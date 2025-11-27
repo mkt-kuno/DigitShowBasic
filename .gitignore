@@ -1,0 +1,103 @@
+# Visual Studio 2022 (C/C++/MFC)
+
+# VS cache and metadata
+.vs/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Dd]ebug/
+[Dd]ebug*/
+[Rr]elease/
+[Rr]elease*/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+
+# Compiled binaries
+*.exe
+*.dll
+*.lib
+*.appx
+*.msix
+*.msixupload
+*.msixbundle
+*.appxbundle
+
+# C/C++ intermediate files
+*.obj
+*.iobj
+*.ipdb
+*.idb
+*.pdb
+*.ilk
+*.exp
+*.pch
+*.pch+* 
+*.res
+*.rsp
+*.tlog
+*.lastbuildstate
+*.lastcodeanalysissucceeded
+*.tmp
+
+# IntelliSense & VC databases
+ipch/
+*.sdf
+*.opensdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+# MFC-specific
+*.aps
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NuGet (keep packages.config, ignore restored packages)
+packages/
+!packages/*/build/
+!packages/*/build/**
+!packages/*/tools/**
+*.nupkg
+*.snupkg
+
+# Azure & publish profiles
+*.Publish.xml
+**/Properties/PublishProfiles/*
+
+# CMake (if used alongside VS)
+CMakeFiles/
+CMakeCache.txt
+cmake-build*/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# Others
+_ReSharper*/
+*.DotSettings.user
+*.ncrunch*
+*.gcno
+*.gcda
+
+# VS Code (optional)
+.vscode/
