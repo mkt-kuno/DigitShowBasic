@@ -1,0 +1,108 @@
+<html>
+<body>
+<pre>
+<h1>ビルドのログ</h1>
+<h3>
+--------------------構成: DigitShowBasic - Win32 Release--------------------
+</h3>
+<h3>コマンド ライン</h3>
+Creating command line "rc.exe /l 0x411 /fo"Release/DigitShowBasic.res" /d "NDEBUG" /d "_AFXDLL" "C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\DigitShowBasic.rc"" 
+一時ファイル "C:\DOCUME~1\user\LOCALS~1\Temp\RSP35.tmp" を作成し、次の内容を記録します
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/DigitShowBasic.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\BoardSettings.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\CalibrationAmp.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\CalibrationFactor.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_CLoading.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_Consolidation.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_File.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_ID.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_LinearStressPath.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_MLoading.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_PreConsolidation.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Control_Sensitivity.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\DA_Channel.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\DA_Pout.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\DA_Vout.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\DigitShowBasic.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\DigitShowBasicDoc.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\DigitShowBasicView.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\MainFrm.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\SamplingSettings.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\Specimen.cpp"
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\TransAdjustment.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\user\LOCALS~1\Temp\RSP35.tmp" 
+一時ファイル "C:\DOCUME~1\user\LOCALS~1\Temp\RSP36.tmp" を作成し、次の内容を記録します
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/DigitShowBasic.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\user\デスクトップ\Sampling program(20060207)\IIS_DigitShowBasic_200ms\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\user\LOCALS~1\Temp\RSP36.tmp" 
+一時ファイル "C:\DOCUME~1\user\LOCALS~1\Temp\RSP37.tmp" を作成し、次の内容を記録します
+[
+/nologo /stack:0x1400000 /subsystem:windows /incremental:no /pdb:"Release/DigitShowBasic.pdb" /machine:I386 /out:"Release/DigitShowBasic.exe" 
+".\Release\BoardSettings.obj"
+".\Release\CalibrationAmp.obj"
+".\Release\CalibrationFactor.obj"
+".\Release\Control_CLoading.obj"
+".\Release\Control_Consolidation.obj"
+".\Release\Control_File.obj"
+".\Release\Control_ID.obj"
+".\Release\Control_LinearStressPath.obj"
+".\Release\Control_MLoading.obj"
+".\Release\Control_PreConsolidation.obj"
+".\Release\Control_Sensitivity.obj"
+".\Release\DA_Channel.obj"
+".\Release\DA_Pout.obj"
+".\Release\DA_Vout.obj"
+".\Release\DigitShowBasic.obj"
+".\Release\DigitShowBasicDoc.obj"
+".\Release\DigitShowBasicView.obj"
+".\Release\MainFrm.obj"
+".\Release\SamplingSettings.obj"
+".\Release\Specimen.obj"
+".\Release\StdAfx.obj"
+".\Release\TransAdjustment.obj"
+".\Release\DigitShowBasic.res"
+".\CAIO.LIB"
+]
+コマンド ライン "link.exe @C:\DOCUME~1\user\LOCALS~1\Temp\RSP37.tmp" の作成中
+<h3>アウトプット ウィンドウ</h3>
+リソースをコンパイル中...
+コンパイル中...
+StdAfx.cpp
+コンパイル中...
+BoardSettings.cpp
+CalibrationAmp.cpp
+CalibrationFactor.cpp
+Control_CLoading.cpp
+Control_Consolidation.cpp
+Control_File.cpp
+Control_ID.cpp
+Control_LinearStressPath.cpp
+Control_MLoading.cpp
+Control_PreConsolidation.cpp
+Control_Sensitivity.cpp
+DA_Channel.cpp
+DA_Pout.cpp
+DA_Vout.cpp
+DigitShowBasic.cpp
+DigitShowBasicDoc.cpp
+DigitShowBasicView.cpp
+MainFrm.cpp
+SamplingSettings.cpp
+Specimen.cpp
+コードを生成中...
+コンパイル中...
+TransAdjustment.cpp
+コードを生成中...
+リンク中...
+
+
+
+<h3>結果</h3>
+DigitShowBasic.exe - エラー 0、警告 0
+</pre>
+</body>
+</html>
