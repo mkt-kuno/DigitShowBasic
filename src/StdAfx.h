@@ -21,6 +21,12 @@
 
 #pragma once
 
+// Target Windows 7 or later
+#include <SDKDDKVer.h>
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0601
+#endif
+
 #define VC_EXTRALEAN
 
 #include <afxwin.h>
