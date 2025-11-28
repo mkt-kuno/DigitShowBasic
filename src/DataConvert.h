@@ -1,103 +1,114 @@
-﻿/*
- * DigitShowBasic - Triaxial Test Machine Control Software
- * Copyright (C) 2025 Makoto KUNO
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+﻿//==================================================================================================
+//	モジュール DataConvert																			
+//																									
+//	GetRangeValue, BinaryToVolt, VoltToBinaryメソッドを公開します。									
+//==================================================================================================
 
-#ifndef DATACONVERT_H
-#define DATACONVERT_H
 
-#pragma once
-
-/**
- * Get range values from AioSetAiRange/AioSetAoRange range code
- * @param RangeData Range code
- * @param Max Pointer to store maximum value
- * @param Min Pointer to store minimum value
- * @return 0 on success, -1 on error
- */
-inline long GetRangeValue(short RangeData, float* Max, float* Min)
+//--------------------------------------------------------------------------------------------------
+//	メソッド	:	GetRangeValue()																	
+//	機能		:	AioSetAiRange, AioSetAoRangeで使用するレンジ値から、							
+//					レンジの最大値と最小値を取得します。											
+//	引数		:	short	RangeData	AioSetAiRange, AioSetAoRangeで定義されるレンジ値			
+//					float*	Max			レンジの最大値を格納する変数のアドレス						
+//					float*	Min			レンジの最小値を格納する変数のアドレス						
+//	戻り値		:	0	:正常終了																	
+//					-1	:RangeDataが異常、Max, MinがNULL											
+//--------------------------------------------------------------------------------------------------
+long GetRangeValue(short RangeData, float * Max, float * Min)
 {
-    if (Max == NULL || Min == NULL) {
-        return -1;
-    }
-    switch (RangeData) {
-    case 0:   *Max = 10.0f;     *Min = -10.0f;    break;
-    case 1:   *Max = 5.0f;      *Min = -5.0f;     break;
-    case 2:   *Max = 2.5f;      *Min = -2.5f;     break;
-    case 3:   *Max = 1.25f;     *Min = -1.25f;    break;
-    case 4:   *Max = 1.0f;      *Min = -1.0f;     break;
-    case 5:   *Max = 0.625f;    *Min = -0.625f;   break;
-    case 6:   *Max = 0.5f;      *Min = -0.5f;     break;
-    case 7:   *Max = 0.3125f;   *Min = -0.3125f;  break;
-    case 8:   *Max = 0.25f;     *Min = -0.25f;    break;
-    case 9:   *Max = 0.125f;    *Min = -0.125f;   break;
-    case 10:  *Max = 0.1f;      *Min = -0.1f;     break;
-    case 11:  *Max = 0.05f;     *Min = -0.05f;    break;
-    case 12:  *Max = 0.025f;    *Min = -0.025f;   break;
-    case 13:  *Max = 0.0125f;   *Min = -0.0125f;  break;
-    case 50:  *Max = 10.0f;     *Min = 0.0f;      break;
-    case 51:  *Max = 5.0f;      *Min = 0.0f;      break;
-    case 52:  *Max = 4.095f;    *Min = 0.0f;      break;
-    case 53:  *Max = 2.5f;      *Min = 0.0f;      break;
-    case 54:  *Max = 1.25f;     *Min = 0.0f;      break;
-    case 55:  *Max = 1.0f;      *Min = 0.0f;      break;
-    case 56:  *Max = 0.5f;      *Min = 0.0f;      break;
-    case 57:  *Max = 0.25f;     *Min = 0.0f;      break;
-    case 58:  *Max = 0.1f;      *Min = 0.0f;      break;
-    case 59:  *Max = 0.05f;     *Min = 0.0f;      break;
-    case 60:  *Max = 0.025f;    *Min = 0.0f;      break;
-    case 61:  *Max = 0.0125f;   *Min = 0.0f;      break;
-    case 100: *Max = 20.0f;     *Min = 0.0f;      break;
-    case 101: *Max = 20.0f;     *Min = 4.0f;      break;
-    case 150: *Max = 5.0f;      *Min = 1.0f;      break;
-    default:  *Max = 0.0f;      *Min = 0.0f;      return -1;
-    }
-    return 0;
+	if((Max == NULL) || (Min == NULL)){
+		return -1;
+	}
+	switch(RangeData){
+	case 0:		*Max = (float)10;		*Min = (float)-10;		break;
+	case 1:		*Max = (float)5;		*Min = (float)-5;		break;
+	case 2:		*Max = (float)2.5;		*Min = (float)-2.5;		break;
+	case 3:		*Max = (float)1.25;		*Min = (float)-1.25;	break;
+	case 4:		*Max = (float)1;		*Min = (float)-1;		break;
+	case 5:		*Max = (float)0.625;	*Min = (float)-0.625;	break;
+	case 6:		*Max = (float)0.5;		*Min = (float)-0.5;		break;
+	case 7:		*Max = (float)0.3125;	*Min = (float)-0.3125;	break;
+	case 8:		*Max = (float)0.25;		*Min = (float)-0.25;	break;
+	case 9:		*Max = (float)0.125;	*Min = (float)-0.125;	break;
+	case 10:	*Max = (float)0.1;		*Min = (float)-0.1;		break;
+	case 11:	*Max = (float)0.05;		*Min = (float)-0.05;	break;
+	case 12:	*Max = (float)0.025;	*Min = (float)-0.025;	break;
+	case 13:	*Max = (float)0.0125;	*Min = (float)-0.0125;	break;
+	case 50:	*Max = (float)10;		*Min = (float)0;		break;
+	case 51:	*Max = (float)5;		*Min = (float)0;		break;
+	case 52:	*Max = (float)4.095;	*Min = (float)0;		break;
+	case 53:	*Max = (float)2.5;		*Min = (float)0;		break;
+	case 54:	*Max = (float)1.25;		*Min = (float)0;		break;
+	case 55:	*Max = (float)1;		*Min = (float)0;		break;
+	case 56:	*Max = (float)0.5;		*Min = (float)0;		break;
+	case 57:	*Max = (float)0.25;		*Min = (float)0;		break;
+	case 58:	*Max = (float)0.1;		*Min = (float)0;		break;
+	case 59:	*Max = (float)0.05;		*Min = (float)0;		break;
+	case 60:	*Max = (float)0.025;	*Min = (float)0;		break;
+	case 61:	*Max = (float)0.0125;	*Min = (float)0;		break;
+	case 100:	*Max = (float)20;		*Min = (float)0;		break;
+	case 101:	*Max = (float)20;		*Min = (float)4;		break;
+	case 150:	*Max = (float)5;		*Min = (float)1;		break;
+	default:	*Max = (float)0;		*Min = (float)0;		return -1;
+	}
+	return 0;
 }
 
-/**
- * Convert binary data to voltage/current
- * @param Max Range maximum
- * @param Min Range minimum
- * @param Bits Resolution (12 or 16)
- * @param Binary Binary data to convert
- * @return Converted voltage/current value
- */
-inline float BinaryToVolt(float Max, float Min, short Bits, long Binary)
+
+//--------------------------------------------------------------------------------------------------
+//	メソッド	:	BinaryToVolt()																	
+//	機能		:	バイナリデータを電圧や電流に変換します。										
+//	引数		:	float	Max		レンジの最大値													
+//					float	Min		レンジの最小値													
+//					short	Bits	分解能(12 または 16)											
+//					long	Binary	変換するバイナリデータ											
+//	戻り値		:	変換されたデータをfloat型で返します。											
+//--------------------------------------------------------------------------------------------------
+float BinaryToVolt(float Max, float Min, short Bits, long Binary)
 {
-    long Resolution = (Bits == 16) ? 65535 : 4095;
-    return Binary * (Max - Min) / Resolution + Min;
+	long	Resolution;
+	switch (Bits){
+	case 12:
+		Resolution = 4095;
+		break;
+	case 16:
+		Resolution = 65535;
+		break;
+	default :
+		Resolution = 4095;
+		break;
+	}
+	return Binary * (Max - Min) / Resolution + Min;
 }
 
-/**
- * Convert voltage/current to binary data
- * @param Max Range maximum
- * @param Min Range minimum
- * @param Bits Resolution (12 or 16)
- * @param Volt Voltage/current value to convert
- * @return Converted binary data
- */
-inline long VoltToBinary(float Max, float Min, short Bits, float Volt)
-{
-    if (Max == Min) {
-        return 0;
-    }
-    long Resolution = (Bits == 16) ? 65535 : 4095;
-    return (long)(Resolution * (Volt - Min) / (Max - Min));
-}
 
-#endif // DATACONVERT_H
+//--------------------------------------------------------------------------------------------------
+//	メソッド	:	VoltToBinary()																	
+//	機能		:	電圧や電流をバイナリデータに変換します。										
+//	引数		:	float	Max		レンジの最大値													
+//					float	Min		レンジの最小値													
+//					short	Bits	分解能(12 または 16)											
+//					float	Volt	変換する電圧や電流データ										
+//	戻り値		:	変換されたバイナリデータをlong型で返します。									
+//--------------------------------------------------------------------------------------------------
+long VoltToBinary(float Max, float Min, short Bits, float Volt)
+{
+	long	Resolution;
+	if(Max == Min){
+		return 0;
+	}
+	switch (Bits){
+	case 12:
+		Resolution = 4095;
+		break;
+	case 16:
+		Resolution = 65535;
+		break;
+	default :
+		Resolution = 4095;
+		break;
+	}
+	return (long)(Resolution * (Volt - Min) / (Max - Min));
+}
 
