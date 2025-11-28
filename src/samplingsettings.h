@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -24,30 +25,30 @@
 class CSamplingSettings : public CDialog
 {
 public:
-	CSamplingSettings(CWnd* pParent = NULL);
+    CSamplingSettings(CWnd* pParent = NULL);
 
-	enum { IDD = IDD_SamplingSettings };
+    enum { IDD = IDD_SamplingSettings };
 
-	long    m_TimeInterval1;
-	long    m_TimeInterval2;
-	long    m_TimeInterval3;
-	CString m_AllocatedMemory;
-	int     m_AvSmplNum;
-	int     m_Channels;
-	int     m_EventSamplingTimes;
-	CString m_MemoryType;
-	float   m_SamplingClock;
-	int     m_SavingTime;
-	long    m_TotalSamplingTimes;
+    long    m_TimeInterval1;
+    long    m_TimeInterval2;
+    long    m_TimeInterval3;
+    CString m_AllocatedMemory;
+    int     m_AvSmplNum;
+    int     m_Channels;
+    int     m_EventSamplingTimes;
+    CString m_MemoryType;
+    float   m_SamplingClock;
+    int     m_SavingTime;
+    long    m_TotalSamplingTimes;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual void OnOK();
-	virtual BOOL OnInitDialog();
+    virtual void DoDataExchange(CDataExchange* pDX);
+    virtual void OnOK();
+    virtual BOOL OnInitDialog();
 
-	afx_msg void OnBUTTONCheck();
+    afx_msg void OnBUTTONCheck();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __SAMPLINGSETTINGS_H_INCLUDE__

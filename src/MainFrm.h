@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -24,41 +25,41 @@
 class CMainFrame : public CFrameWnd
 {
 protected:
-	CMainFrame();
-	DECLARE_DYNCREATE(CMainFrame)
+    CMainFrame();
+    DECLARE_DYNCREATE(CMainFrame)
 
 public:
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+    virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
 public:
-	virtual ~CMainFrame();
+    virtual ~CMainFrame();
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+    virtual void AssertValid() const;
+    virtual void Dump(CDumpContext& dc) const;
 #endif
 
 private:
-	int nResult;
+    int nResult;
 
 protected:
-	afx_msg void OnBoardSettings();
-	afx_msg void OnCalibrationFactor();
-	afx_msg void OnSpecimenData();
-	afx_msg void OnDAVout();
-	afx_msg void OnControlID();
-	afx_msg void OnDAPout();
-	afx_msg void OnDAChannel();
-	afx_msg void OnControlConsolidation();
-	afx_msg void OnControlMLoading();
-	afx_msg void OnControlSensitivity();
-	afx_msg void OnControlCLoading();
-	afx_msg void OnControlFile();
-	afx_msg void OnSamplingSettings();
-	afx_msg void OnControlPreConsolidation();
-	afx_msg void OnTransAdjustment();
-	afx_msg void OnControlLinearStressPath();
-	DECLARE_MESSAGE_MAP()
+    afx_msg void OnBoardSettings();
+    afx_msg void OnCalibrationFactor();
+    afx_msg void OnSpecimenData();
+    afx_msg void OnDAVout();
+    afx_msg void OnControlID();
+    afx_msg void OnDAPout();
+    afx_msg void OnDAChannel();
+    afx_msg void OnControlConsolidation();
+    afx_msg void OnControlMLoading();
+    afx_msg void OnControlSensitivity();
+    afx_msg void OnControlCLoading();
+    afx_msg void OnControlFile();
+    afx_msg void OnSamplingSettings();
+    afx_msg void OnControlPreConsolidation();
+    afx_msg void OnTransAdjustment();
+    afx_msg void OnControlLinearStressPath();
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __MAINFRM_H_INCLUDE__

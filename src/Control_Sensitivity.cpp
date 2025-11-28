@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -29,22 +30,22 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 CControl_Sensitivity::CControl_Sensitivity(CWnd* pParent)
-	: CDialog(CControl_Sensitivity::IDD, pParent)
+    : CDialog(CControl_Sensitivity::IDD, pParent)
 {
-	DigitShowContext* ctx = GetContext();
-	m_ERR_StressA = ctx->errTol.StressA;
-	m_ERR_StressCom = ctx->errTol.StressCom;
-	m_ERR_StressExt = ctx->errTol.StressExt;
+    DigitShowContext* ctx = GetContext();
+    m_ERR_StressA = ctx->errTol.StressA;
+    m_ERR_StressCom = ctx->errTol.StressCom;
+    m_ERR_StressExt = ctx->errTol.StressExt;
 }
 
 void CControl_Sensitivity::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT_ERR_StressA, m_ERR_StressA);
-	DDX_Text(pDX, IDC_EDIT_ERR_StressCom, m_ERR_StressCom);
-	DDV_MinMaxDouble(pDX, m_ERR_StressCom, 0., 50.);
-	DDX_Text(pDX, IDC_EDIT_ERR_StressExt, m_ERR_StressExt);
-	DDV_MinMaxDouble(pDX, m_ERR_StressExt, -50., 0.);
+    CDialog::DoDataExchange(pDX);
+    DDX_Text(pDX, IDC_EDIT_ERR_StressA, m_ERR_StressA);
+    DDX_Text(pDX, IDC_EDIT_ERR_StressCom, m_ERR_StressCom);
+    DDV_MinMaxDouble(pDX, m_ERR_StressCom, 0., 50.);
+    DDX_Text(pDX, IDC_EDIT_ERR_StressExt, m_ERR_StressExt);
+    DDV_MinMaxDouble(pDX, m_ERR_StressExt, -50., 0.);
 }
 
 BEGIN_MESSAGE_MAP(CControl_Sensitivity, CDialog)
@@ -52,10 +53,10 @@ END_MESSAGE_MAP()
 
 void CControl_Sensitivity::OnOK()
 {
-	UpdateData(TRUE);
-	DigitShowContext* ctx = GetContext();
-	ctx->errTol.StressA = m_ERR_StressA;
-	ctx->errTol.StressCom = m_ERR_StressCom;
-	ctx->errTol.StressExt = m_ERR_StressExt;
-	CDialog::OnOK();
+    UpdateData(TRUE);
+    DigitShowContext* ctx = GetContext();
+    ctx->errTol.StressA = m_ERR_StressA;
+    ctx->errTol.StressCom = m_ERR_StressCom;
+    ctx->errTol.StressExt = m_ERR_StressExt;
+    CDialog::OnOK();
 }

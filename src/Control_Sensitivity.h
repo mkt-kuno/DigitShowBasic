@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -24,19 +25,19 @@
 class CControl_Sensitivity : public CDialog
 {
 public:
-	CControl_Sensitivity(CWnd* pParent = NULL);
+    CControl_Sensitivity(CWnd* pParent = NULL);
 
-	enum { IDD = IDD_Control_Sensitivity };
+    enum { IDD = IDD_Control_Sensitivity };
 
-	double m_ERR_StressA;
-	double m_ERR_StressCom;
-	double m_ERR_StressExt;
+    double m_ERR_StressA;
+    double m_ERR_StressCom;
+    double m_ERR_StressExt;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual void OnOK();
+    virtual void DoDataExchange(CDataExchange* pDX);
+    virtual void OnOK();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __CONTROL_SENSITIVITY_H_INCLUDE__

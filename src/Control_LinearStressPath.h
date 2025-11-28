@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -24,23 +25,23 @@
 class CControl_LinearStressPath : public CDialog
 {
 public:
-	CControl_LinearStressPath(CWnd* pParent = NULL);
+    CControl_LinearStressPath(CWnd* pParent = NULL);
 
-	enum { IDD = IDD_Control_LinearStressPathLoading };
+    enum { IDD = IDD_Control_LinearStressPathLoading };
 
-	double m_e_sigma1;
-	double m_e_sigma2;
-	double m_MotorSpeed;
-	double m_sigma_rate;
-	double m_sigma1;
-	double m_sigma2;
+    double m_e_sigma1;
+    double m_e_sigma2;
+    double m_MotorSpeed;
+    double m_sigma_rate;
+    double m_sigma1;
+    double m_sigma2;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
+    virtual void DoDataExchange(CDataExchange* pDX);
 
-	afx_msg void OnBUTTONUpdate();
+    afx_msg void OnBUTTONUpdate();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __CONTROL_LINEARSTRESSPATH_H_INCLUDE__

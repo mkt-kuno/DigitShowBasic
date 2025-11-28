@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DigitShowBasic - Triaxial Test Machine Control Software
  * Copyright (C) 2025 Makoto KUNO
  *
@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -114,20 +115,34 @@ struct CalibrationData {
  * Physical values
  */
 struct PhysicalValues {
-    double sa;      // axial stress
-    double e_sa;    // effective axial stress
-    double sr;      // radial stress
-    double e_sr;    // effective radial stress
-    double p;       // mean stress
-    double e_p;     // effective mean stress
-    double q;       // deviator stress
-    double u;       // pore pressure
-    double ea;      // axial strain
-    double er;      // radial strain
-    double ev;      // volumetric strain
-    double eLDT;    // LDT average strain
-    double eLDT1;   // LDT1 strain
-    double eLDT2;   // LDT2 strain
+    double sa;
+    // axial stress
+    double e_sa;
+    // effective axial stress
+    double sr;
+    // radial stress
+    double e_sr;
+    // effective radial stress
+    double p;
+    // mean stress
+    double e_p;
+    // effective mean stress
+    double q;
+    // deviator stress
+    double u;
+    // pore pressure
+    double ea;
+    // axial strain
+    double er;
+    // radial strain
+    double ev;
+    // volumetric strain
+    double eLDT;
+    // LDT average strain
+    double eLDT1;
+    // LDT1 strain
+    double eLDT2;
+    // LDT2 strain
 };
 
 /**
@@ -143,9 +158,12 @@ struct ControlFileData {
  * Time settings
  */
 struct TimeSettings {
-    unsigned int Interval1;  // Time interval (ms) to display output data
-    unsigned int Interval2;  // Time interval (ms) to feed back
-    unsigned int Interval3;  // Time interval (ms) to save the data
+    unsigned int Interval1;
+    // Time interval (ms) to display output data
+    unsigned int Interval2;
+    // Time interval (ms) to feed back
+    unsigned int Interval3;
+    // Time interval (ms) to save the data
 };
 
 /**
@@ -174,9 +192,12 @@ struct SamplingSettings {
  * Error tolerance settings
  */
 struct ErrorTolerance {
-    double StressCom;   // Compression stress tolerance (kPa)
-    double StressExt;   // Extension stress tolerance (kPa)
-    double StressA;     // General stress tolerance (kPa)
+    double StressCom;
+    // Compression stress tolerance (kPa)
+    double StressExt;
+    // Extension stress tolerance (kPa)
+    double StressA;
+    // General stress tolerance (kPa)
 };
 
 /**
