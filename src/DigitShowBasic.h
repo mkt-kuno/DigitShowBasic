@@ -1,4 +1,22 @@
-﻿// DigitShowBasic.h : DIGITSHOWBASIC アプリケーションのメイン ヘッダー ファイル
+﻿/*
+ * DigitShowBasic - Triaxial Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// DigitShowBasic.h : DIGITSHOWBASIC アプリケーションのメイン ヘッダー ファイル
 //
 
 #if !defined(AFX_DIGITSHOWBASIC_H__022B46E0_9575_4547_950E_44664C9C23DA__INCLUDED_)
