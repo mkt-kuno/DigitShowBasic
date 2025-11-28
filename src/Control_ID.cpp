@@ -264,9 +264,13 @@ void CControl_ID::OnBUTTONLoadfromfile()
 		if((err = fopen_s(&FileCtlData,(LPCSTR)pFileName , _T("r"))) == 0)
 		{
 			for(i=0;i<16;i++){
+				int tmpFlag[3];
 				fscanf_s(FileCtlData,_T("%d"),&tmp);
 				fscanf_s(FileCtlData,_T("%d%d%d"),
-					&ControlData[i].flag[0],&ControlData[i].flag[1],&ControlData[i].flag[2]);
+					&tmpFlag[0],&tmpFlag[1],&tmpFlag[2]);
+				ControlData[i].flag[0] = (tmpFlag[0] != 0);
+				ControlData[i].flag[1] = (tmpFlag[1] != 0);
+				ControlData[i].flag[2] = (tmpFlag[2] != 0);
 				fscanf_s(FileCtlData,_T("%d%d%d"),
 					&ControlData[i].time[0],&ControlData[i].time[1],&ControlData[i].time[2]);
 				fscanf_s(FileCtlData,_T("%lf"),&ControlData[i].p);
@@ -366,7 +370,7 @@ void CControl_ID::OnBUTTONSaveFile()
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
 					ControlData[i].sigmaAmp[0],ControlData[i].sigmaAmp[1],ControlData[i].sigmaAmp[2]);
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
-					ControlData[i].sigmaRate[0],ControlData[i].sigmaRate[1],&ControlData[i].sigmaRate[2]);
+					ControlData[i].sigmaRate[0],ControlData[i].sigmaRate[1],ControlData[i].sigmaRate[2]);
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
 					ControlData[i].e_sigma[0],ControlData[i].e_sigma[1],ControlData[i].e_sigma[2]);
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
