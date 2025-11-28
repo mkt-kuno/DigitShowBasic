@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -22,7 +23,7 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
+    #error include 'stdafx.h' before including this file for PCH
 #endif
 
 #include "resource.h"
@@ -30,13 +31,13 @@
 class CDigitShowBasicApp : public CWinApp
 {
 public:
-	CDigitShowBasicApp();
+    CDigitShowBasicApp();
 
 public:
-	virtual BOOL InitInstance();
+    virtual BOOL InitInstance();
 
-	afx_msg void OnAppAbout();
-	DECLARE_MESSAGE_MAP()
+    afx_msg void OnAppAbout();
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __DIGITSHOWBASIC_H_INCLUDE__

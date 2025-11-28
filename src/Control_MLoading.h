@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -24,22 +25,22 @@
 class CControl_MLoading : public CDialog
 {
 public:
-	CControl_MLoading(CWnd* pParent = NULL);
+    CControl_MLoading(CWnd* pParent = NULL);
 
-	enum { IDD = IDD_Control_MLoading };
+    enum { IDD = IDD_Control_MLoading };
 
-	int    m_MotorCruch;
-	double m_MotorSpeed;
-	int    m_flag0;
-	double m_q;
+    int    m_MotorCruch;
+    double m_MotorSpeed;
+    int    m_flag0;
+    double m_q;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
+    virtual void DoDataExchange(CDataExchange* pDX);
 
-	afx_msg void OnBUTTONUpdate();
-	afx_msg void OnBUTTONReflesh();
+    afx_msg void OnBUTTONUpdate();
+    afx_msg void OnBUTTONReflesh();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __CONTROL_MLOADING_H_INCLUDE__

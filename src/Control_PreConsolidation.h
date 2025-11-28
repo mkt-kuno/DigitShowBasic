@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -24,18 +25,18 @@
 class CControl_PreConsolidation : public CDialog
 {
 public:
-	CControl_PreConsolidation(CWnd* pParent = NULL);
+    CControl_PreConsolidation(CWnd* pParent = NULL);
 
-	enum { IDD = IDD_Control_PreConsolidation };
+    enum { IDD = IDD_Control_PreConsolidation };
 
-	double m_q;
-	double m_MotorSpeed;
+    double m_q;
+    double m_MotorSpeed;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual void OnOK();
+    virtual void DoDataExchange(CDataExchange* pDX);
+    virtual void OnOK();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __CONTROL_PRECONSOLIDATION_H_INCLUDE__

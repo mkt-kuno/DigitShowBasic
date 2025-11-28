@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -24,26 +25,26 @@
 class CTransAdjustment : public CDialog
 {
 public:
-	CTransAdjustment(CWnd* pParent = NULL);
+    CTransAdjustment(CWnd* pParent = NULL);
 
-	enum { IDD = IDD_TransAdjustment };
+    enum { IDD = IDD_TransAdjustment };
 
-	double m_FinalDisp;
-	double m_InitialDisp;
-	double m_FinalBullet;
-	double m_InitialBullet;
+    double m_FinalDisp;
+    double m_InitialDisp;
+    double m_FinalBullet;
+    double m_InitialBullet;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
+    virtual void DoDataExchange(CDataExchange* pDX);
 
-	afx_msg void OnBUTTONInitialDisp();
-	afx_msg void OnBUTTONEndDisp();
-	afx_msg void OnBUTTONInitialBullet();
-	afx_msg void OnBUTTONEndBullet();
-	afx_msg void OnBUTTONUpdateDisp();
-	afx_msg void OnBUTTONUpdateBullet();
+    afx_msg void OnBUTTONInitialDisp();
+    afx_msg void OnBUTTONEndDisp();
+    afx_msg void OnBUTTONInitialBullet();
+    afx_msg void OnBUTTONEndBullet();
+    afx_msg void OnBUTTONUpdateDisp();
+    afx_msg void OnBUTTONUpdateBullet();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __TRANSADJUSTMENT_H_INCLUDE__
