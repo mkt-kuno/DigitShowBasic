@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DIGITSHOW_CONTEXT_H
-#define DIGITSHOW_CONTEXT_H
+#ifndef __DIGITSHOWCONTEXT_H_INCLUDE__
+#define __DIGITSHOWCONTEXT_H_INCLUDE__
 
 #pragma once
 
@@ -271,4 +271,4 @@ void InitContext(DigitShowContext* ctx);
 typedef SpecimenData Specimen;
 typedef ControlData Control;
 
-#endif // DIGITSHOW_CONTEXT_H
+#endif // __DIGITSHOWCONTEXT_H_INCLUDE__

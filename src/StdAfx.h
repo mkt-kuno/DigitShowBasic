@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef STDAFX_H
-#define STDAFX_H
+#ifndef __STDAFX_H_INCLUDE__
+#define __STDAFX_H_INCLUDE__
 
 #pragma once
 
@@ -32,4 +32,4 @@
 #include <afxcmn.h>
 #endif
 
-#endif // STDAFX_H
+#endif // __STDAFX_H_INCLUDE__

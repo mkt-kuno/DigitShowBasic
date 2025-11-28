@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DIGITSHOWBASICVIEW_H
-#define DIGITSHOWBASICVIEW_H
+#ifndef __DIGITSHOWBASICVIEW_H_INCLUDE__
+#define __DIGITSHOWBASICVIEW_H_INCLUDE__
 
 #pragma once
 
@@ -107,4 +107,4 @@ inline CDigitShowBasicDoc* CDigitShowBasicView::GetDocument()
 }
 #endif
 
-#endif // DIGITSHOWBASICVIEW_H
+#endif // __DIGITSHOWBASICVIEW_H_INCLUDE__

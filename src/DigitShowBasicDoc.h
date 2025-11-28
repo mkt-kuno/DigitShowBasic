@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef DIGITSHOWBASICDOC_H
-#define DIGITSHOWBASICDOC_H
+#ifndef __DIGITSHOWBASICDOC_H_INCLUDE__
+#define __DIGITSHOWBASICDOC_H_INCLUDE__
 
 #pragma once
 
@@ -64,4 +64,4 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // DIGITSHOWBASICDOC_H
+#endif // __DIGITSHOWBASICDOC_H_INCLUDE__

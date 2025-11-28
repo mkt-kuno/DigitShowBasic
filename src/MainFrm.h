@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MAINFRM_H
-#define MAINFRM_H
+#ifndef __MAINFRM_H_INCLUDE__
+#define __MAINFRM_H_INCLUDE__
 
 #pragma once
 
@@ -61,4 +61,4 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // MAINFRM_H
+#endif // __MAINFRM_H_INCLUDE__
