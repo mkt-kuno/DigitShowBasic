@@ -16,13 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Control_PreConsolidation.cpp : インプリメンテーション ファイル
-//
-
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "Control_PreConsolidation.h"
 #include "DigitShowBasicDoc.h"
+#include "DigitShowContext.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,45 +28,30 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CControl_PreConsolidation ダイアログ
-extern	Control	ControlData[16];
-
-
-CControl_PreConsolidation::CControl_PreConsolidation(CWnd* pParent /*=NULL*/)
+CControl_PreConsolidation::CControl_PreConsolidation(CWnd* pParent)
 	: CDialog(CControl_PreConsolidation::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CControl_PreConsolidation)
-	m_q = ControlData[1].q;
-	m_MotorSpeed = ControlData[1].MotorSpeed;
-	//}}AFX_DATA_INIT
+	DigitShowContext* ctx = GetContext();
+	m_q = ctx->control[1].q;
+	m_MotorSpeed = ctx->control[1].MotorSpeed;
 }
-
 
 void CControl_PreConsolidation::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CControl_PreConsolidation)
 	DDX_Text(pDX, IDC_EDIT_q, m_q);
 	DDX_Text(pDX, IDC_EDIT_MotorSpeed, m_MotorSpeed);
 	DDV_MinMaxDouble(pDX, m_MotorSpeed, 0., 3000.);
-	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CControl_PreConsolidation, CDialog)
-	//{{AFX_MSG_MAP(CControl_PreConsolidation)
-	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////
-// CControl_PreConsolidation メッセージ ハンドラ
-
-void CControl_PreConsolidation::OnOK() 
+void CControl_PreConsolidation::OnOK()
 {
-	// TODO: この位置にその他の検証用のコードを追加してください
 	UpdateData(TRUE);
-	ControlData[1].q = m_q;
-	ControlData[1].MotorSpeed = m_MotorSpeed;
+	DigitShowContext* ctx = GetContext();
+	ctx->control[1].q = m_q;
+	ctx->control[1].MotorSpeed = m_MotorSpeed;
 	CDialog::OnOK();
 }
