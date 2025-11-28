@@ -143,7 +143,8 @@ END_MESSAGE_MAP()
 
 void CControl_ID::OnBUTTONLoad() 
 {
-
+	DigitShowContext* ctx = GetContext();
+	ControlData* ControlData = ctx->control;
 
 	UpdateData(TRUE);
 	tmp=m_Control_ID;
@@ -194,7 +195,8 @@ void CControl_ID::OnBUTTONLoad()
 
 void CControl_ID::OnBUTTONUpdate() 
 {
-
+	DigitShowContext* ctx = GetContext();
+	ControlData* ControlData = ctx->control;
 
 	UpdateData(TRUE);
 	tmp=m_Control_ID;
@@ -245,6 +247,8 @@ void CControl_ID::OnBUTTONUpdate()
 
 void CControl_ID::OnBUTTONLoadfromfile() 
 {
+	DigitShowContext* ctx = GetContext();
+	ControlData* ControlData = ctx->control;
 
 	CString	pFileName;
 	FILE	*FileCtlData;
@@ -294,36 +298,6 @@ void CControl_ID::OnBUTTONLoadfromfile()
 				fscanf_s(FileCtlData,_T("%lf"),&ControlData[i].MotorSpeed);
 				fscanf_s(FileCtlData,_T("%d"),&ControlData[i].Motor);
 				fscanf_s(FileCtlData,_T("%d"),&ControlData[i].MotorCruch);
-				//fscanf(FileCtlData,"%d",&tmp);
-				//fscanf(FileCtlData,"%d%d%d",
-				//	&ControlData[i].flag[0],&ControlData[i].flag[1],&ControlData[i].flag[2]);
-				//fscanf(FileCtlData,"%d%d%d",
-				//	&ControlData[i].time[0],&ControlData[i].time[1],&ControlData[i].time[2]);
-				//fscanf(FileCtlData,"%lf",&ControlData[i].p);
-				//fscanf(FileCtlData,"%lf",&ControlData[i].q);
-				//fscanf(FileCtlData,"%lf",&ControlData[i].u);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].sigma[0],&ControlData[i].sigma[1],&ControlData[i].sigma[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].sigmaAmp[0],&ControlData[i].sigmaAmp[1],&ControlData[i].sigmaAmp[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].sigmaRate[0],&ControlData[i].sigmaRate[1],&ControlData[i].sigmaRate[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].e_sigma[0],&ControlData[i].e_sigma[1],&ControlData[i].e_sigma[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].e_sigmaAmp[0],&ControlData[i].e_sigmaAmp[1],&ControlData[i].e_sigmaAmp[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].e_sigmaRate[0],&ControlData[i].e_sigmaRate[1],&ControlData[i].e_sigmaRate[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].strain[0],&ControlData[i].strain[1],&ControlData[i].strain[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].strainAmp[0],&ControlData[i].strainAmp[1],&ControlData[i].strainAmp[2]);
-				//fscanf(FileCtlData,"%lf%lf%lf",
-				//	&ControlData[i].strainRate[0],&ControlData[i].strainRate[1],&ControlData[i].strainRate[2]);
-				//fscanf(FileCtlData,"%lf",&ControlData[i].K0);
-				//fscanf(FileCtlData,"%lf",&ControlData[i].MotorSpeed);
-				//fscanf(FileCtlData,"%d",&ControlData[i].Motor);
-				//fscanf(FileCtlData,"%d",&ControlData[i].MotorCruch);
 			}
 			fclose(FileCtlData);
 		}
@@ -337,7 +311,8 @@ void CControl_ID::OnBUTTONLoadfromfile()
 
 void CControl_ID::OnBUTTONSaveFile() 
 {
-
+	DigitShowContext* ctx = GetContext();
+	ControlData* ControlData = ctx->control;
 
 	CString	pFileName;
 	FILE	*FileCtlData;

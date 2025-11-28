@@ -47,9 +47,6 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame
 
-//---Flag---
-extern	bool		Flag_SetBoard;
-
 IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
@@ -139,8 +136,8 @@ void CMainFrame::OnSamplingSettings()
 
 void CMainFrame::OnCalibrationFactor() 
 {
-
-	if(Flag_SetBoard==FALSE){
+	DigitShowContext* ctx = GetContext();
+	if(ctx->FlagSetBoard==FALSE){
 		AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
 	}
 	CCalibrationFactor CalibrationFactor;
@@ -169,8 +166,8 @@ void CMainFrame::OnDAChannel()
 }
 void CMainFrame::OnDAVout() 
 {
-
-	if(Flag_SetBoard==FALSE){
+	DigitShowContext* ctx = GetContext();
+	if(ctx->FlagSetBoard==FALSE){
 		AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
 	}
 	CDA_Vout DA_Vout;
@@ -179,8 +176,8 @@ void CMainFrame::OnDAVout()
 
 void CMainFrame::OnDAPout() 
 {
-
-	if(Flag_SetBoard==FALSE){
+	DigitShowContext* ctx = GetContext();
+	if(ctx->FlagSetBoard==FALSE){
 		AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
 	}
 	CDA_Pout DA_Pout;

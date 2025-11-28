@@ -73,26 +73,26 @@ END_MESSAGE_MAP()
 BOOL CSamplingSettings::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-	
+	DigitShowContext* ctx = GetContext();
 
-	m_TimeInterval1 = TimeInterval_1;
-	m_TimeInterval2 = TimeInterval_2;
-	m_TimeInterval3 = TimeInterval_3;
+	m_TimeInterval1 = ctx->timeSettings.Interval1;
+	m_TimeInterval2 = ctx->timeSettings.Interval2;
+	m_TimeInterval3 = ctx->timeSettings.Interval3;
 //
-	m_AllocatedMemory.Format("%.1f",AllocatedMemory);
-	m_Channels = AdMaxCH;
-	m_EventSamplingTimes = AdSamplingTimes[0];
-	m_AvSmplNum = AvSmplNum;
-	if(AdMemoryType[0]==0) m_MemoryType = _T("FIFO");
-	if(AdMemoryType[0]==1) m_MemoryType = _T("RING");
-	m_SamplingClock = AdSamplingClock[0]/1000.0f;
-	m_SavingTime = SavingTime;
-	m_TotalSamplingTimes = TotalSamplingTimes;
+	m_AllocatedMemory.Format("%.1f", ctx->sampling.AllocatedMemory);
+	m_Channels = ctx->AdMaxChannels;
+	m_EventSamplingTimes = ctx->ad.SamplingTimes[0];
+	m_AvSmplNum = ctx->sampling.AvSmplNum;
+	if(ctx->ad.MemoryType[0]==0) m_MemoryType = _T("FIFO");
+	if(ctx->ad.MemoryType[0]==1) m_MemoryType = _T("RING");
+	m_SamplingClock = ctx->ad.SamplingClock[0]/1000.0f;
+	m_SavingTime = ctx->sampling.SavingTime;
+	m_TotalSamplingTimes = ctx->sampling.TotalSamplingTimes;
 	UpdateData(FALSE);
 //
 	CButton* myBTN1=(CButton*)GetDlgItem(IDC_BUTTON_Check);
 	CButton* myBTN2=(CButton*)GetDlgItem(IDOK);
-	if(Flag_FIFO==TRUE)	myBTN1->EnableWindow(FALSE);
+	if(ctx->FlagFIFO==TRUE)	myBTN1->EnableWindow(FALSE);
 	myBTN2->EnableWindow(FALSE);
 	
 	return TRUE;  // コントロールにフォーカスを設定しないとき、戻り値は TRUE となります
@@ -104,9 +104,10 @@ void CSamplingSettings::OnBUTTONCheck()
 {
 
 	UpdateData(TRUE);
+	DigitShowContext* ctx = GetContext();
 	m_TotalSamplingTimes=long(m_SavingTime*1000/m_SamplingClock);
-	m_AllocatedMemory.Format("%.1f",4*AdMaxCH*m_TotalSamplingTimes/1024.0f/1024.0f);
-	m_EventSamplingTimes=long(TimeInterval_1/m_SamplingClock);
+	m_AllocatedMemory.Format("%.1f",4*ctx->AdMaxChannels*m_TotalSamplingTimes/1024.0f/1024.0f);
+	m_EventSamplingTimes=long(ctx->timeSettings.Interval1/m_SamplingClock);
 	UpdateData(FALSE);
 
 	CButton* myBTN1=(CButton*)GetDlgItem(IDOK);
@@ -118,18 +119,19 @@ void CSamplingSettings::OnOK()
 {
 
 	UpdateData(TRUE);
-	AdSamplingClock[0] = m_SamplingClock*1000.0f;
-	SavingTime = m_SavingTime;
-	AdSamplingTimes[0] = m_EventSamplingTimes;
-	TotalSamplingTimes=long(SavingTime*1000000/AdSamplingClock[0]);
-	AllocatedMemory=4*AdMaxCH*m_TotalSamplingTimes/1024.0f/1024.0f;
-	m_AllocatedMemory.Format("%.1f",AllocatedMemory);
-	m_TotalSamplingTimes=TotalSamplingTimes;
+	DigitShowContext* ctx = GetContext();
+	ctx->ad.SamplingClock[0] = m_SamplingClock*1000.0f;
+	ctx->sampling.SavingTime = m_SavingTime;
+	ctx->ad.SamplingTimes[0] = m_EventSamplingTimes;
+	ctx->sampling.TotalSamplingTimes=long(ctx->sampling.SavingTime*1000000/ctx->ad.SamplingClock[0]);
+	ctx->sampling.AllocatedMemory=4*ctx->AdMaxChannels*m_TotalSamplingTimes/1024.0f/1024.0f;
+	m_AllocatedMemory.Format("%.1f", ctx->sampling.AllocatedMemory);
+	m_TotalSamplingTimes= ctx->sampling.TotalSamplingTimes;
 	UpdateData(FALSE);
 
-	if(NUMAD>1){
-		AdSamplingClock[1]=AdSamplingClock[0];
-		AdSamplingTimes[1]=AdSamplingTimes[0];
+	if(ctx->NumAD>1){
+		ctx->ad.SamplingClock[1]=ctx->ad.SamplingClock[0];
+		ctx->ad.SamplingTimes[1]=ctx->ad.SamplingTimes[0];
 	}
 	
 	CDialog::OnOK();

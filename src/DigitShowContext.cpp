@@ -39,6 +39,7 @@ void InitContext(DigitShowContext* ctx)
     // Initialize board counts
     ctx->NumAD = 1;
     ctx->NumDA = 0;
+    ctx->AdMaxChannels = 0;
 
     // Initialize A/D board config
     memset(&ctx->ad, 0, sizeof(ctx->ad));
@@ -65,6 +66,7 @@ void InitContext(DigitShowContext* ctx)
     ctx->FlagSaveData = false;
     ctx->FlagFIFO = false;
     ctx->FlagCyclic = false;
+    ctx->FlagCtrl = false;
 
     // Initialize control state
     ctx->ControlID = 0;

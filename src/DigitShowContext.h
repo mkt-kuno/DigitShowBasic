@@ -190,6 +190,7 @@ struct DigitShowContext {
     AdBoardConfig ad;
     DaBoardConfig da;
     DaChannelAssign daChannel;
+    int AdMaxChannels;
 
     // Sampling and calibration
     SamplingSettings sampling;
@@ -217,7 +218,6 @@ struct DigitShowContext {
 
     // Control state
     int  ControlID;
-    bool FlagCyclic;
     int  NumCyclic;
     double TotalStepTime;
 
@@ -228,6 +228,8 @@ struct DigitShowContext {
     bool FlagSetBoard;
     bool FlagSaveData;
     bool FlagFIFO;
+    bool FlagCtrl;
+    bool FlagCyclic;
 
     // Time management
     TimeSettings timeSettings;

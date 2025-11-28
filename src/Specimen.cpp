@@ -33,7 +33,8 @@ CSpecimen::CSpecimen(CWnd* pParent)
 	: CDialog(CSpecimen::IDD, pParent)
 {
 	DigitShowContext* ctx = GetContext();
-	SpecimenData* SpecimenData = &ctx->specimen;
+	auto SpecimenData = &ctx->specimen;
+
 	m_Area0 = SpecimenData->Area[0];
 	m_Area1 = SpecimenData->Area[1];
 	m_Area2 = SpecimenData->Area[2];
@@ -71,10 +72,10 @@ CSpecimen::CSpecimen(CWnd* pParent)
 	m_VLDT1_1 = SpecimenData->VLDT1[1];
 	m_VLDT1_2 = SpecimenData->VLDT1[2];
 	m_VLDT1_3 = SpecimenData->VLDT1[3];
-	m_VLDT2_0 = SpecimenData.VLDT2[0];
-	m_VLDT2_1 = SpecimenData.VLDT2[1];
-	m_VLDT2_2 = SpecimenData.VLDT2[2];
-	m_VLDT2_3 = SpecimenData.VLDT2[3];
+	m_VLDT2_0 = SpecimenData->VLDT2[0];
+	m_VLDT2_1 = SpecimenData->VLDT2[1];
+	m_VLDT2_2 = SpecimenData->VLDT2[2];
+	m_VLDT2_3 = SpecimenData->VLDT2[3];
 	//}}AFX_DATA_INIT
 }
 
@@ -145,6 +146,8 @@ END_MESSAGE_MAP()
 
 void CSpecimen::OnBUTTONUpdate() 
 {
+	DigitShowContext* ctx = GetContext();
+	auto SpecimenData = &ctx->specimen;
 
 	UpdateData(TRUE);
 	if( m_Diameter0 != 0.0){
@@ -176,53 +179,54 @@ void CSpecimen::OnBUTTONUpdate()
 	m_Volume2=m_Area2*m_Height2;
 	m_Volume3=m_Area3*m_Height3;
 
-	SpecimenData.Area[0]   = m_Area0;
-	SpecimenData.Area[1]   = m_Area1;
-	SpecimenData.Area[2]   = m_Area2;
-	SpecimenData.Area[3]   = m_Area3;
-	SpecimenData.Gs        = m_Gs;
-	SpecimenData.Height[0] = m_Height0;
-	SpecimenData.Height[1] = m_Height1;	
-	SpecimenData.Height[2] = m_Height2;
-	SpecimenData.Height[3] = m_Height3;
-	SpecimenData.MembraneModulus   = m_MembraneE;
-	SpecimenData.MembraneThickness = m_MembraneT;
-	SpecimenData.RodArea   = m_RodArea;
-	SpecimenData.RodWeight = m_RodWeight;
-	SpecimenData.Volume[0] = m_Volume0;
-	SpecimenData.Volume[1] = m_Volume1;	
-	SpecimenData.Volume[2] = m_Volume2;
-	SpecimenData.Volume[3] = m_Volume3;
-	SpecimenData.Weight[0] = m_Weight0;
-	SpecimenData.Weight[1] = m_Weight1;		
-	SpecimenData.Weight[2] = m_Weight2;	
-	SpecimenData.Weight[3] = m_Weight3;	
-	SpecimenData.Diameter[0] = m_Diameter0;
-	SpecimenData.Diameter[1] = m_Diameter1;	
-	SpecimenData.Diameter[2] = m_Diameter2;
-	SpecimenData.Diameter[3] = m_Diameter3;
-	SpecimenData.Depth[0] = m_Depth0;
-	SpecimenData.Depth[1] = m_Depth1;
-	SpecimenData.Depth[2] = m_Depth2;
-	SpecimenData.Depth[3] = m_Depth3;	
-	SpecimenData.Width[0] = m_Width0;
-	SpecimenData.Width[1] = m_Width1;
-	SpecimenData.Width[2] = m_Width2;
-	SpecimenData.Width[3] = m_Width3;
-	SpecimenData.VLDT1[0] = m_VLDT1_0;
-	SpecimenData.VLDT1[1] = m_VLDT1_1;
-	SpecimenData.VLDT1[2] = m_VLDT1_2;
-	SpecimenData.VLDT1[3] = m_VLDT1_3;
-	SpecimenData.VLDT2[0] = m_VLDT2_0;
-	SpecimenData.VLDT2[1] = m_VLDT2_1;
-	SpecimenData.VLDT2[2] = m_VLDT2_2;
-	SpecimenData.VLDT2[3] = m_VLDT2_3;
+	SpecimenData->Area[0]   = m_Area0;
+	SpecimenData->Area[1]   = m_Area1;
+	SpecimenData->Area[2]   = m_Area2;
+	SpecimenData->Area[3]   = m_Area3;
+	SpecimenData->Gs        = m_Gs;
+	SpecimenData->Height[0] = m_Height0;
+	SpecimenData->Height[1] = m_Height1;	
+	SpecimenData->Height[2] = m_Height2;
+	SpecimenData->Height[3] = m_Height3;
+	SpecimenData->MembraneModulus   = m_MembraneE;
+	SpecimenData->MembraneThickness = m_MembraneT;
+	SpecimenData->RodArea   = m_RodArea;
+	SpecimenData->RodWeight = m_RodWeight;
+	SpecimenData->Volume[0] = m_Volume0;
+	SpecimenData->Volume[1] = m_Volume1;	
+	SpecimenData->Volume[2] = m_Volume2;
+	SpecimenData->Volume[3] = m_Volume3;
+	SpecimenData->Weight[0] = m_Weight0;
+	SpecimenData->Weight[1] = m_Weight1;		
+	SpecimenData->Weight[2] = m_Weight2;	
+	SpecimenData->Weight[3] = m_Weight3;	
+	SpecimenData->Diameter[0] = m_Diameter0;
+	SpecimenData->Diameter[1] = m_Diameter1;	
+	SpecimenData->Diameter[2] = m_Diameter2;
+	SpecimenData->Diameter[3] = m_Diameter3;
+	SpecimenData->Depth[0] = m_Depth0;
+	SpecimenData->Depth[1] = m_Depth1;
+	SpecimenData->Depth[2] = m_Depth2;
+	SpecimenData->Depth[3] = m_Depth3;	
+	SpecimenData->Width[0] = m_Width0;
+	SpecimenData->Width[1] = m_Width1;
+	SpecimenData->Width[2] = m_Width2;
+	SpecimenData->Width[3] = m_Width3;
+	SpecimenData->VLDT1[0] = m_VLDT1_0;
+	SpecimenData->VLDT1[1] = m_VLDT1_1;
+	SpecimenData->VLDT1[2] = m_VLDT1_2;
+	SpecimenData->VLDT1[3] = m_VLDT1_3;
+	SpecimenData->VLDT2[0] = m_VLDT2_0;
+	SpecimenData->VLDT2[1] = m_VLDT2_1;
+	SpecimenData->VLDT2[2] = m_VLDT2_2;
+	SpecimenData->VLDT2[3] = m_VLDT2_3;
 	UpdateData(FALSE);
 }
 
 void CSpecimen::OnBUTTONSave() 
 {
-
+	DigitShowContext* ctx = GetContext();
+	auto SpecimenData = &ctx->specimen;
 	
 	OnBUTTONUpdate();
 
@@ -240,28 +244,28 @@ void CSpecimen::OnBUTTONSave()
 		if((err = fopen_s(&FileSpcData,(LPCSTR)pFileName , _T("w"))) == 0)
 		{
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","Diameter(mm)",
-				SpecimenData.Diameter[0],SpecimenData.Diameter[1],SpecimenData.Diameter[2],SpecimenData.Diameter[3]);
+				SpecimenData->Diameter[0],SpecimenData->Diameter[1],SpecimenData->Diameter[2],SpecimenData->Diameter[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","Width(mm)",
-				SpecimenData.Width[0],SpecimenData.Width[1],SpecimenData.Width[2],SpecimenData.Width[3]);
+				SpecimenData->Width[0],SpecimenData->Width[1],SpecimenData->Width[2],SpecimenData->Width[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","Depth(mm)",
-				SpecimenData.Depth[0],SpecimenData.Depth[1],SpecimenData.Depth[2],SpecimenData.Depth[3]);
+				SpecimenData->Depth[0],SpecimenData->Depth[1],SpecimenData->Depth[2],SpecimenData->Depth[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","Height(mm)",
-				SpecimenData.Height[0],SpecimenData.Height[1],SpecimenData.Height[2],SpecimenData.Height[3]);
+				SpecimenData->Height[0],SpecimenData->Height[1],SpecimenData->Height[2],SpecimenData->Height[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","Area(mm^2)",
-				SpecimenData.Area[0],SpecimenData.Area[1],SpecimenData.Area[2],SpecimenData.Area[3]);
+				SpecimenData->Area[0],SpecimenData->Area[1],SpecimenData->Area[2],SpecimenData->Area[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","Volume(mm^3)",
-				SpecimenData.Volume[0],SpecimenData.Volume[1],SpecimenData.Volume[2],SpecimenData.Volume[3]);
+				SpecimenData->Volume[0],SpecimenData->Volume[1],SpecimenData->Volume[2],SpecimenData->Volume[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","Weight(g)",
-				SpecimenData.Weight[0],SpecimenData.Weight[1],SpecimenData.Weight[2],SpecimenData.Weight[3]);
+				SpecimenData->Weight[0],SpecimenData->Weight[1],SpecimenData->Weight[2],SpecimenData->Weight[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","VLDT1(mm)",
-				SpecimenData.VLDT1[0],SpecimenData.VLDT1[1],SpecimenData.VLDT1[2],SpecimenData.VLDT1[3]);
+				SpecimenData->VLDT1[0],SpecimenData->VLDT1[1],SpecimenData->VLDT1[2],SpecimenData->VLDT1[3]);
 			fprintf(FileSpcData,"%s	%lf	%lf	%lf	%lf\n","VLDT1(mm)",
-				SpecimenData.VLDT2[0],SpecimenData.VLDT2[1],SpecimenData.VLDT2[2],SpecimenData.VLDT2[3]);
-			fprintf(FileSpcData,"%s	%lf\n","Gs",SpecimenData.Gs);
-			fprintf(FileSpcData,"%s	%lf\n","MembraneModulus(kPa)",SpecimenData.MembraneModulus);
-			fprintf(FileSpcData,"%s	%lf\n","MembraneThickness(mm)",SpecimenData.MembraneThickness);
-			fprintf(FileSpcData,"%s	%lf\n","RodArea(mm^2)",SpecimenData.RodArea);
-			fprintf(FileSpcData,"%s	%lf\n","RodWeight(g)",SpecimenData.RodWeight);
+				SpecimenData->VLDT2[0],SpecimenData->VLDT2[1],SpecimenData->VLDT2[2],SpecimenData->VLDT2[3]);
+			fprintf(FileSpcData,"%s	%lf\n","Gs",SpecimenData->Gs);
+			fprintf(FileSpcData,"%s	%lf\n","MembraneModulus(kPa)",SpecimenData->MembraneModulus);
+			fprintf(FileSpcData,"%s	%lf\n","MembraneThickness(mm)",SpecimenData->MembraneThickness);
+			fprintf(FileSpcData,"%s	%lf\n","RodArea(mm^2)",SpecimenData->RodArea);
+			fprintf(FileSpcData,"%s	%lf\n","RodWeight(g)",SpecimenData->RodWeight);
 			fclose(FileSpcData);
 		}
 	}	
@@ -269,40 +273,46 @@ void CSpecimen::OnBUTTONSave()
 
 void CSpecimen::OnBUTTONBeConsol() 
 {
+	DigitShowContext* ctx = GetContext();
+    auto SpecimenData = &ctx->specimen;
 
-	SpecimenData.Height[2] = SpecimenData.Height[1]-Phyout[1];	
-	SpecimenData.Volume[2] = SpecimenData.Volume[1]-SpecimenData.Area[1]*Phyout[1];
-	SpecimenData.Area[2]   = SpecimenData.Area[1];
-	SpecimenData.Diameter[2] = SpecimenData.Diameter[1]*sqrt(SpecimenData.Area[2]/SpecimenData.Area[1]) ;
-	SpecimenData.Depth[2]  = SpecimenData.Depth[1]*sqrt(SpecimenData.Area[2]/SpecimenData.Area[1]);
-	SpecimenData.Width[2]  = SpecimenData.Width[1]*sqrt(SpecimenData.Area[2]/SpecimenData.Area[1]);
-	SpecimenData.VLDT1[2] = Phyout[5];
-	SpecimenData.VLDT2[2] = Phyout[6];
-	Cal_c[1]=Cal_c[1]-Phyout[1];	//---0-adjustment of Displacement transducer---
-	Cal_c[4]=Cal_c[4]-Phyout[4];	//---0-adjustment of Volume Change ---	
+	SpecimenData->Height[2] = SpecimenData->Height[1]-ctx->Phyout[1];	
+	SpecimenData->Volume[2] = SpecimenData->Volume[1]-SpecimenData->Area[1]*ctx->Phyout[1];
+	SpecimenData->Area[2]   = SpecimenData->Area[1];
+	SpecimenData->Diameter[2] = SpecimenData->Diameter[1]*sqrt(SpecimenData->Area[2]/SpecimenData->Area[1]) ;
+	SpecimenData->Depth[2]  = SpecimenData->Depth[1]*sqrt(SpecimenData->Area[2]/SpecimenData->Area[1]);
+	SpecimenData->Width[2]  = SpecimenData->Width[1]*sqrt(SpecimenData->Area[2]/SpecimenData->Area[1]);
+	SpecimenData->VLDT1[2] = ctx->Phyout[5];
+	SpecimenData->VLDT2[2] = ctx->Phyout[6];
+	ctx->cal.c[1]=ctx->cal.c[1]- ctx->Phyout[1];	//---0-adjustment of Displacement transducer---
+	ctx->cal.c[4]=ctx->cal.c[4]- ctx->Phyout[4];	//---0-adjustment of Volume Change ---	
 	Reflesh();
 	OnBUTTONToPresent2();
 }
 
 void CSpecimen::OnBUTTONAfConsolidation() 
 {
+	DigitShowContext* ctx = GetContext();
+	auto SpecimenData = &ctx->specimen;
 
-	SpecimenData.Height[3] = SpecimenData.Height[2]-Phyout[1];	
-	SpecimenData.Volume[3] = SpecimenData.Volume[2]-Phyout[4];
-	SpecimenData.Area[3]   = SpecimenData.Volume[3]/SpecimenData.Height[3];
-	SpecimenData.Diameter[3] = SpecimenData.Diameter[2]*sqrt(SpecimenData.Area[3]/SpecimenData.Area[2]);
-	SpecimenData.Depth[3] = SpecimenData.Depth[2]*sqrt(SpecimenData.Area[3]/SpecimenData.Area[2]);
-	SpecimenData.Width[3] = SpecimenData.Width[2]*sqrt(SpecimenData.Area[3]/SpecimenData.Area[2]);	
-	SpecimenData.VLDT1[3] = Phyout[5];
-	SpecimenData.VLDT2[3] = Phyout[6];
-	Cal_c[1]=Cal_c[1]-Phyout[1];	//---0-adjustment of Displacement transducer---
-	Cal_c[4]=Cal_c[4]-Phyout[4];	//---0-adjustment of Volume Change ---	
+	SpecimenData->Height[3] = SpecimenData->Height[2]-ctx->Phyout[1];	
+	SpecimenData->Volume[3] = SpecimenData->Volume[2]-ctx->Phyout[4];
+	SpecimenData->Area[3]   = SpecimenData->Volume[3]/SpecimenData->Height[3];
+	SpecimenData->Diameter[3] = SpecimenData->Diameter[2]*sqrt(SpecimenData->Area[3]/SpecimenData->Area[2]);
+	SpecimenData->Depth[3] = SpecimenData->Depth[2]*sqrt(SpecimenData->Area[3]/SpecimenData->Area[2]);
+	SpecimenData->Width[3] = SpecimenData->Width[2]*sqrt(SpecimenData->Area[3]/SpecimenData->Area[2]);	
+	SpecimenData->VLDT1[3] = ctx->Phyout[5];
+	SpecimenData->VLDT2[3] = ctx->Phyout[6];
+	ctx->cal.c[1]= ctx->cal.c[1]- ctx->Phyout[1];	//---0-adjustment of Displacement transducer---
+	ctx->cal.c[4]= ctx->cal.c[4]- ctx->Phyout[4];	//---0-adjustment of Volume Change ---	
 	Reflesh();
 	OnBUTTONToPresent3();
 }
 
 void CSpecimen::OnBUTTONToPresent1() 
 {
+	DigitShowContext* ctx = GetContext();
+	auto SpecimenData = &ctx->specimen;
 
 	UpdateData(TRUE);
 	if( m_Diameter1 != 0.0){
@@ -312,28 +322,30 @@ void CSpecimen::OnBUTTONToPresent1()
 	}	
 	else	m_Area1=m_Depth1*m_Width1;
 	m_Volume1=m_Area1*m_Height1;
-	SpecimenData.Diameter[1]=m_Diameter1;
-	SpecimenData.Width[1]=m_Width1;
-	SpecimenData.Depth[1]=m_Depth1;
-	SpecimenData.Height[1]=m_Height1;
-	SpecimenData.Area[1]=m_Area1;
-	SpecimenData.Volume[1]=m_Volume1;
-	SpecimenData.VLDT1[1] = m_VLDT1_1;
-	SpecimenData.VLDT2[1] = m_VLDT2_1;
+	SpecimenData->Diameter[1]=m_Diameter1;
+	SpecimenData->Width[1]=m_Width1;
+	SpecimenData->Depth[1]=m_Depth1;
+	SpecimenData->Height[1]=m_Height1;
+	SpecimenData->Area[1]=m_Area1;
+	SpecimenData->Volume[1]=m_Volume1;
+	SpecimenData->VLDT1[1] = m_VLDT1_1;
+	SpecimenData->VLDT2[1] = m_VLDT2_1;
 //  -> present one
-	SpecimenData.Diameter[0]=SpecimenData.Diameter[1];
-	SpecimenData.Width[0]=SpecimenData.Width[1];
-	SpecimenData.Depth[0]=SpecimenData.Depth[1];
-	SpecimenData.Height[0]=SpecimenData.Height[1];
-	SpecimenData.Area[0]=SpecimenData.Area[1];
-	SpecimenData.Volume[0]=SpecimenData.Volume[1];
-	SpecimenData.VLDT1[0] = SpecimenData.VLDT1[1];
-	SpecimenData.VLDT2[0] = SpecimenData.VLDT2[1];
+	SpecimenData->Diameter[0]=SpecimenData->Diameter[1];
+	SpecimenData->Width[0]=SpecimenData->Width[1];
+	SpecimenData->Depth[0]=SpecimenData->Depth[1];
+	SpecimenData->Height[0]=SpecimenData->Height[1];
+	SpecimenData->Area[0]=SpecimenData->Area[1];
+	SpecimenData->Volume[0]=SpecimenData->Volume[1];
+	SpecimenData->VLDT1[0] = SpecimenData->VLDT1[1];
+	SpecimenData->VLDT2[0] = SpecimenData->VLDT2[1];
 	Reflesh();
 }
 
 void CSpecimen::OnBUTTONToPresent2() 
 {
+	DigitShowContext* ctx = GetContext();
+	auto SpecimenData = &ctx->specimen;
 
 	UpdateData(TRUE);
 	if( m_Diameter2 != 0.0){
@@ -343,28 +355,30 @@ void CSpecimen::OnBUTTONToPresent2()
 	}	
 	else	m_Area2=m_Depth2*m_Width2;
 	m_Volume2=m_Area2*m_Height2;
-	SpecimenData.Diameter[2]=m_Diameter2;
-	SpecimenData.Width[2]=m_Width2;
-	SpecimenData.Depth[2]=m_Depth2;
-	SpecimenData.Height[2]=m_Height2;
-	SpecimenData.Area[2]=m_Area2;
-	SpecimenData.Volume[2]=m_Volume2;
-	SpecimenData.VLDT1[2] = m_VLDT1_2;
-	SpecimenData.VLDT2[2] = m_VLDT2_2;
+	SpecimenData->Diameter[2]=m_Diameter2;
+	SpecimenData->Width[2]=m_Width2;
+	SpecimenData->Depth[2]=m_Depth2;
+	SpecimenData->Height[2]=m_Height2;
+	SpecimenData->Area[2]=m_Area2;
+	SpecimenData->Volume[2]=m_Volume2;
+	SpecimenData->VLDT1[2] = m_VLDT1_2;
+	SpecimenData->VLDT2[2] = m_VLDT2_2;
 //  -> present one
-	SpecimenData.Diameter[0]=SpecimenData.Diameter[2];
-	SpecimenData.Width[0]=SpecimenData.Width[2];
-	SpecimenData.Depth[0]=SpecimenData.Depth[2];
-	SpecimenData.Height[0]=SpecimenData.Height[2];
-	SpecimenData.Area[0]=SpecimenData.Area[2];
-	SpecimenData.Volume[0]=SpecimenData.Volume[2];
-	SpecimenData.VLDT1[0] = SpecimenData.VLDT1[2];
-	SpecimenData.VLDT2[0] = SpecimenData.VLDT2[2];
+	SpecimenData->Diameter[0]=SpecimenData->Diameter[2];
+	SpecimenData->Width[0]=SpecimenData->Width[2];
+	SpecimenData->Depth[0]=SpecimenData->Depth[2];
+	SpecimenData->Height[0]=SpecimenData->Height[2];
+	SpecimenData->Area[0]=SpecimenData->Area[2];
+	SpecimenData->Volume[0]=SpecimenData->Volume[2];
+	SpecimenData->VLDT1[0] = SpecimenData->VLDT1[2];
+	SpecimenData->VLDT2[0] = SpecimenData->VLDT2[2];
 	Reflesh();
 }
 
 void CSpecimen::OnBUTTONToPresent3() 
 {
+	DigitShowContext* ctx = GetContext();
+	auto SpecimenData = &ctx->specimen;
 
 	UpdateData(TRUE);
 	if( m_Diameter3 != 0.0){
@@ -374,68 +388,71 @@ void CSpecimen::OnBUTTONToPresent3()
 	}	
 	else	m_Area3=m_Depth3*m_Width3;
 	m_Volume3=m_Area3*m_Height3;
-	SpecimenData.Diameter[3]=m_Diameter3;
-	SpecimenData.Width[3]=m_Width3;
-	SpecimenData.Depth[3]=m_Depth3;
-	SpecimenData.Height[3]=m_Height3;
-	SpecimenData.Area[3]=m_Area3;
-	SpecimenData.Volume[3]=m_Volume3;
-	SpecimenData.VLDT1[3] = m_VLDT1_3;
-	SpecimenData.VLDT2[3] = m_VLDT2_3;
+	SpecimenData->Diameter[3]=m_Diameter3;
+	SpecimenData->Width[3]=m_Width3;
+	SpecimenData->Depth[3]=m_Depth3;
+	SpecimenData->Height[3]=m_Height3;
+	SpecimenData->Area[3]=m_Area3;
+	SpecimenData->Volume[3]=m_Volume3;
+	SpecimenData->VLDT1[3] = m_VLDT1_3;
+	SpecimenData->VLDT2[3] = m_VLDT2_3;
 //  -> present one
-	SpecimenData.Diameter[0]=SpecimenData.Diameter[3];
-	SpecimenData.Width[0]=SpecimenData.Width[3];
-	SpecimenData.Depth[0]=SpecimenData.Depth[3];
-	SpecimenData.Height[0]=SpecimenData.Height[3];
-	SpecimenData.Area[0]=SpecimenData.Area[3];
-	SpecimenData.Volume[0]=SpecimenData.Volume[3];
-	SpecimenData.VLDT1[0] = SpecimenData.VLDT1[3];
-	SpecimenData.VLDT2[0] = SpecimenData.VLDT2[3];
+	SpecimenData->Diameter[0]=SpecimenData->Diameter[3];
+	SpecimenData->Width[0]=SpecimenData->Width[3];
+	SpecimenData->Depth[0]=SpecimenData->Depth[3];
+	SpecimenData->Height[0]=SpecimenData->Height[3];
+	SpecimenData->Area[0]=SpecimenData->Area[3];
+	SpecimenData->Volume[0]=SpecimenData->Volume[3];
+	SpecimenData->VLDT1[0] = SpecimenData->VLDT1[3];
+	SpecimenData->VLDT2[0] = SpecimenData->VLDT2[3];
 	Reflesh();
 }
 
 void CSpecimen::Reflesh()
 {
-	m_Area0 = SpecimenData.Area[0];
-	m_Area1 = SpecimenData.Area[1];
-	m_Area2 = SpecimenData.Area[2];
-	m_Area3 = SpecimenData.Area[3];
-	m_Gs = SpecimenData.Gs;
-	m_Height0 = SpecimenData.Height[0];
-	m_Height1 = SpecimenData.Height[1];
-	m_Height2 = SpecimenData.Height[2];
-	m_Height3 = SpecimenData.Height[3];
-	m_MembraneE = SpecimenData.MembraneModulus;
-	m_MembraneT = SpecimenData.MembraneThickness;
-	m_Diameter0 = SpecimenData.Diameter[0];
-	m_Diameter1 = SpecimenData.Diameter[1];
-	m_Diameter2 = SpecimenData.Diameter[2];
-	m_Diameter3 = SpecimenData.Diameter[3];
-	m_RodArea = SpecimenData.RodArea;
-	m_RodWeight = SpecimenData.RodWeight;
-	m_Volume0 = SpecimenData.Volume[0];
-	m_Volume1 = SpecimenData.Volume[1];
-	m_Volume2 = SpecimenData.Volume[2];
-	m_Volume3 = SpecimenData.Volume[3];
-	m_Weight0 = SpecimenData.Weight[0];
-	m_Weight1 = SpecimenData.Weight[1];	
-	m_Weight2 = SpecimenData.Weight[2];
-	m_Weight3 = SpecimenData.Weight[3];
-	m_Depth0 = SpecimenData.Depth[0];
-	m_Depth1 = SpecimenData.Depth[1];
-	m_Depth2 = SpecimenData.Depth[2];
-	m_Depth3 = SpecimenData.Depth[3];	
-	m_Width0 = SpecimenData.Width[0];
-	m_Width1 = SpecimenData.Width[1];
-	m_Width2 = SpecimenData.Width[2];
-	m_Width3 = SpecimenData.Width[3];
-	m_VLDT1_0 = SpecimenData.VLDT1[0];
-	m_VLDT1_1 = SpecimenData.VLDT1[1];
-	m_VLDT1_2 = SpecimenData.VLDT1[2];
-	m_VLDT1_3 = SpecimenData.VLDT1[3];
-	m_VLDT2_0 = SpecimenData.VLDT2[0];
-	m_VLDT2_1 = SpecimenData.VLDT2[1];
-	m_VLDT2_2 = SpecimenData.VLDT2[2];
-	m_VLDT2_3 = SpecimenData.VLDT2[3];
+	DigitShowContext* ctx = GetContext();
+	auto SpecimenData = &ctx->specimen;
+
+	m_Area0 = SpecimenData->Area[0];
+	m_Area1 = SpecimenData->Area[1];
+	m_Area2 = SpecimenData->Area[2];
+	m_Area3 = SpecimenData->Area[3];
+	m_Gs = SpecimenData->Gs;
+	m_Height0 = SpecimenData->Height[0];
+	m_Height1 = SpecimenData->Height[1];
+	m_Height2 = SpecimenData->Height[2];
+	m_Height3 = SpecimenData->Height[3];
+	m_MembraneE = SpecimenData->MembraneModulus;
+	m_MembraneT = SpecimenData->MembraneThickness;
+	m_Diameter0 = SpecimenData->Diameter[0];
+	m_Diameter1 = SpecimenData->Diameter[1];
+	m_Diameter2 = SpecimenData->Diameter[2];
+	m_Diameter3 = SpecimenData->Diameter[3];
+	m_RodArea = SpecimenData->RodArea;
+	m_RodWeight = SpecimenData->RodWeight;
+	m_Volume0 = SpecimenData->Volume[0];
+	m_Volume1 = SpecimenData->Volume[1];
+	m_Volume2 = SpecimenData->Volume[2];
+	m_Volume3 = SpecimenData->Volume[3];
+	m_Weight0 = SpecimenData->Weight[0];
+	m_Weight1 = SpecimenData->Weight[1];	
+	m_Weight2 = SpecimenData->Weight[2];
+	m_Weight3 = SpecimenData->Weight[3];
+	m_Depth0 = SpecimenData->Depth[0];
+	m_Depth1 = SpecimenData->Depth[1];
+	m_Depth2 = SpecimenData->Depth[2];
+	m_Depth3 = SpecimenData->Depth[3];	
+	m_Width0 = SpecimenData->Width[0];
+	m_Width1 = SpecimenData->Width[1];
+	m_Width2 = SpecimenData->Width[2];
+	m_Width3 = SpecimenData->Width[3];
+	m_VLDT1_0 = SpecimenData->VLDT1[0];
+	m_VLDT1_1 = SpecimenData->VLDT1[1];
+	m_VLDT1_2 = SpecimenData->VLDT1[2];
+	m_VLDT1_3 = SpecimenData->VLDT1[3];
+	m_VLDT2_0 = SpecimenData->VLDT2[0];
+	m_VLDT2_1 = SpecimenData->VLDT2[1];
+	m_VLDT2_2 = SpecimenData->VLDT2[2];
+	m_VLDT2_3 = SpecimenData->VLDT2[3];
 	UpdateData(FALSE);
 }
