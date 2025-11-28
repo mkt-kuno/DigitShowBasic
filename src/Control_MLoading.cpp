@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -29,50 +30,50 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 CControl_MLoading::CControl_MLoading(CWnd* pParent)
-	: CDialog(CControl_MLoading::IDD, pParent)
+    : CDialog(CControl_MLoading::IDD, pParent)
 {
-	DigitShowContext* ctx = GetContext();
-	m_MotorCruch = ctx->control[3].MotorCruch;
-	m_MotorSpeed = ctx->control[3].MotorSpeed;
-	m_flag0 = ctx->control[3].flag[0];
-	m_q = ctx->control[3].q;
+    DigitShowContext* ctx = GetContext();
+    m_MotorCruch = ctx->control[3].MotorCruch;
+    m_MotorSpeed = ctx->control[3].MotorSpeed;
+    m_flag0 = ctx->control[3].flag[0];
+    m_q = ctx->control[3].q;
 }
 
 void CControl_MLoading::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT_Motor_Cruch, m_MotorCruch);
-	DDV_MinMaxInt(pDX, m_MotorCruch, 0, 1);
-	DDX_Text(pDX, IDC_EDIT_MotorSpeed, m_MotorSpeed);
-	DDX_Text(pDX, IDC_EDIT_flag0, m_flag0);
-	DDX_Text(pDX, IDC_EDIT_q, m_q);
+    CDialog::DoDataExchange(pDX);
+    DDX_Text(pDX, IDC_EDIT_Motor_Cruch, m_MotorCruch);
+    DDV_MinMaxInt(pDX, m_MotorCruch, 0, 1);
+    DDX_Text(pDX, IDC_EDIT_MotorSpeed, m_MotorSpeed);
+    DDX_Text(pDX, IDC_EDIT_flag0, m_flag0);
+    DDX_Text(pDX, IDC_EDIT_q, m_q);
 }
 
 BEGIN_MESSAGE_MAP(CControl_MLoading, CDialog)
-	ON_BN_CLICKED(IDC_BUTTON_Update, OnBUTTONUpdate)
-	ON_BN_CLICKED(IDC_BUTTON_Reflesh, OnBUTTONReflesh)
+    ON_BN_CLICKED(IDC_BUTTON_Update, OnBUTTONUpdate)
+    ON_BN_CLICKED(IDC_BUTTON_Reflesh, OnBUTTONReflesh)
 END_MESSAGE_MAP()
 
 void CControl_MLoading::OnBUTTONUpdate()
 {
-	UpdateData(TRUE);
-	DigitShowContext* ctx = GetContext();
-	ctx->control[3].MotorCruch = m_MotorCruch;
-	ctx->control[3].MotorSpeed = m_MotorSpeed;
-	ctx->control[3].flag[0] = (m_flag0 != 0);
-	ctx->control[3].q = m_q;
-	ctx->control[4] = ctx->control[3];
+    UpdateData(TRUE);
+    DigitShowContext* ctx = GetContext();
+    ctx->control[3].MotorCruch = m_MotorCruch;
+    ctx->control[3].MotorSpeed = m_MotorSpeed;
+    ctx->control[3].flag[0] = (m_flag0 != 0);
+    ctx->control[3].q = m_q;
+    ctx->control[4] = ctx->control[3];
 }
 
 void CControl_MLoading::OnBUTTONReflesh()
 {
-	DigitShowContext* ctx = GetContext();
-	if (ctx->ControlID == 4) {
-		ctx->control[3] = ctx->control[4];
-	}
-	m_MotorCruch = ctx->control[3].MotorCruch;
-	m_MotorSpeed = ctx->control[3].MotorSpeed;
-	m_flag0 = ctx->control[3].flag[0];
-	m_q = ctx->control[3].q;
-	UpdateData(FALSE);
+    DigitShowContext* ctx = GetContext();
+    if (ctx->ControlID == 4) {
+        ctx->control[3] = ctx->control[4];
+    }
+    m_MotorCruch = ctx->control[3].MotorCruch;
+    m_MotorSpeed = ctx->control[3].MotorSpeed;
+    m_flag0 = ctx->control[3].flag[0];
+    m_q = ctx->control[3].q;
+    UpdateData(FALSE);
 }

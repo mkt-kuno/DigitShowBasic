@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -29,34 +30,34 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 CControl_Consolidation::CControl_Consolidation(CWnd* pParent)
-	: CDialog(CControl_Consolidation::IDD, pParent)
+    : CDialog(CControl_Consolidation::IDD, pParent)
 {
-	DigitShowContext* ctx = GetContext();
-	m_MotorK0 = ctx->control[2].K0;
-	m_MotorSpeed = ctx->control[2].MotorSpeed;
-	m_MotorSrRate = ctx->control[2].sigmaRate[2];
-	m_MotorESa = ctx->control[2].e_sigma[0];
+    DigitShowContext* ctx = GetContext();
+    m_MotorK0 = ctx->control[2].K0;
+    m_MotorSpeed = ctx->control[2].MotorSpeed;
+    m_MotorSrRate = ctx->control[2].sigmaRate[2];
+    m_MotorESa = ctx->control[2].e_sigma[0];
 }
 
 void CControl_Consolidation::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT_Motor_K0, m_MotorK0);
-	DDX_Text(pDX, IDC_EDIT_Motor_speed, m_MotorSpeed);
-	DDX_Text(pDX, IDC_EDIT_Motor_sr_rate, m_MotorSrRate);
-	DDX_Text(pDX, IDC_EDIT_Motor_e_sa, m_MotorESa);
+    CDialog::DoDataExchange(pDX);
+    DDX_Text(pDX, IDC_EDIT_Motor_K0, m_MotorK0);
+    DDX_Text(pDX, IDC_EDIT_Motor_speed, m_MotorSpeed);
+    DDX_Text(pDX, IDC_EDIT_Motor_sr_rate, m_MotorSrRate);
+    DDX_Text(pDX, IDC_EDIT_Motor_e_sa, m_MotorESa);
 }
 
 BEGIN_MESSAGE_MAP(CControl_Consolidation, CDialog)
-	ON_BN_CLICKED(IDC_BUTTON_Update, OnBUTTONUpdate)
+    ON_BN_CLICKED(IDC_BUTTON_Update, OnBUTTONUpdate)
 END_MESSAGE_MAP()
 
 void CControl_Consolidation::OnBUTTONUpdate()
 {
-	UpdateData(TRUE);
-	DigitShowContext* ctx = GetContext();
-	ctx->control[2].e_sigma[0] = m_MotorESa;
-	ctx->control[2].K0 = m_MotorK0;
-	ctx->control[2].sigmaRate[2] = m_MotorSrRate;
-	ctx->control[2].MotorSpeed = m_MotorSpeed;
+    UpdateData(TRUE);
+    DigitShowContext* ctx = GetContext();
+    ctx->control[2].e_sigma[0] = m_MotorESa;
+    ctx->control[2].K0 = m_MotorK0;
+    ctx->control[2].sigmaRate[2] = m_MotorSrRate;
+    ctx->control[2].MotorSpeed = m_MotorSpeed;
 }

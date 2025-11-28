@@ -8,7 +8,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;
+ without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -26,28 +27,28 @@
 class CBoardSettings : public CDialog
 {
 public:
-	CBoardSettings(CWnd* pParent = NULL);
-	CDigitShowBasicDoc* pDoc;
+    CBoardSettings(CWnd* pParent = NULL);
+    CDigitShowBasicDoc* pDoc;
 
-	enum { IDD = IDD_BoardSettings };
+    enum { IDD = IDD_BoardSettings };
 
-	CString m_ADMethod0;
-	CString m_ADMethod1;
-	CString m_ADResolution0;
-	CString m_ADResolution1;
-	CString m_ADRange0;
-	CString m_ADRange1;
-	CString m_ADMaxChannel0;
-	CString m_ADMaxChannel1;
-	CString m_DAMaxChannel0;
-	CString m_DARange0;
-	CString m_DAResolution0;
+    CString m_ADMethod0;
+    CString m_ADMethod1;
+    CString m_ADResolution0;
+    CString m_ADResolution1;
+    CString m_ADRange0;
+    CString m_ADRange1;
+    CString m_ADMaxChannel0;
+    CString m_ADMaxChannel1;
+    CString m_DAMaxChannel0;
+    CString m_DARange0;
+    CString m_DAResolution0;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual BOOL OnInitDialog();
+    virtual void DoDataExchange(CDataExchange* pDX);
+    virtual BOOL OnInitDialog();
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };
 
 #endif // __BOARDSETTINGS_H_INCLUDE__
