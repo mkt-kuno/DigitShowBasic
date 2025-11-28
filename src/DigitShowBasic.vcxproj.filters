@@ -21,6 +21,9 @@
     <ClCompile Include="CalibrationAmp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DigitShowContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="CalibrationFactor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -153,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DigitShowBasic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitShowContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DigitShowBasicDoc.h">
