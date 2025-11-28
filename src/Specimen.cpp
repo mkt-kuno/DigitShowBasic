@@ -16,13 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Specimen.cpp : インプリメンテーション ファイル
-//
-
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "Specimen.h"
 #include "DigitShowBasicDoc.h"
+#include "DigitShowContext.h"
 #include "math.h"
 
 #ifdef _DEBUG
@@ -31,53 +29,48 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CSpecimen ダイアログ
-extern	Specimen	SpecimenData;
-extern	double		Phyout[64],Cal_c[64];
-extern	int			Control_ID;
-
-CSpecimen::CSpecimen(CWnd* pParent /*=NULL*/)
+CSpecimen::CSpecimen(CWnd* pParent)
 	: CDialog(CSpecimen::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CSpecimen)
-	m_Area0 = SpecimenData.Area[0];
-	m_Area1 = SpecimenData.Area[1];
-	m_Area2 = SpecimenData.Area[2];
-	m_Area3 = SpecimenData.Area[3];
-	m_Depth0 = SpecimenData.Depth[0];
-	m_Depth1 = SpecimenData.Depth[1];
-	m_Depth2 = SpecimenData.Depth[2];
-	m_Gs = SpecimenData.Gs;
-	m_Height0 = SpecimenData.Height[0];
-	m_Height1 = SpecimenData.Height[1];
-	m_Height2 = SpecimenData.Height[2];
-	m_Height3 = SpecimenData.Height[3];
-	m_MembraneE = SpecimenData.MembraneModulus;
-	m_MembraneT = SpecimenData.MembraneThickness;
-	m_RodArea = SpecimenData.RodArea;
-	m_RodWeight = SpecimenData.RodWeight;
-	m_Volume0 = SpecimenData.Volume[0];
-	m_Volume1 = SpecimenData.Volume[1];
-	m_Volume2 = SpecimenData.Volume[2];
-	m_Volume3 = SpecimenData.Volume[3];
-	m_Weight0 = SpecimenData.Weight[0];
-	m_Weight1 = SpecimenData.Weight[1];	
-	m_Weight2 = SpecimenData.Weight[2];
-	m_Weight3 = SpecimenData.Weight[3];
-	m_Width0 = SpecimenData.Width[0];
-	m_Width1 = SpecimenData.Width[1];
-	m_Width2 = SpecimenData.Width[2];
-	m_Width3 = SpecimenData.Width[3];
-	m_Depth3 = SpecimenData.Depth[3];	
-	m_Diameter0 = SpecimenData.Diameter[0];
-	m_Diameter1 = SpecimenData.Diameter[1];
-	m_Diameter2 = SpecimenData.Diameter[2];
-	m_Diameter3 = SpecimenData.Diameter[3];
-	m_VLDT1_0 = SpecimenData.VLDT1[0];
-	m_VLDT1_1 = SpecimenData.VLDT1[1];
-	m_VLDT1_2 = SpecimenData.VLDT1[2];
-	m_VLDT1_3 = SpecimenData.VLDT1[3];
+	DigitShowContext* ctx = GetContext();
+	SpecimenData* SpecimenData = &ctx->specimen;
+	m_Area0 = SpecimenData->Area[0];
+	m_Area1 = SpecimenData->Area[1];
+	m_Area2 = SpecimenData->Area[2];
+	m_Area3 = SpecimenData->Area[3];
+	m_Depth0 = SpecimenData->Depth[0];
+	m_Depth1 = SpecimenData->Depth[1];
+	m_Depth2 = SpecimenData->Depth[2];
+	m_Gs = SpecimenData->Gs;
+	m_Height0 = SpecimenData->Height[0];
+	m_Height1 = SpecimenData->Height[1];
+	m_Height2 = SpecimenData->Height[2];
+	m_Height3 = SpecimenData->Height[3];
+	m_MembraneE = SpecimenData->MembraneModulus;
+	m_MembraneT = SpecimenData->MembraneThickness;
+	m_RodArea = SpecimenData->RodArea;
+	m_RodWeight = SpecimenData->RodWeight;
+	m_Volume0 = SpecimenData->Volume[0];
+	m_Volume1 = SpecimenData->Volume[1];
+	m_Volume2 = SpecimenData->Volume[2];
+	m_Volume3 = SpecimenData->Volume[3];
+	m_Weight0 = SpecimenData->Weight[0];
+	m_Weight1 = SpecimenData->Weight[1];	
+	m_Weight2 = SpecimenData->Weight[2];
+	m_Weight3 = SpecimenData->Weight[3];
+	m_Width0 = SpecimenData->Width[0];
+	m_Width1 = SpecimenData->Width[1];
+	m_Width2 = SpecimenData->Width[2];
+	m_Width3 = SpecimenData->Width[3];
+	m_Depth3 = SpecimenData->Depth[3];	
+	m_Diameter0 = SpecimenData->Diameter[0];
+	m_Diameter1 = SpecimenData->Diameter[1];
+	m_Diameter2 = SpecimenData->Diameter[2];
+	m_Diameter3 = SpecimenData->Diameter[3];
+	m_VLDT1_0 = SpecimenData->VLDT1[0];
+	m_VLDT1_1 = SpecimenData->VLDT1[1];
+	m_VLDT1_2 = SpecimenData->VLDT1[2];
+	m_VLDT1_3 = SpecimenData->VLDT1[3];
 	m_VLDT2_0 = SpecimenData.VLDT2[0];
 	m_VLDT2_1 = SpecimenData.VLDT2[1];
 	m_VLDT2_2 = SpecimenData.VLDT2[2];

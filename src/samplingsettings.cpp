@@ -16,12 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// SamplingSettings.cpp : インプリメンテーション ファイル
-//
-
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "SamplingSettings.h"
+#include "DigitShowContext.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -29,29 +27,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CSamplingSettings ダイアログ
-extern	int			NUMAD;
-extern	int			AdMaxCH;
-extern	short		AdMemoryType[2];
-extern	float		AdSamplingClock[2];
-extern	long		AdSamplingTimes[2];
-extern	int			SavingTime;
-extern	long		TotalSamplingTimes;
-extern	float		AllocatedMemory;
-extern	int			AvSmplNum;
-
-extern	bool		Flag_FIFO;
-
-extern	unsigned int	TimeInterval_1;	// Time interval (ms) to display output data.		
-extern	unsigned int	TimeInterval_2;	// Time interval (ms) to feed back.		
-extern	unsigned int	TimeInterval_3;	// Time interval (ms) to save the data.
-
-
-CSamplingSettings::CSamplingSettings(CWnd* pParent /*=NULL*/)
+CSamplingSettings::CSamplingSettings(CWnd* pParent)
 	: CDialog(CSamplingSettings::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CSamplingSettings)
 	m_TimeInterval1 = 0;
 	m_TimeInterval2 = 0;
 	m_TimeInterval3 = 0;
@@ -63,14 +41,11 @@ CSamplingSettings::CSamplingSettings(CWnd* pParent /*=NULL*/)
 	m_SamplingClock = 0.0f;
 	m_SavingTime = 0;
 	m_TotalSamplingTimes = 0;
-	//}}AFX_DATA_INIT
 }
-
 
 void CSamplingSettings::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CSamplingSettings)
 	DDX_Text(pDX, IDC_EDIT_TimeInterval1, m_TimeInterval1);
 	DDX_Text(pDX, IDC_EDIT_TimeInterval2, m_TimeInterval2);
 	DDX_Text(pDX, IDC_EDIT_TimeInterval3, m_TimeInterval3);

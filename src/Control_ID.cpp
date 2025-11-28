@@ -16,13 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// Control_ID.cpp : インプリメンテーション ファイル
-//
-
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "Control_ID.h"
 #include "DigitShowBasicDoc.h"
+#include "DigitShowContext.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,15 +28,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CControl_ID ダイアログ
-		int			tmp;
-extern	Control		ControlData[16];
+static int tmp;
 
-CControl_ID::CControl_ID(CWnd* pParent /*=NULL*/)
+CControl_ID::CControl_ID(CWnd* pParent)
 	: CDialog(CControl_ID::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CControl_ID)
+	DigitShowContext* ctx = GetContext();
+	ControlData* ControlData = ctx->control;
 	m_Control_ID = tmp;
 	m_esigma0 = ControlData[tmp].e_sigma[0];
 	m_esigma1 = ControlData[tmp].e_sigma[1];

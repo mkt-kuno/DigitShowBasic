@@ -16,13 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// BoardSettings.cpp : インプリメンテーション ファイル
-//
-
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "DigitShowBasicDoc.h"
-
+#include "DigitShowContext.h"
 #include "BoardSettings.h"
 
 #ifdef _DEBUG
@@ -31,20 +28,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CBoardSettings ダイアログ
-
-//---boards---
-extern	int			NUMAD,NUMDA;
-extern	short		AdChannels[2],DaChannels[1];		// The Number of Channel
-extern	short		AdRange[2],DaRange[1];				// Range of A/D and D/A boards
-extern	short		AdResolution[2],DaResolution[1];	// Resolution of A/D and D/A Boards
-extern	short		AdInputMethod[2];					// Input Method of A/D
-
-CBoardSettings::CBoardSettings(CWnd* pParent /*=NULL*/)
+CBoardSettings::CBoardSettings(CWnd* pParent)
 	: CDialog(CBoardSettings::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CBoardSettings)
 	m_ADMethod0 = _T("");
 	m_ADMethod1 = _T("");
 	m_ADResolution0 = _T("");
@@ -56,14 +42,11 @@ CBoardSettings::CBoardSettings(CWnd* pParent /*=NULL*/)
 	m_DAMaxChannel0 = _T("");
 	m_DARange0 = _T("");
 	m_DAResolution0 = _T("");
-	//}}AFX_DATA_INIT
 }
-
 
 void CBoardSettings::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CBoardSettings)
 	DDX_Text(pDX, IDC_EDIT_ADMethod0, m_ADMethod0);
 	DDX_Text(pDX, IDC_EDIT_ADMethod1, m_ADMethod1);
 	DDX_Text(pDX, IDC_EDIT_ADResolution0, m_ADResolution0);
@@ -75,7 +58,6 @@ void CBoardSettings::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_DAMaxChannel0, m_DAMaxChannel0);
 	DDX_Text(pDX, IDC_EDIT_DARange0, m_DARange0);
 	DDX_Text(pDX, IDC_EDIT_DAResolution0, m_DAResolution0);
-	//}}AFX_DATA_MAP
 }
 
 
