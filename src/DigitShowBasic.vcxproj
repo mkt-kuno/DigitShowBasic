@@ -51,6 +51,7 @@
   <ItemGroup>
     <ClCompile Include="BoardSettings.cpp" />
     <ClCompile Include="CalibrationAmp.cpp" />
+    <ClCompile Include="DigitShowContext.cpp" />
     <ClCompile Include="CalibrationFactor.cpp" />
     <ClCompile Include="Control_CLoading.cpp" />
     <ClCompile Include="Control_Consolidation.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="DA_Channel.h" />
     <ClInclude Include="DA_Pout.h" />
     <ClInclude Include="DA_Vout.h" />
+    <ClInclude Include="DigitShowContext.h" />
     <ClInclude Include="DigitShowBasic.h" />
     <ClInclude Include="DigitShowBasicDoc.h" />
     <ClInclude Include="DigitShowBasicView.h" />

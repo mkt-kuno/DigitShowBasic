@@ -1,10 +1,25 @@
-﻿// BoardSettings.cpp : インプリメンテーション ファイル
-//
+﻿/*
+ * DigitShowBasic - Triaxial Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "DigitShowBasicDoc.h"
-
+#include "DigitShowContext.h"
 #include "BoardSettings.h"
 
 #ifdef _DEBUG
@@ -13,20 +28,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CBoardSettings ダイアログ
-
-//---boards---
-extern	int			NUMAD,NUMDA;
-extern	short		AdChannels[2],DaChannels[1];		// The Number of Channel
-extern	short		AdRange[2],DaRange[1];				// Range of A/D and D/A boards
-extern	short		AdResolution[2],DaResolution[1];	// Resolution of A/D and D/A Boards
-extern	short		AdInputMethod[2];					// Input Method of A/D
-
-CBoardSettings::CBoardSettings(CWnd* pParent /*=NULL*/)
+CBoardSettings::CBoardSettings(CWnd* pParent)
 	: CDialog(CBoardSettings::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CBoardSettings)
 	m_ADMethod0 = _T("");
 	m_ADMethod1 = _T("");
 	m_ADResolution0 = _T("");
@@ -38,14 +42,11 @@ CBoardSettings::CBoardSettings(CWnd* pParent /*=NULL*/)
 	m_DAMaxChannel0 = _T("");
 	m_DARange0 = _T("");
 	m_DAResolution0 = _T("");
-	//}}AFX_DATA_INIT
 }
-
 
 void CBoardSettings::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CBoardSettings)
 	DDX_Text(pDX, IDC_EDIT_ADMethod0, m_ADMethod0);
 	DDX_Text(pDX, IDC_EDIT_ADMethod1, m_ADMethod1);
 	DDX_Text(pDX, IDC_EDIT_ADResolution0, m_ADResolution0);
@@ -57,7 +58,6 @@ void CBoardSettings::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_DAMaxChannel0, m_DAMaxChannel0);
 	DDX_Text(pDX, IDC_EDIT_DARange0, m_DARange0);
 	DDX_Text(pDX, IDC_EDIT_DAResolution0, m_DAResolution0);
-	//}}AFX_DATA_MAP
 }
 
 
@@ -72,7 +72,7 @@ BOOL CBoardSettings::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	// TODO: この位置に初期化の補足処理を追加してください
+
 	if(NUMAD >0 && AdInputMethod[0]==0) m_ADMethod0="Single Input";
 	if(NUMAD >0 && AdInputMethod[0]==1) m_ADMethod0="Differential Input";
 	if(NUMAD >1 && AdInputMethod[1]==0) m_ADMethod1="Single Input";

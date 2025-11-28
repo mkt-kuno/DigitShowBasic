@@ -1,4 +1,22 @@
-﻿// DigitShowBasic.cpp : アプリケーション用クラスの機能定義を行います。
+﻿/*
+ * DigitShowBasic - Triaxial Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// DigitShowBasic.cpp : アプリケーション用クラスの機能定義を行います。
 //
 
 #include "stdafx.h"
@@ -33,7 +51,7 @@ END_MESSAGE_MAP()
 
 CDigitShowBasicApp::CDigitShowBasicApp()
 {
-	// TODO: この位置に構築用コードを追加してください。
+
 	// ここに InitInstance 中の重要な初期化処理をすべて記述してください。
 
 }
@@ -68,7 +86,7 @@ BOOL CDigitShowBasicApp::InitInstance()
 
 
 	// 設定が保存される下のレジストリ キーを変更します。
-	// TODO: この文字列を、会社名または所属など適切なものに
+
 	// 変更してください。
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 

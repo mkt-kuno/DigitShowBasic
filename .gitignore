@@ -100,4 +100,5 @@ _ReSharper*/
 *.gcda
 
 # VS Code (optional)
-
+.vscode/
+_codeql_detected_source_root
