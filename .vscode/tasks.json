@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build (Debug)",
+            "type": "shell",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "DigitShowBasic.sln",
+                "/p:Configuration=Debug",
+                "/p:Platform=x64",
+                "/p:WarningLevel=Level4"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build (Release)",
+            "type": "shell",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "DigitShowBasic.sln",
+                "/p:Configuration=Release",
+                "/p:Platform=x64",
+                "/p:WarningLevel=Level4"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
