@@ -16,61 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// DigitShowBasicDoc.h : CDigitShowBasicDoc クラスの宣言およびインターフェイスの定義をします。
-//
-/////////////////////////////////////////////////////////////////////////////
+#ifndef DIGITSHOWBASICDOC_H
+#define DIGITSHOWBASICDOC_H
 
-
-#if !defined(AFX_DIGITSHOWBASICDOC_H__0F5B25DB_9338_44C6_9841_265C5A221957__INCLUDED_)
-#define AFX_DIGITSHOWBASICDOC_H__0F5B25DB_9338_44C6_9841_265C5A221957__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-//---Specimen Data---
-typedef	struct{	
-		double	Diameter[4];	double	Width[4];	double	Depth[4];	double	Height[4];
-		double	Area[4];		double	Volume[4];	double	Weight[4];	
-		double	VLDT1[4];		double	VLDT2[4];
-		double	Gs;	
-		double	MembraneModulus;	double	MembraneThickness;
-		double	RodArea;	double	RodWeight;
-	} Specimen;
-		
-//---Control Data---	
-typedef	struct{
-		bool	flag[3];			
-		int		time[3];	
-		double	p;				double	q;					double	u;
-		double	sigma[3];		double	sigmaRate[3];		double	sigmaAmp[3];	
-		double	e_sigma[3];		double	e_sigmaRate[3];		double	e_sigmaAmp[3];
-		double	strain[3];		double	strainRate[3];		double	strainAmp[3];
-		double	K0;				
-		double	MotorSpeed;		int		Motor;				int		MotorCruch;		
-	} Control;
+#include "DigitShowContext.h"
 
 class CDigitShowBasicDoc : public CDocument
 {
-protected: // シリアライズ機能のみから作成します。
+protected:
 	CDigitShowBasicDoc();
 	DECLARE_DYNCREATE(CDigitShowBasicDoc)
 
-// アトリビュート
 public:
-
-// オペレーション
-public:
-
-//オーバーライド
-	// ClassWizard は仮想関数のオーバーライドを生成します。
-	//{{AFX_VIRTUAL(CDigitShowBasicDoc)
-	public:
 	virtual BOOL OnNewDocument();
 	virtual void Serialize(CArchive& ar);
-	//}}AFX_VIRTUAL
 
-// インプリメンテーション
 public:
 	void Creep2();
 	void SaveToFile2();
@@ -92,28 +54,14 @@ public:
 	void DA_OUTPUT();
 	void AD_INPUT();
 	virtual ~CDigitShowBasicDoc();
+
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
 protected:
-
-// 生成されたメッセージ マップ関数
-private:
-
-
-protected:
-	//{{AFX_MSG(CDigitShowBasicDoc)
-		// メモ - ClassWizard はこの位置にメンバ関数を追加または削除します。
-		//        この位置に生成されるコードを編集しないでください。
-	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
 
-/////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ は前行の直前に追加の宣言を挿入します。
-
-#endif // !defined(AFX_DIGITSHOWBASICDOC_H__0F5B25DB_9338_44C6_9841_265C5A221957__INCLUDED_)
+#endif // DIGITSHOWBASICDOC_H
