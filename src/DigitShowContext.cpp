@@ -70,6 +70,7 @@ void InitContext(DigitShowContext* ctx)
     ctx->ControlID = 0;
     ctx->NumCyclic = 0;
     ctx->TotalStepTime = 0.0;
+    ctx->AmpID = 0;
 
     // Initialize time values
     ctx->SequentTime1 = 0;

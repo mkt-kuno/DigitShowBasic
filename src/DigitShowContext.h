@@ -221,6 +221,9 @@ struct DigitShowContext {
     int  NumCyclic;
     double TotalStepTime;
 
+    // Amplifier calibration
+    int  AmpID;
+
     // System flags
     bool FlagSetBoard;
     bool FlagSaveData;
