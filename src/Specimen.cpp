@@ -145,7 +145,7 @@ END_MESSAGE_MAP()
 
 void CSpecimen::OnBUTTONUpdate() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	UpdateData(TRUE);
 	if( m_Diameter0 != 0.0){
 		m_Width0=0.0;
@@ -222,7 +222,7 @@ void CSpecimen::OnBUTTONUpdate()
 
 void CSpecimen::OnBUTTONSave() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	
 	OnBUTTONUpdate();
 
@@ -269,7 +269,7 @@ void CSpecimen::OnBUTTONSave()
 
 void CSpecimen::OnBUTTONBeConsol() 
 {
-	// TODO: Add your control notification handler code here
+
 	SpecimenData.Height[2] = SpecimenData.Height[1]-Phyout[1];	
 	SpecimenData.Volume[2] = SpecimenData.Volume[1]-SpecimenData.Area[1]*Phyout[1];
 	SpecimenData.Area[2]   = SpecimenData.Area[1];
@@ -286,7 +286,7 @@ void CSpecimen::OnBUTTONBeConsol()
 
 void CSpecimen::OnBUTTONAfConsolidation() 
 {
-	// TODO: Add your control notification handler code here
+
 	SpecimenData.Height[3] = SpecimenData.Height[2]-Phyout[1];	
 	SpecimenData.Volume[3] = SpecimenData.Volume[2]-Phyout[4];
 	SpecimenData.Area[3]   = SpecimenData.Volume[3]/SpecimenData.Height[3];
@@ -303,7 +303,7 @@ void CSpecimen::OnBUTTONAfConsolidation()
 
 void CSpecimen::OnBUTTONToPresent1() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	UpdateData(TRUE);
 	if( m_Diameter1 != 0.0){
 		m_Width1=0.0;
@@ -334,7 +334,7 @@ void CSpecimen::OnBUTTONToPresent1()
 
 void CSpecimen::OnBUTTONToPresent2() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	UpdateData(TRUE);
 	if( m_Diameter2 != 0.0){
 		m_Width2=0.0;
@@ -365,7 +365,7 @@ void CSpecimen::OnBUTTONToPresent2()
 
 void CSpecimen::OnBUTTONToPresent3() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	UpdateData(TRUE);
 	if( m_Diameter3 != 0.0){
 		m_Width3=0.0;

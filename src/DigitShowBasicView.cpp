@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// DigitShowBasicView.cpp : CDigitShowBasicView クラスの動作の定義を行います。
-//
 
 #include "time.h"
 #include "stdafx.h"
@@ -201,7 +199,7 @@ CDigitShowBasicView::CDigitShowBasicView()
 	m_SamplingTime = TimeInterval_3;
 	m_FileName = _T("");
 	//}}AFX_DATA_INIT
-	// TODO: この場所に構築用のコードを追加してください。
+
 	Flag_Ctrl=FALSE;
 	m_pEditBrush= new CBrush(RGB(255,255,255));
 	m_pStaticBrush= new CBrush(RGB(0,128,128));	
@@ -309,7 +307,7 @@ void CDigitShowBasicView::DoDataExchange(CDataExchange* pDX)
 
 BOOL CDigitShowBasicView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: この位置で CREATESTRUCT cs を修正して Window クラスまたはスタイルを
+
 	//  修正してください。
 	return CFormView::PreCreateWindow(cs);
 }
@@ -375,7 +373,6 @@ void CDigitShowBasicView::OnInitialUpdate()
 	m_Combo2->InsertString(-1,"2.0 min");	m_Combo2->InsertString(-1,"3.0 min");
 	m_Combo2->InsertString(-1,"5.0 min");	m_Combo2->InsertString(-1,"10.0 min");	
 	m_Combo2->SetWindowText("1.0 s");
-//
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
 	pDoc->OpenBoard();
 	if(Flag_SetBoard){
@@ -438,14 +435,14 @@ HBRUSH CDigitShowBasicView::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CDigitShowBasicView::OnDestroy() 
 {
 	CFormView::OnDestroy();
-	// TODO: この位置にメッセージ ハンドラ用のコードを追加してください
+
 	delete	m_pEditBrush;
 	delete	m_pStaticBrush;	
 	delete	m_pDlgBrush;
 }
 void CDigitShowBasicView::OnTimer(UINT_PTR nIDEvent) 
 {
-	// TODO: この位置にメッセージ ハンドラ用のコードを追加するかまたはデフォルトの処理を呼び出してください
+
 
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
 
@@ -550,7 +547,7 @@ void CDigitShowBasicView::ShowData()
 
 void CDigitShowBasicView::OnBUTTONCtrlOn() 
 {
-	// TODO: Add your control notification handler code here
+
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
 	if(Flag_SetBoard){
 		SetTimer(2,TimeInterval_2,NULL);
@@ -564,7 +561,7 @@ void CDigitShowBasicView::OnBUTTONCtrlOn()
 
 void CDigitShowBasicView::OnBUTTONCtrlOff() 
 {
-	// TODO: Add your control notification handler code here
+
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
 	KillTimer(2);
 	Flag_Ctrl=FALSE;
@@ -577,7 +574,7 @@ void CDigitShowBasicView::OnBUTTONCtrlOff()
 
 void CDigitShowBasicView::OnBUTTONStartSave() 
 {
-	// TODO: Add your control notification handler code here
+
 	long		Ret;
 	CString	TmpString;
 	errno_t err;
@@ -602,7 +599,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 				pFileName1.Replace(TmpString,".dat");
 				m_FileName=m_FileName+_T(".dat");
 			}
-//			FileSaveData1 = fopen((LPCSTR)pFileName1 , "w" );
 			if((err = fopen_s(&FileSaveData1,(LPCSTR)pFileName1, _T("w"))) == 0)
 			{
 				fprintf(FileSaveData1,"%s	","Time(s)");
@@ -622,22 +618,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 				fprintf(FileSaveData1,"%s	","CH13_(V)");
 				fprintf(FileSaveData1,"%s	","CH14_(V)");
 				fprintf(FileSaveData1,"%s	","CH15_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH16_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH17_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH18_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH19_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH20_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH21_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH22_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH23_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH24_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH25_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH26_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH27_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH28_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH29_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH30_(V)");
-	//			fprintf(FileSaveData1,"%s	","CH31_(V)");
 				fprintf(FileSaveData1,"\n");
 			}
 
@@ -645,7 +625,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 			// File for saving the voltage data
 			pFileName0=pFileName1;
 			pFileName0.Replace(".dat",".vlt");
-//			FileSaveData0 = fopen((LPCSTR)pFileName0 , "w" );
 			if((err = fopen_s(&FileSaveData0,(LPCSTR)pFileName0, _T("w"))) == 0)
 			{
 				fprintf(FileSaveData0,"%s	","Time(s)");
@@ -665,22 +644,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 				fprintf(FileSaveData0,"%s	","CH13_(V)");
 				fprintf(FileSaveData0,"%s	","CH14_(V)");
 				fprintf(FileSaveData0,"%s	","CH15_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH16_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH17_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH18_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH19_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH20_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH21_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH22_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH23_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH24_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH25_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH26_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH27_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH28_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH39_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH30_(V)");
-	//			fprintf(FileSaveData0,"%s	","CH31_(V)");
 				fprintf(FileSaveData0,"\n");
 			}
 
@@ -688,7 +651,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 			// File for saving the parameter data
 			pFileName2=pFileName1;
 			pFileName2.Replace(".dat",".out");
-//			FileSaveData2 = fopen((LPCSTR)pFileName2 , "w" );
 			if((err = fopen_s(&FileSaveData2,(LPCSTR)pFileName2, _T("w"))) == 0)
 			{
 				fprintf(FileSaveData2,"%s	","Time(s)");
@@ -716,12 +678,10 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 			StartTime=NowTime;
 			SpanTime=NowTime-StartTime;
 			SequentTime1=(long)SpanTime.GetTotalSeconds();
-//
 			/*_ftime(&NowTime2);*/
 			_ftime_s(&NowTime2);
 			StartTime2=NowTime2;
 			SequentTime2=double(NowTime2.time-StartTime2.time)+double( (NowTime2.millitm-StartTime2.millitm)/1000.0 );
-//
 			Flag_SaveData=TRUE;
 			CButton* myBTN1=(CButton*)GetDlgItem(IDC_BUTTON_StartSave);
 			CButton* myBTN2=(CButton*)GetDlgItem(IDC_BUTTON_StopSave);
@@ -733,7 +693,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 			myBTN3->EnableWindow(TRUE);
 			myBTN4->EnableWindow(FALSE);
 			myBTN5->EnableWindow(FALSE);
-//
 			if(Flag_SetBoard)	pDoc -> AD_INPUT();
 			pDoc -> Cal_Physical();
 			pDoc -> Cal_Param();
@@ -772,7 +731,7 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 
 void CDigitShowBasicView::OnBUTTONStopSave() 
 {
-	// TODO: Add your control notification handler code here
+
 	long	Ret;
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
 
@@ -825,7 +784,7 @@ void CDigitShowBasicView::OnBUTTONStopSave()
 
 void CDigitShowBasicView::OnBUTTONInterceptSave() 
 {
-	// TODO: Add your control notification handler code here
+
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
 	
 	//_ftime(&NowTime2);
@@ -839,7 +798,7 @@ void CDigitShowBasicView::OnBUTTONInterceptSave()
 
 void CDigitShowBasicView::OnBUTTONFIFOStart() 
 {
-	// TODO: Add your control notification handler code here
+
 	long	Ret;
 	int		nResult;
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
@@ -884,7 +843,7 @@ void CDigitShowBasicView::OnBUTTONFIFOStart()
 
 void CDigitShowBasicView::OnBUTTONFIFOStop() 
 {
-	// TODO: Add your control notification handler code here
+
 	long	Ret;
 	CDigitShowBasicDoc* pDoc=(CDigitShowBasicDoc *)GetDocument();
 	CButton* myBTN1=(CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
@@ -894,7 +853,6 @@ void CDigitShowBasicView::OnBUTTONFIFOStop()
 	Flag_FIFO=FALSE;
 	myBTN1->EnableWindow(TRUE);
 	myBTN2->EnableWindow(FALSE);
-//
 	if(NUMAD>0)	{
 		Ret = AioSetAiSamplingClock ( AdId[0] , 1000 );
 		Ret = AioGetAiSamplingClock ( AdId[0] , &AdSamplingClock[0] );
@@ -920,7 +878,7 @@ void CDigitShowBasicView::OnBUTTONFIFOStop()
 
 void CDigitShowBasicView::OnBUTTONWriteData() 
 {
-	// TODO: Add your control notification handler code here
+
 	long	Ret;
     if(NUMAD>0) Ret = AioStopAi(AdId[0]);
     if(NUMAD>1) Ret = AioStopAi(AdId[1]);
@@ -947,7 +905,6 @@ void CDigitShowBasicView::OnBUTTONWriteData()
 			pFileName1.Replace(TmpString,".dat");
 			m_FileName=m_FileName+_T(".dat");
 		}
-//		FileSaveData1 = fopen((LPCSTR)pFileName1 , "w" );
 		if((err = fopen_s(&FileSaveData1,(LPCSTR)pFileName1 , _T("w"))) == 0)
 		{
 			fprintf(FileSaveData1,"%s	","Time(s)");
@@ -967,22 +924,6 @@ void CDigitShowBasicView::OnBUTTONWriteData()
 			fprintf(FileSaveData1,"%s	","CH13_(V)");
 			fprintf(FileSaveData1,"%s	","CH14_(V)");
 			fprintf(FileSaveData1,"%s	","CH15_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH16_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH17_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH18_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH19_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH20_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH21_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH22_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH23_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH24_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH25_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH26_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH27_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH28_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH29_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH30_(V)");
-	//		fprintf(FileSaveData1,"%s	","CH31_(V)");
 			fprintf(FileSaveData1,"\n");
 		}
 
@@ -990,7 +931,6 @@ void CDigitShowBasicView::OnBUTTONWriteData()
 		// File for saving the voltage data
 		pFileName0=pFileName1;
 		pFileName0.Replace(".dat",".vlt");
-//		FileSaveData0 = fopen((LPCSTR)pFileName0 , "w" );
 		if((err = fopen_s(&FileSaveData0,(LPCSTR)pFileName0 , _T("w"))) == 0)
 		{
 			fprintf(FileSaveData0,"%s	","Time(s)");
@@ -1010,22 +950,6 @@ void CDigitShowBasicView::OnBUTTONWriteData()
 			fprintf(FileSaveData0,"%s	","CH13_(V)");
 			fprintf(FileSaveData0,"%s	","CH14_(V)");
 			fprintf(FileSaveData0,"%s	","CH15_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH16_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH17_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH18_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH19_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH20_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH21_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH22_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH23_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH24_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH25_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH26_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH27_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH28_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH39_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH30_(V)");
-	//		fprintf(FileSaveData0,"%s	","CH31_(V)");
 			fprintf(FileSaveData0,"\n");
 		}
 		pDoc -> SaveToFile2();
@@ -1059,7 +983,7 @@ void CDigitShowBasicView::OnBUTTONWriteData()
 
 LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
 {
-	// TODO: Add your specialized code here and/or call the base class
+
 	int		i,j;
 	long	tmp,tmp0,tmp1;
 	long	Ret,Ret2;
@@ -1143,7 +1067,7 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
 
 void CDigitShowBasicView::OnBUTTONSetCtrlID() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	CString		tmp;
 	CComboBox* m_Combo1 = (CComboBox*)GetDlgItem(IDC_COMBO_Control_ID);
 	m_Combo1->GetWindowText(tmp);
@@ -1152,7 +1076,7 @@ void CDigitShowBasicView::OnBUTTONSetCtrlID()
 
 void CDigitShowBasicView::OnBUTTONSetTimeInterval() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	CString		tmp;
 	CComboBox* m_Combo1 = (CComboBox*)GetDlgItem(IDC_COMBO_SamplingTime);
 	m_Combo1->GetWindowText(tmp);

@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// MainFrm.cpp : CMainFrame クラスの動作の定義を行います。
-//
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "DigitShowBasicDoc.h"
@@ -80,7 +78,7 @@ END_MESSAGE_MAP()
 
 CMainFrame::CMainFrame()
 {
-	// TODO: この位置にメンバの初期化処理コードを追加してください。
+
 }
 
 CMainFrame::~CMainFrame()
@@ -89,7 +87,7 @@ CMainFrame::~CMainFrame()
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: この位置で CREATESTRUCT cs を修正して、Window クラスやスタイルを
+
 	//       修正してください。
 
 	//Get system height and widths- added later
@@ -127,21 +125,21 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 void CMainFrame::OnBoardSettings() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 		CBoardSettings BoardSettings;
 		nResult = BoardSettings.DoModal();		// Display a device open dialog.
 }
 
 void CMainFrame::OnSamplingSettings() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 		CSamplingSettings SamplingSettings;
 		nResult = SamplingSettings.DoModal();		// Display a device open dialog.
 }
 
 void CMainFrame::OnCalibrationFactor() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	if(Flag_SetBoard==FALSE){
 		AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
 	}
@@ -151,27 +149,27 @@ void CMainFrame::OnCalibrationFactor()
 
 void CMainFrame::OnSpecimenData() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CSpecimen Specimen;
 	nResult = Specimen.DoModal();		
 }
 
 void CMainFrame::OnTransAdjustment() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CTransAdjustment TransAdjustment;
 	nResult = TransAdjustment.DoModal();		
 }
 
 void CMainFrame::OnDAChannel() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CDA_Channel DA_Channel;
 	nResult = DA_Channel.DoModal();	
 }
 void CMainFrame::OnDAVout() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	if(Flag_SetBoard==FALSE){
 		AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
 	}
@@ -181,7 +179,7 @@ void CMainFrame::OnDAVout()
 
 void CMainFrame::OnDAPout() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	if(Flag_SetBoard==FALSE){
 		AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
 	}
@@ -191,49 +189,49 @@ void CMainFrame::OnDAPout()
 
 void CMainFrame::OnControlSensitivity() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_Sensitivity Control_Sensitivity;
 	nResult = Control_Sensitivity.DoModal();		
 }
 
 void CMainFrame::OnControlID() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_ID Control_ID;
 	nResult = Control_ID.DoModal();	
 }
 
 void CMainFrame::OnControlPreConsolidation() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_PreConsolidation Control_PreConsolidation;
 	nResult = Control_PreConsolidation.DoModal();	
 }
 
 void CMainFrame::OnControlConsolidation() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_Consolidation Control_Consolidation;
 	nResult = Control_Consolidation.DoModal();	
 }
 
 void CMainFrame::OnControlMLoading() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_MLoading Control_MLoading;
 	nResult = Control_MLoading.DoModal();	
 }
 
 void CMainFrame::OnControlCLoading() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_CLoading Control_CLoading;
 	nResult = Control_CLoading.DoModal();	
 }
 
 void CMainFrame::OnControlLinearStressPath() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_LinearStressPath Control_LinearStressPath;
 	nResult = Control_LinearStressPath.DoModal();	
 	
@@ -241,7 +239,7 @@ void CMainFrame::OnControlLinearStressPath()
 
 void CMainFrame::OnControlFile() 
 {
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+
 	CControl_File Control_File;
 	nResult = Control_File.DoModal();	
 }

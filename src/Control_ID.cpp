@@ -143,7 +143,7 @@ END_MESSAGE_MAP()
 
 void CControl_ID::OnBUTTONLoad() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 
 	UpdateData(TRUE);
 	tmp=m_Control_ID;
@@ -194,7 +194,7 @@ void CControl_ID::OnBUTTONLoad()
 
 void CControl_ID::OnBUTTONUpdate() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 
 	UpdateData(TRUE);
 	tmp=m_Control_ID;
@@ -245,7 +245,7 @@ void CControl_ID::OnBUTTONUpdate()
 
 void CControl_ID::OnBUTTONLoadfromfile() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	CString	pFileName;
 	FILE	*FileCtlData;
 	errno_t err; 
@@ -337,7 +337,7 @@ void CControl_ID::OnBUTTONLoadfromfile()
 
 void CControl_ID::OnBUTTONSaveFile() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 
 	CString	pFileName;
 	FILE	*FileCtlData;

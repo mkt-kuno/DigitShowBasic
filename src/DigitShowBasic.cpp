@@ -51,7 +51,7 @@ END_MESSAGE_MAP()
 
 CDigitShowBasicApp::CDigitShowBasicApp()
 {
-	// TODO: この位置に構築用コードを追加してください。
+
 	// ここに InitInstance 中の重要な初期化処理をすべて記述してください。
 
 }
@@ -86,7 +86,7 @@ BOOL CDigitShowBasicApp::InitInstance()
 
 
 	// 設定が保存される下のレジストリ キーを変更します。
-	// TODO: この文字列を、会社名または所属など適切なものに
+
 	// 変更してください。
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 

@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// CalibrationFactor.cpp : インプリメンテーション ファイル
-//
 
 #include "stdafx.h"
 #include "DigitShowBasic.h"
@@ -226,7 +224,7 @@ BOOL CCalibrationFactor::OnInitDialog()
 	CDialog::OnInitDialog();
     m_Channels=_T("CH0-CH15");
 	CF_Load();
-	// TODO: この位置に初期化の補足処理を追加してください
+
 	
 	return TRUE;  // コントロールにフォーカスを設定しないとき、戻り値は TRUE となります
 	              // 例外: OCX プロパティ ページの戻り値は FALSE となります
@@ -292,7 +290,7 @@ void CCalibrationFactor::CF_Load()
 
 void CCalibrationFactor::OnBUTTONCFUpdate() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	UpdateData(TRUE);
 	if(m_Channels=="CH0-CH15"){	
 		Cal_a[0]=m_CFA00;	Cal_b[0]=m_CFB00;	Cal_c[0]=m_CFC00;	
@@ -335,7 +333,7 @@ void CCalibrationFactor::OnBUTTONCFUpdate()
 
 void CCalibrationFactor::OnBUTTONZero00() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[0]=Cal_c[0]-Phyout[0];
 	if(m_Channels=="CH16-CH31")	Cal_c[16]=Cal_c[16]-Phyout[16];
@@ -344,7 +342,7 @@ void CCalibrationFactor::OnBUTTONZero00()
 
 void CCalibrationFactor::OnBUTTONZero01() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[1]=Cal_c[1]-Phyout[1];
 	if(m_Channels=="CH16-CH31")	Cal_c[17]=Cal_c[17]-Phyout[17];
@@ -353,7 +351,7 @@ void CCalibrationFactor::OnBUTTONZero01()
 
 void CCalibrationFactor::OnBUTTONZero02() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[2]=Cal_c[2]-Phyout[2];
 	if(m_Channels=="CH16-CH31")	Cal_c[18]=Cal_c[18]-Phyout[18];
@@ -362,7 +360,7 @@ void CCalibrationFactor::OnBUTTONZero02()
 
 void CCalibrationFactor::OnBUTTONZero03() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[3]=Cal_c[3]-Phyout[3];
 	if(m_Channels=="CH16-CH31")	Cal_c[19]=Cal_c[19]-Phyout[19];
@@ -371,7 +369,7 @@ void CCalibrationFactor::OnBUTTONZero03()
 
 void CCalibrationFactor::OnBUTTONZero04() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[4]=Cal_c[4]-Phyout[4];
 	if(m_Channels=="CH16-CH31")	Cal_c[20]=Cal_c[20]-Phyout[20];
@@ -380,7 +378,7 @@ void CCalibrationFactor::OnBUTTONZero04()
 
 void CCalibrationFactor::OnBUTTONZero05() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[5]=Cal_c[5]-Phyout[5];
 	if(m_Channels=="CH16-CH31")	Cal_c[21]=Cal_c[21]-Phyout[21];
@@ -389,7 +387,7 @@ void CCalibrationFactor::OnBUTTONZero05()
 
 void CCalibrationFactor::OnBUTTONZero06() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[6]=Cal_c[6]-Phyout[6];
 	if(m_Channels=="CH16-CH31")	Cal_c[22]=Cal_c[22]-Phyout[22];
@@ -398,7 +396,7 @@ void CCalibrationFactor::OnBUTTONZero06()
 
 void CCalibrationFactor::OnBUTTONZero07() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[7]=Cal_c[7]-Phyout[7];
 	if(m_Channels=="CH16-CH31")	Cal_c[23]=Cal_c[23]-Phyout[23];
@@ -407,7 +405,7 @@ void CCalibrationFactor::OnBUTTONZero07()
 
 void CCalibrationFactor::OnBUTTONZero08() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[8]=Cal_c[8]-Phyout[8];
 	if(m_Channels=="CH16-CH31")	Cal_c[24]=Cal_c[24]-Phyout[24];
@@ -416,7 +414,7 @@ void CCalibrationFactor::OnBUTTONZero08()
 
 void CCalibrationFactor::OnBUTTONZero09() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[9]=Cal_c[9]-Phyout[9];
 	if(m_Channels=="CH16-CH31")	Cal_c[25]=Cal_c[25]-Phyout[25];
@@ -425,7 +423,7 @@ void CCalibrationFactor::OnBUTTONZero09()
 
 void CCalibrationFactor::OnBUTTONZero10() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[10]=Cal_c[10]-Phyout[10];
 	if(m_Channels=="CH16-CH31")	Cal_c[26]=Cal_c[26]-Phyout[26];
@@ -434,7 +432,7 @@ void CCalibrationFactor::OnBUTTONZero10()
 
 void CCalibrationFactor::OnBUTTONZero11() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[11]=Cal_c[11]-Phyout[11];
 	if(m_Channels=="CH16-CH31")	Cal_c[27]=Cal_c[27]-Phyout[27];
@@ -443,7 +441,7 @@ void CCalibrationFactor::OnBUTTONZero11()
 
 void CCalibrationFactor::OnBUTTONZero12() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[12]=Cal_c[12]-Phyout[12];
 	if(m_Channels=="CH16-CH31")	Cal_c[28]=Cal_c[28]-Phyout[28];
@@ -452,7 +450,7 @@ void CCalibrationFactor::OnBUTTONZero12()
 
 void CCalibrationFactor::OnBUTTONZero13() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[13]=Cal_c[13]-Phyout[13];
 	if(m_Channels=="CH16-CH31")	Cal_c[29]=Cal_c[29]-Phyout[29];
@@ -461,7 +459,7 @@ void CCalibrationFactor::OnBUTTONZero13()
 
 void CCalibrationFactor::OnBUTTONZero14() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[14]=Cal_c[14]-Phyout[14];
 	if(m_Channels=="CH16-CH31")	Cal_c[30]=Cal_c[30]-Phyout[30];
@@ -470,7 +468,7 @@ void CCalibrationFactor::OnBUTTONZero14()
 
 void CCalibrationFactor::OnBUTTONZero15() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	OnBUTTONCFUpdate();
 	if(m_Channels=="CH0-CH15")	Cal_c[15]=Cal_c[15]-Phyout[15];
 	if(m_Channels=="CH16-CH31")	Cal_c[31]=Cal_c[31]-Phyout[31];
@@ -481,7 +479,7 @@ void CCalibrationFactor::OnBUTTONZero15()
 
 void CCalibrationFactor::OnBUTTONAmp00() 
 {
-	// TODO: Add your control notification handler code here
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=0;
 	if(m_Channels=="CH16-CH31")	AmpID=16;
@@ -496,7 +494,7 @@ void CCalibrationFactor::OnBUTTONAmp00()
 
 void CCalibrationFactor::OnBUTTONAmp01() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=1;
 	if(m_Channels=="CH16-CH31")	AmpID=17;
@@ -511,7 +509,7 @@ void CCalibrationFactor::OnBUTTONAmp01()
 
 void CCalibrationFactor::OnBUTTONAmp02() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=2;
 	if(m_Channels=="CH16-CH31")	AmpID=18;
@@ -526,7 +524,7 @@ void CCalibrationFactor::OnBUTTONAmp02()
 
 void CCalibrationFactor::OnBUTTONAmp03() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=3;
 	if(m_Channels=="CH16-CH31")	AmpID=19;
@@ -541,7 +539,7 @@ void CCalibrationFactor::OnBUTTONAmp03()
 
 void CCalibrationFactor::OnBUTTONAmp04() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=4;
 	if(m_Channels=="CH16-CH31")	AmpID=20;
@@ -556,7 +554,7 @@ void CCalibrationFactor::OnBUTTONAmp04()
 
 void CCalibrationFactor::OnBUTTONAmp05() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=5;
 	if(m_Channels=="CH16-CH31")	AmpID=21;
@@ -571,7 +569,7 @@ void CCalibrationFactor::OnBUTTONAmp05()
 
 void CCalibrationFactor::OnBUTTONAmp06() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=6;
 	if(m_Channels=="CH16-CH31")	AmpID=22;
@@ -586,7 +584,7 @@ void CCalibrationFactor::OnBUTTONAmp06()
 
 void CCalibrationFactor::OnBUTTONAmp07() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=7;
 	if(m_Channels=="CH16-CH31")	AmpID=23;
@@ -601,7 +599,7 @@ void CCalibrationFactor::OnBUTTONAmp07()
 
 void CCalibrationFactor::OnBUTTONAmp08() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=8;
 	if(m_Channels=="CH16-CH31")	AmpID=24;
@@ -616,7 +614,7 @@ void CCalibrationFactor::OnBUTTONAmp08()
 
 void CCalibrationFactor::OnBUTTONAmp09() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=9;
 	if(m_Channels=="CH16-CH31")	AmpID=25;
@@ -631,7 +629,7 @@ void CCalibrationFactor::OnBUTTONAmp09()
 
 void CCalibrationFactor::OnBUTTONAmp10() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=10;
 	if(m_Channels=="CH16-CH31")	AmpID=26;
@@ -646,7 +644,7 @@ void CCalibrationFactor::OnBUTTONAmp10()
 
 void CCalibrationFactor::OnBUTTONAmp11() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=11;
 	if(m_Channels=="CH16-CH31")	AmpID=27;
@@ -661,7 +659,7 @@ void CCalibrationFactor::OnBUTTONAmp11()
 
 void CCalibrationFactor::OnBUTTONAmp12() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=12;
 	if(m_Channels=="CH16-CH31")	AmpID=28;
@@ -676,7 +674,7 @@ void CCalibrationFactor::OnBUTTONAmp12()
 
 void CCalibrationFactor::OnBUTTONAmp13() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=13;
 	if(m_Channels=="CH16-CH31")	AmpID=29;
@@ -691,7 +689,7 @@ void CCalibrationFactor::OnBUTTONAmp13()
 
 void CCalibrationFactor::OnBUTTONAmp14() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=14;
 	if(m_Channels=="CH16-CH31")	AmpID=30;
@@ -706,7 +704,7 @@ void CCalibrationFactor::OnBUTTONAmp14()
 
 void CCalibrationFactor::OnBUTTONAmp15() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int	nResult;
 	if(m_Channels=="CH0-CH15")	AmpID=15;
 	if(m_Channels=="CH16-CH31")	AmpID=31;
@@ -721,7 +719,7 @@ void CCalibrationFactor::OnBUTTONAmp15()
 
 void CCalibrationFactor::OnBUTTONCFSave() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int		i;
 	CString	pFileName;
 	FILE	*FileCalData;
@@ -747,7 +745,7 @@ void CCalibrationFactor::OnBUTTONCFSave()
 
 void CCalibrationFactor::OnBUTTONCFLoadFile() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	int		i,j;
 	CString	pFileName;
 	FILE	*FileCalData;
@@ -776,7 +774,7 @@ void CCalibrationFactor::OnBUTTONCFLoadFile()
 
 void CCalibrationFactor::OnBUTTONChannelChange() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	if(m_Channels=="CH0-CH15"){
 		m_Channels="CH16-CH31";
 	}
