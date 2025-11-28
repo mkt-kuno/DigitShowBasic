@@ -1,9 +1,25 @@
-﻿// SamplingSettings.cpp : インプリメンテーション ファイル
-//
+﻿/*
+ * DigitShowBasic - Triaxial Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "SamplingSettings.h"
+#include "DigitShowContext.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -11,29 +27,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CSamplingSettings ダイアログ
-extern	int			NUMAD;
-extern	int			AdMaxCH;
-extern	short		AdMemoryType[2];
-extern	float		AdSamplingClock[2];
-extern	long		AdSamplingTimes[2];
-extern	int			SavingTime;
-extern	long		TotalSamplingTimes;
-extern	float		AllocatedMemory;
-extern	int			AvSmplNum;
-
-extern	bool		Flag_FIFO;
-
-extern	unsigned int	TimeInterval_1;	// Time interval (ms) to display output data.		
-extern	unsigned int	TimeInterval_2;	// Time interval (ms) to feed back.		
-extern	unsigned int	TimeInterval_3;	// Time interval (ms) to save the data.
-
-
-CSamplingSettings::CSamplingSettings(CWnd* pParent /*=NULL*/)
+CSamplingSettings::CSamplingSettings(CWnd* pParent)
 	: CDialog(CSamplingSettings::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CSamplingSettings)
 	m_TimeInterval1 = 0;
 	m_TimeInterval2 = 0;
 	m_TimeInterval3 = 0;
@@ -45,14 +41,11 @@ CSamplingSettings::CSamplingSettings(CWnd* pParent /*=NULL*/)
 	m_SamplingClock = 0.0f;
 	m_SavingTime = 0;
 	m_TotalSamplingTimes = 0;
-	//}}AFX_DATA_INIT
 }
-
 
 void CSamplingSettings::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CSamplingSettings)
 	DDX_Text(pDX, IDC_EDIT_TimeInterval1, m_TimeInterval1);
 	DDX_Text(pDX, IDC_EDIT_TimeInterval2, m_TimeInterval2);
 	DDX_Text(pDX, IDC_EDIT_TimeInterval3, m_TimeInterval3);
@@ -81,7 +74,7 @@ BOOL CSamplingSettings::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	// TODO: この位置に初期化の補足処理を追加してください
+
 	m_TimeInterval1 = TimeInterval_1;
 	m_TimeInterval2 = TimeInterval_2;
 	m_TimeInterval3 = TimeInterval_3;
@@ -109,7 +102,7 @@ BOOL CSamplingSettings::OnInitDialog()
 
 void CSamplingSettings::OnBUTTONCheck() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	UpdateData(TRUE);
 	m_TotalSamplingTimes=long(m_SavingTime*1000/m_SamplingClock);
 	m_AllocatedMemory.Format("%.1f",4*AdMaxCH*m_TotalSamplingTimes/1024.0f/1024.0f);
@@ -123,7 +116,7 @@ void CSamplingSettings::OnBUTTONCheck()
 
 void CSamplingSettings::OnOK() 
 {
-	// TODO: この位置にその他の検証用のコードを追加してください
+
 	UpdateData(TRUE);
 	AdSamplingClock[0] = m_SamplingClock*1000.0f;
 	SavingTime = m_SavingTime;

@@ -1,10 +1,26 @@
-﻿// Control_ID.cpp : インプリメンテーション ファイル
-//
+﻿/*
+ * DigitShowBasic - Triaxial Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "stdafx.h"
 #include "DigitShowBasic.h"
 #include "Control_ID.h"
 #include "DigitShowBasicDoc.h"
+#include "DigitShowContext.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -12,15 +28,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CControl_ID ダイアログ
-		int			tmp;
-extern	Control		ControlData[16];
+static int tmp;
 
-CControl_ID::CControl_ID(CWnd* pParent /*=NULL*/)
+CControl_ID::CControl_ID(CWnd* pParent)
 	: CDialog(CControl_ID::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CControl_ID)
+	DigitShowContext* ctx = GetContext();
+	ControlData* ControlData = ctx->control;
 	m_Control_ID = tmp;
 	m_esigma0 = ControlData[tmp].e_sigma[0];
 	m_esigma1 = ControlData[tmp].e_sigma[1];
@@ -129,7 +143,7 @@ END_MESSAGE_MAP()
 
 void CControl_ID::OnBUTTONLoad() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 
 	UpdateData(TRUE);
 	tmp=m_Control_ID;
@@ -180,7 +194,7 @@ void CControl_ID::OnBUTTONLoad()
 
 void CControl_ID::OnBUTTONUpdate() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 
 	UpdateData(TRUE);
 	tmp=m_Control_ID;
@@ -231,7 +245,7 @@ void CControl_ID::OnBUTTONUpdate()
 
 void CControl_ID::OnBUTTONLoadfromfile() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	CString	pFileName;
 	FILE	*FileCtlData;
 	errno_t err; 
@@ -246,9 +260,13 @@ void CControl_ID::OnBUTTONLoadfromfile()
 		if((err = fopen_s(&FileCtlData,(LPCSTR)pFileName , _T("r"))) == 0)
 		{
 			for(i=0;i<16;i++){
+				int tmpFlag[3];
 				fscanf_s(FileCtlData,_T("%d"),&tmp);
 				fscanf_s(FileCtlData,_T("%d%d%d"),
-					&ControlData[i].flag[0],&ControlData[i].flag[1],&ControlData[i].flag[2]);
+					&tmpFlag[0],&tmpFlag[1],&tmpFlag[2]);
+				ControlData[i].flag[0] = (tmpFlag[0] != 0);
+				ControlData[i].flag[1] = (tmpFlag[1] != 0);
+				ControlData[i].flag[2] = (tmpFlag[2] != 0);
 				fscanf_s(FileCtlData,_T("%d%d%d"),
 					&ControlData[i].time[0],&ControlData[i].time[1],&ControlData[i].time[2]);
 				fscanf_s(FileCtlData,_T("%lf"),&ControlData[i].p);
@@ -319,7 +337,7 @@ void CControl_ID::OnBUTTONLoadfromfile()
 
 void CControl_ID::OnBUTTONSaveFile() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 
 	CString	pFileName;
 	FILE	*FileCtlData;
@@ -348,7 +366,7 @@ void CControl_ID::OnBUTTONSaveFile()
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
 					ControlData[i].sigmaAmp[0],ControlData[i].sigmaAmp[1],ControlData[i].sigmaAmp[2]);
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
-					ControlData[i].sigmaRate[0],ControlData[i].sigmaRate[1],&ControlData[i].sigmaRate[2]);
+					ControlData[i].sigmaRate[0],ControlData[i].sigmaRate[1],ControlData[i].sigmaRate[2]);
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
 					ControlData[i].e_sigma[0],ControlData[i].e_sigma[1],ControlData[i].e_sigma[2]);
 				fprintf(FileCtlData,"%lf	%lf	%lf	\n",
