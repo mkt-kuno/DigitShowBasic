@@ -259,7 +259,7 @@ void CSpecimen::OnBUTTONSave()
                 SpecimenData->Weight[0],SpecimenData->Weight[1],SpecimenData->Weight[2],SpecimenData->Weight[3]);
             fprintf(FileSpcData,"%s    %lf    %lf    %lf    %lf\n","VLDT1(mm)",
                 SpecimenData->VLDT1[0],SpecimenData->VLDT1[1],SpecimenData->VLDT1[2],SpecimenData->VLDT1[3]);
-            fprintf(FileSpcData,"%s    %lf    %lf    %lf    %lf\n","VLDT1(mm)",
+            fprintf(FileSpcData,"%s    %lf    %lf    %lf    %lf\n","VLDT2(mm)",
                 SpecimenData->VLDT2[0],SpecimenData->VLDT2[1],SpecimenData->VLDT2[2],SpecimenData->VLDT2[3]);
             fprintf(FileSpcData,"%s    %lf\n","Gs",SpecimenData->Gs);
             fprintf(FileSpcData,"%s    %lf\n","MembraneModulus(kPa)",SpecimenData->MembraneModulus);
