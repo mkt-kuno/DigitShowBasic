@@ -36,12 +36,29 @@ void InitContext(DigitShowContext* ctx)
 {
     if (ctx == nullptr) return;
 
-    // Clear all memory
-    memset(ctx, 0, sizeof(DigitShowContext));
-
     // Initialize board counts
     ctx->NumAD = 1;
     ctx->NumDA = 0;
+
+    // Initialize A/D board config
+    memset(&ctx->ad, 0, sizeof(ctx->ad));
+    
+    // Initialize D/A board config
+    memset(&ctx->da, 0, sizeof(ctx->da));
+    
+    // Initialize D/A channel assignments
+    ctx->daChannel.Motor = 0;
+    ctx->daChannel.MotorCruch = 1;
+    ctx->daChannel.MotorSpeed = 2;
+    ctx->daChannel.EP_Cell = 3;
+
+    // Initialize sampling settings
+    ctx->sampling.SavingClock = 0.0f;
+    ctx->sampling.SavingTime = 300;
+    ctx->sampling.TotalSamplingTimes = 0;
+    ctx->sampling.CurrentSamplingTimes = 0;
+    ctx->sampling.AllocatedMemory = 0.0f;
+    ctx->sampling.AvSmplNum = 20;
 
     // Initialize flags
     ctx->FlagSetBoard = false;
@@ -64,9 +81,44 @@ void InitContext(DigitShowContext* ctx)
     ctx->timeSettings.Interval2 = 500;
     ctx->timeSettings.Interval3 = 1000;
 
-    // Initialize sampling settings
-    ctx->sampling.SavingTime = 300;
-    ctx->sampling.AvSmplNum = 20;
+    // Initialize physical values
+    ctx->phys.sa = 0.0;
+    ctx->phys.e_sa = 0.0;
+    ctx->phys.sr = 0.0;
+    ctx->phys.e_sr = 0.0;
+    ctx->phys.p = 0.0;
+    ctx->phys.e_p = 0.0;
+    ctx->phys.q = 0.0;
+    ctx->phys.u = 0.0;
+    ctx->phys.ea = 0.0;
+    ctx->phys.er = 0.0;
+    ctx->phys.ev = 0.0;
+    ctx->phys.eLDT = 0.0;
+    ctx->phys.eLDT1 = 0.0;
+    ctx->phys.eLDT2 = 0.0;
+    ctx->height = 0.0;
+    ctx->volume = 0.0;
+    ctx->area = 0.0;
+    ctx->Vtmp = 0.0f;
+    ctx->Ptmp = 0.0;
+
+    // Initialize memory pointers
+    ctx->pSmplData0 = nullptr;
+    ctx->pSmplData1 = nullptr;
+    ctx->hHeap0 = nullptr;
+    ctx->hHeap1 = nullptr;
+
+    // Initialize file handles
+    ctx->FileSaveData0 = nullptr;
+    ctx->FileSaveData1 = nullptr;
+    ctx->FileSaveData2 = nullptr;
+
+    // Initialize error handling
+    ctx->Ret = 0;
+    ctx->Ret2 = 0;
+    ctx->AdEvent = 0;
+    memset(ctx->ErrorString, 0, sizeof(ctx->ErrorString));
+    // Note: CString TextString, CTime, CTimeSpan are default-constructed by C++ runtime
 
     // Initialize calibration factors (default: linear y = x)
     for (int i = 0; i < 64; i++) {
