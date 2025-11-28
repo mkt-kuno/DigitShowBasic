@@ -72,7 +72,7 @@ BOOL CBoardSettings::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	// TODO: この位置に初期化の補足処理を追加してください
+
 	if(NUMAD >0 && AdInputMethod[0]==0) m_ADMethod0="Single Input";
 	if(NUMAD >0 && AdInputMethod[0]==1) m_ADMethod0="Differential Input";
 	if(NUMAD >1 && AdInputMethod[1]==0) m_ADMethod1="Single Input";

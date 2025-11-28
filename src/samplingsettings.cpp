@@ -74,7 +74,7 @@ BOOL CSamplingSettings::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	// TODO: この位置に初期化の補足処理を追加してください
+
 	m_TimeInterval1 = TimeInterval_1;
 	m_TimeInterval2 = TimeInterval_2;
 	m_TimeInterval3 = TimeInterval_3;
@@ -102,7 +102,7 @@ BOOL CSamplingSettings::OnInitDialog()
 
 void CSamplingSettings::OnBUTTONCheck() 
 {
-	// TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+
 	UpdateData(TRUE);
 	m_TotalSamplingTimes=long(m_SavingTime*1000/m_SamplingClock);
 	m_AllocatedMemory.Format("%.1f",4*AdMaxCH*m_TotalSamplingTimes/1024.0f/1024.0f);
@@ -116,7 +116,7 @@ void CSamplingSettings::OnBUTTONCheck()
 
 void CSamplingSettings::OnOK() 
 {
-	// TODO: この位置にその他の検証用のコードを追加してください
+
 	UpdateData(TRUE);
 	AdSamplingClock[0] = m_SamplingClock*1000.0f;
 	SavingTime = m_SavingTime;

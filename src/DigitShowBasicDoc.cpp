@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// DigitShowBasicDoc.cpp : CDigitShowBasicDoc クラスの動作の定義を行います。
-//
 
 #include	"stdafx.h"
 #include	"DigitShowBasic.h"
@@ -126,7 +124,6 @@ static char THIS_FILE[] = __FILE__;
 	FILE		*FileSaveData1;						// File to save the physical value
 	FILE		*FileSaveData2;						// File to save the parameter value
 
-//
 
 IMPLEMENT_DYNCREATE(CDigitShowBasicDoc, CDocument)
 
@@ -142,7 +139,7 @@ END_MESSAGE_MAP()
 
 CDigitShowBasicDoc::CDigitShowBasicDoc()
 {
-	// TODO: この位置に１度だけ呼ばれる構築用のコードを追加してください。
+
 	// Initialize of data
 	int	i,j;
 	Flag_SetBoard=FALSE;
@@ -182,7 +179,6 @@ CDigitShowBasicDoc::CDigitShowBasicDoc()
 	SpecimenData.MembraneThickness=0.0;
 	SpecimenData.RodArea=0.0;
 	SpecimenData.RodWeight=0.0;
-//
 	for(i=0;i<16;i++){
 		ControlData[i].p=0.0;
 		ControlData[i].q=0.0;
@@ -201,7 +197,6 @@ CDigitShowBasicDoc::CDigitShowBasicDoc()
 		ControlData[i].K0=1.0;			ControlData[i].MotorSpeed=0.0;
 		ControlData[i].Motor=0;			ControlData[i].MotorCruch=0;
 	}
-//
 	CURNUM=0;
 	for(i=0;i<128;i++){
 		CFNUM[i]=0;
@@ -223,7 +218,6 @@ CDigitShowBasicDoc::CDigitShowBasicDoc()
 	DA_Cal_b[CH_MotorSpeed]=0.0;		// D/A Calibration Factor, MotoSpeed (V) 
 	DA_Cal_a[CH_EP_Cell]=0.003401361;			// D/A Calibration Factor, EP for Cell Pressure (V/kPa)
 	DA_Cal_b[CH_EP_Cell]=0.0;			// D/A Calibration Factor, EP for Cell Pressure (V/kPa)
-//
 	Flag_Cyclic=FALSE;
 	NUM_Cyclic=0;
 	TotalStepTime=0.0;
@@ -238,7 +232,7 @@ BOOL CDigitShowBasicDoc::OnNewDocument()
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
-	// TODO: この位置に再初期化処理を追加してください。
+
 	// (SDI ドキュメントはこのドキュメントを再利用します。)
 
 	return TRUE;
@@ -253,11 +247,11 @@ void CDigitShowBasicDoc::Serialize(CArchive& ar)
 {
 	if (ar.IsStoring())
 	{
-		// TODO: この位置に保存用のコードを追加してください。
+	
 	}
 	else
 	{
-		// TODO: この位置に読み込み用のコードを追加してください。
+	
 	}
 }
 
@@ -465,7 +459,6 @@ void CDigitShowBasicDoc::Cal_Param()
 		eLDT2=0.0;
 	}
 	eLDT=(eLDT1+eLDT2)/2.0;
-//
 	q=Phyout[0]/area*1000.0;		// Deviator Stress (kPa)
 	sr=Phyout[2];					// Cell(Radial) Stress (kPa)
 	sa=q+sr;						// Axial Stress (kPa)
