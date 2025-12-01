@@ -1,4 +1,4 @@
-# DigitShowBasic(Open Source version)
+# DigitShowBasic (Open Source version)
 
 ![Github License](https://img.shields.io/github/license/mkt-kuno/DigitShowBasic)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
 
