@@ -1,4 +1,7 @@
 # DigitShowBasic(Open Source version)
+
+![Github License](https://img.shields.io/github/license/mkt-kuno/DigitShowBasic)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
+
 東京大学の地盤研で使用されている三軸試験機制御ソフトウェアのオープンソース版です。  
 ContecのAD/DAボードで動作させることを前提としています。  
 このリポジトリのライセンスは **GPLv3** となっているため、注意してください。  
