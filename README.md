@@ -1,4 +1,4 @@
-# DigitShowBasic (Open Source version)
+# DigitShowBasic (OpenSource Edition)
 
 ![Github License](https://img.shields.io/github/license/mkt-kuno/DigitShowBasic)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
 
@@ -34,9 +34,11 @@ GPLv3とは何か知ったうえで、覚悟して使い始めてください。
 オープンソースの理念に沿った要求は大歓迎します。  
 
 ## リポジトリの運用方針について
-- 基本的に新機能の追加は行いません。
-- Pull Requestを送る場合は、簡単で良いので動作確認を行い、変更点を明記してください。
+- 基本的に新機能の追加は行いません。プルリクがあればコードレビューはします。
+- AIによるバイブコーディンを禁止しませんが、推奨もしません。
+- Pull Requestを送る場合は、簡単で良いので動作確認を行い、変更点を記載してください。
 - バグなどのIssueを送る場合は、必ず考えつく限り詳細な、問題を再現するのに必要な情報を提供してください。
-- main/developブランチが荒れない事が第一なので、差分が多くなければfeature/****に独自のforkコードを置いてOKです。
+- main/developブランチが荒れない事が第一なので、差分が多くなければfeature/****などに独自のforkコードを置いてOKです。
 - Git Worktreeに必ずしも従う必要はありません。
+- commitは何となく変更点が分かればいいです。コメントの書き方も自由で良いです。日本語でもOKです。
 - 無茶な要求が続くようであれば公開をやめ、コードを放棄します。libxml2のように。
