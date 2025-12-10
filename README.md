@@ -2,6 +2,9 @@
 
 ![Github License](https://img.shields.io/github/license/mkt-kuno/DigitShowBasic)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
 
+<img width="1019" height="739" alt="image" src="https://github.com/user-attachments/assets/2d86bec5-5eb6-4870-9612-685556bf65e4" />
+
+
 ## 簡単な説明
 東京大学の地盤研で使用されている、三軸試験機制御ソフトウェアのオープンソース版です。  
 ContecのAD/DAボードで動作させることを前提としています。  
