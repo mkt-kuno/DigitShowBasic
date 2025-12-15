@@ -18,7 +18,7 @@ ContecのAD/DAボードで動作させることを前提としています。
 [Passmark性能(マルチスレッド)](https://www.cpubenchmark.net/multithread/) 最低5000 推奨8000以上
 - RAM: 最低4GB 推奨8GB以上
 - GPU: 依存なし、iGPU/dGPU/APU いずれも可
-- 液晶: FHD以上
+- 液晶: 最低HD 推奨FHD以上
 - 記憶媒体: 最低HDD 推奨SSD
 
 ## 注意点
