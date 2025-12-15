@@ -11,9 +11,14 @@ ContecのAD/DAボードで動作させることを前提としています。
 このリポジトリのライセンスは **GPLv3** となっているため、注意してください。  
 
 ## 動作環境
-- Windows 11 (64bit)
+- Windows 11 (x64のみ, arm64不可)
 - Visual Studio 2022
 - CONTEC API-AIO(WDM) Ver.8.90
+- CPU: x64 Intel/AMD問わず  
+[Passmark性能(マルチスレッド)](https://www.cpubenchmark.net/multithread/) 最低5000 推奨8000以上
+- RAM: 最低4GB 推奨8GB以上
+- 液晶: FHD以上
+- 記憶媒体: 最低HDD 推奨SSD
 
 ## 注意点
 - 本ソフトウェアの動作について、一切の保証を行いません。
