@@ -11,14 +11,19 @@ ContecのAD/DAボードで動作させることを前提としています。
 このリポジトリのライセンスは **GPLv3** となっているため、注意してください。  
 
 ## 動作環境
-- Windows 11 (x64のみ, arm64不可)
+- Windows 11  
+x64のみ, arm64不可、しかし、コード修正すればARM64もARM64ECも可能
 - Visual Studio 2022
-- CONTEC API-AIO(WDM) Ver.8.90
+Community版でOK, MFCライブラリ必須  
+- CONTEC API-AIO(WDM) Ver.8.90  
+適宜、CAIO.H, CAIO.LIBを置き換えて使用するDLLバージョン一致させれば最新版でも可。
 - CPU: x64 Intel/AMD問わず  
 [Passmark性能(マルチスレッド)](https://www.cpubenchmark.net/multithread/) 最低5000 推奨8000以上
-- RAM: 最低4GB 推奨8GB以上
+- RAM: 最低4GB 推奨8GB以上  
+他に動かすアプリケーション次第。MS Officeは重い。
 - GPU: 依存なし、iGPU/dGPU/APU いずれも可
-- 液晶: 最低HD 推奨FHD以上
+- 液晶: 最低HD 推奨FHD以上  
+縦長画面だと表示が見切れると思います。
 - 記憶媒体: 最低HDD 推奨SSD  
 容量はビルドPCと動作PCが同じなら最低128GB 推奨256GB
 
