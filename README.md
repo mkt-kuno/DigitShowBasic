@@ -12,7 +12,7 @@ ContecのAD/DAボードで動作させることを前提としています。
 
 ## 動作環境
 - Windows 11  
-x64のみ, arm64不可、しかし、コード修正すればARM64もARM64ECも可能
+x64のみ, arm64不可、しかし、コード修正すればARM64もARM64ECも可能  
 CONTECを使用する場合はのCONTECのドライバ依存なのでほぼx64のみ
 - Visual Studio 2022
 Community版でOK, MFCライブラリ必須  
