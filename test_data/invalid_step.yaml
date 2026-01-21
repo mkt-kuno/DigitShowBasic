@@ -1,0 +1,8 @@
+# Test file with type mismatch error
+use: "monotonic_loading_constant_pressure"
+name: "Invalid step"
+with:
+  motor_rpm: "not_a_number" # This should cause TypeMismatch error
+  tau_kPa: 100
+  sigma_kPa: 200
+  direction: "load"

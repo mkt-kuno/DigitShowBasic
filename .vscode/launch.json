@@ -1,29 +1,25 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug (x64)",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/x64/Debug/DigitShowBasic.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "console": "externalTerminal",
-            "preLaunchTask": "build (Debug)"
-        },
-        {
-            "name": "Release (x64)",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/x64/Release/DigitShowBasic.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "console": "externalTerminal",
-            "preLaunchTask": "build (Release)"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run DigitShowDST (Release)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}\\bin\\x64\\Release\\DigitShowDST.exe",
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "preLaunchTask": "MSBuild: Build Release x64"
+    },
+    {
+      "name": "Debug DigitShowDST (Debug)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}\\bin\\x64\\Debug\\DigitShowDST.exe",
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "preLaunchTask": "MSBuild: Build Debug x64"
+    }
+  ]
 }

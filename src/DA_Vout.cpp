@@ -1,6 +1,6 @@
 ﻿/*
- * DigitShowBasic - Triaxial Test Machine Control Software
- * Copyright (C) 2025 Makoto KUNO
+ * DigitShowDST - Direct Shear Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO, Takuto ISHII
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,74 +16,71 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "DigitShowBasic.h"
+/**
+ * @file DA_Vout.cpp
+ * @brief Implementation of D/A voltage output dialog
+ *
+ * インプリメンテーション ファイル
+ */
+
+#include "StdAfx.h"
+#include "resource.h"
+
 #include "DA_Vout.h"
-#include "DigitShowContext.h"
+#include "Variables.hpp"
+#include <ranges>
+#include <spdlog/spdlog.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+using namespace variables;
 
-CDA_Vout::CDA_Vout(CWnd* pParent)
-    : CDialog(CDA_Vout::IDD, pParent)
+/////////////////////////////////////////////////////////////////////////////
+// CDA_Vout ダイアログ
+
+CDA_Vout::CDA_Vout(CWnd *pParent /*=NULL*/) : CDialog(CDA_Vout::IDD, pParent), m_DAVout{DAVout}
 {
-    DigitShowContext* ctx = GetContext();
-    m_DAVout01 = ctx->DAVout[0];
-    m_DAVout02 = ctx->DAVout[1];
-    m_DAVout03 = ctx->DAVout[2];
-    m_DAVout04 = ctx->DAVout[3];
-    m_DAVout05 = ctx->DAVout[4];
-    m_DAVout06 = ctx->DAVout[5];
-    m_DAVout07 = ctx->DAVout[6];
-    m_DAVout08 = ctx->DAVout[7];
 }
 
-void CDA_Vout::DoDataExchange(CDataExchange* pDX)
+void CDA_Vout::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
-    DDX_Text(pDX, IDC_EDIT_DAVout01, m_DAVout01);
-    DDX_Text(pDX, IDC_EDIT_DAVout02, m_DAVout02);
-    DDX_Text(pDX, IDC_EDIT_DAVout03, m_DAVout03);
-    DDX_Text(pDX, IDC_EDIT_DAVout04, m_DAVout04);
-    DDX_Text(pDX, IDC_EDIT_DAVout05, m_DAVout05);
-    DDX_Text(pDX, IDC_EDIT_DAVout06, m_DAVout06);
-    DDX_Text(pDX, IDC_EDIT_DAVout07, m_DAVout07);
-    DDX_Text(pDX, IDC_EDIT_DAVout08, m_DAVout08);
+    //{{AFX_DATA_MAP(CDA_Vout)
+
+    // Resource ID array for DDX_Text loop (only channels 1-8 are used)
+    static constexpr std::array<int, 8> IDS_DAVOUT = {{IDC_EDIT_DAVout01, IDC_EDIT_DAVout02, IDC_EDIT_DAVout03,
+                                                       IDC_EDIT_DAVout04, IDC_EDIT_DAVout05, IDC_EDIT_DAVout06,
+                                                       IDC_EDIT_DAVout07, IDC_EDIT_DAVout08}};
+
+    // Use loop for array-based DDX
+    for (const auto &&[id, value] : std::views::zip(IDS_DAVOUT, m_DAVout))
+    {
+        DDX_Text(pDX, id, value);
+    }
+    //}}AFX_DATA_MAP
 }
 
-BEGIN_MESSAGE_MAP(CDA_Vout, CDialog)
-    ON_BN_CLICKED(IDC_BUTTON_DA_Vout, OnBUTTONDAVout)
-    ON_BN_CLICKED(IDC_BUTTON_Reflesh, OnBUTTONReflesh)
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF(CDA_Vout, CDialog)
+//{{AFX_MSG_MAP(CDA_Vout)
+ON_BN_CLICKED(IDC_BUTTON_DA_Vout, &CDA_Vout::OnBUTTONDAVout)
+ON_BN_CLICKED(IDC_BUTTON_Reflesh, &CDA_Vout::OnBUTTONReflesh)
+//}}AFX_MSG_MAP
+END_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF()
+
+/////////////////////////////////////////////////////////////////////////////
+// CDA_Vout メッセージ ハンドラ
 
 void CDA_Vout::OnBUTTONDAVout()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    ctx->DAVout[0] = m_DAVout01;
-    ctx->DAVout[1] = m_DAVout02;
-    ctx->DAVout[2] = m_DAVout03;
-    ctx->DAVout[3] = m_DAVout04;
-    ctx->DAVout[4] = m_DAVout05;
-    ctx->DAVout[5] = m_DAVout06;
-    ctx->DAVout[6] = m_DAVout07;
-    ctx->DAVout[7] = m_DAVout08;
-    pDoc->DA_OUTPUT();
+    if (const auto result = variables::set_output_voltages(m_DAVout); !result)
+    {
+        spdlog::warn("set_output_voltages failed: {}", result.error());
+    }
 }
 
 void CDA_Vout::OnBUTTONReflesh()
 {
-    DigitShowContext* ctx = GetContext();
-    m_DAVout01 = ctx->DAVout[0];
-    m_DAVout02 = ctx->DAVout[1];
-    m_DAVout03 = ctx->DAVout[2];
-    m_DAVout04 = ctx->DAVout[3];
-    m_DAVout05 = ctx->DAVout[4];
-    m_DAVout06 = ctx->DAVout[5];
-    m_DAVout07 = ctx->DAVout[6];
-    m_DAVout08 = ctx->DAVout[7];
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
+    m_DAVout = DAVout;
     UpdateData(FALSE);
 }

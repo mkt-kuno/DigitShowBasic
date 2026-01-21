@@ -1,0 +1,78 @@
+version: 1
+metadata:
+  name: Consolidation Sweep with Cyclic Loading
+  author: Takker
+  created: 2025-10-29
+  specimen_profile: standard_clay
+  calibration_profile: high_sensitivity
+  description: |
+    Multi-stage consolidation with intermediate cyclic loading
+    to characterize degradation behavior.
+execution:
+  simulation: false
+  logging:
+    basename: consolidation_sweep_001
+    interval_ms: 500
+guards:
+  - when: "abs(q_kpa) > 500"
+    action: emergency_stop
+    message: "Deviator stress exceeded safety limit"
+steps:
+  - id: initial_wait
+    uses: wait
+    with:
+      duration: 60s
+      message: "Waiting for system stabilization"
+
+  - id: pre_consolidation_1
+    uses: pre_consolidation
+    with:
+      target_cell_pressure: 50kPa
+      motor_speed_rpm: 1200
+      axial_error_threshold: 5kPa
+
+  - id: wait_consolidation
+    uses: wait
+    with:
+      duration: 600s
+
+  - id: consolidation_1
+    uses: constant_tau_consolidation
+    with:
+      direction: compression
+      motor_speed_rpm: 1800
+      target_deviator_stress: 20kPa
+      consolidation_rate: 5kPa/min
+      target_cell_pressure_final: 100kPa
+      sensitivity_overrides:
+        err_disp_override: 0.05mm
+
+  - id: creep_1
+    uses: creep_constant_pressure
+    with:
+      target_deviator_stress: 20kPa
+      target_cell_pressure: 100kPa
+      motor_speed_rpm_max: 3000
+      stress_error_threshold: 1kPa
+      hold_duration_minutes: 30min
+
+  - id: cyclic_loading_1
+    uses: cyclic_stress_loading_constant_pressure
+    with:
+      direction: compression
+      motor_speed_rpm: 900
+      deviator_stress_min: 10kPa
+      deviator_stress_max: 40kPa
+      target_cell_pressure: 100kPa
+      cycle_count_param1: 3
+
+  - id: monotonic_to_failure
+    uses: monotonic_loading_constant_volume
+    with:
+      direction: compression
+      motor_speed_rpm: 1800
+      target_deviator_stress: 200kPa
+
+postprocessing:
+  export_fifo: true
+  notes: "Expected sample failure around 180 kPa based on previous tests"

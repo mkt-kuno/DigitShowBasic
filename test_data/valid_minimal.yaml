@@ -1,0 +1,14 @@
+version: 1
+metadata:
+  name: Minimal Test
+  specimen_profile: default
+  calibration_profile: default
+execution:
+  simulation: true
+  logging:
+    basename: minimal_run
+steps:
+  - id: pause
+    uses: wait
+    with:
+      duration: 10s

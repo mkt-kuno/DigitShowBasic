@@ -1,6 +1,6 @@
 ﻿/*
- * DigitShowBasic - Triaxial Test Machine Control Software
- * Copyright (C) 2025 Makoto KUNO
+ * DigitShowDST - Direct Shear Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO, Takuto ISHII
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,82 +16,72 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "DigitShowBasic.h"
+/**
+ * @file DA_Channel.cpp
+ * @brief Implementation of D/A channel calibration dialog
+ *
+ * インプリメンテーション ファイル
+ */
+#include "StdAfx.h"
+
 #include "DA_Channel.h"
-#include "DigitShowContext.h"
+#include "Variables.hpp"
+#include "resource.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+using namespace variables;
 
-CDA_Channel::CDA_Channel(CWnd* pParent)
-    : CDialog(CDA_Channel::IDD, pParent)
+/////////////////////////////////////////////////////////////////////////////
+// CDA_Channel ダイアログ
+
+CDA_Channel::CDA_Channel(CWnd *pParent /*=NULL*/) : CDialog(CDA_Channel::IDD, pParent)
 {
-    DigitShowContext* ctx = GetContext();
-    m_DA_Cala00 = ctx->cal.DA_a[0];
-    m_DA_Cala01 = ctx->cal.DA_a[1];
-    m_DA_Cala02 = ctx->cal.DA_a[2];
-    m_DA_Cala03 = ctx->cal.DA_a[3];
-    m_DA_Cala04 = ctx->cal.DA_a[4];
-    m_DA_Cala05 = ctx->cal.DA_a[5];
-    m_DA_Cala06 = ctx->cal.DA_a[6];
-    m_DA_Cala07 = ctx->cal.DA_a[7];
-    m_DA_Calb00 = ctx->cal.DA_b[0];
-    m_DA_Calb01 = ctx->cal.DA_b[1];
-    m_DA_Calb02 = ctx->cal.DA_b[2];
-    m_DA_Calb03 = ctx->cal.DA_b[3];
-    m_DA_Calb04 = ctx->cal.DA_b[4];
-    m_DA_Calb05 = ctx->cal.DA_b[5];
-    m_DA_Calb06 = ctx->cal.DA_b[6];
-    m_DA_Calb07 = ctx->cal.DA_b[7];
+    // Initialize arrays with current DA_Cal values
+    for (size_t i = 0; i < CHANNELS_DA; ++i)
+    {
+        m_DA_Cala[i] = DA_Cal_a[i];
+        m_DA_Calb[i] = DA_Cal_b[i];
+    }
 }
 
-void CDA_Channel::DoDataExchange(CDataExchange* pDX)
+void CDA_Channel::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala00, m_DA_Cala00);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala01, m_DA_Cala01);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala02, m_DA_Cala02);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala03, m_DA_Cala03);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala04, m_DA_Cala04);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala05, m_DA_Cala05);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala06, m_DA_Cala06);
-    DDX_Text(pDX, IDC_EDIT_DA_Cala07, m_DA_Cala07);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb00, m_DA_Calb00);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb01, m_DA_Calb01);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb02, m_DA_Calb02);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb03, m_DA_Calb03);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb04, m_DA_Calb04);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb05, m_DA_Calb05);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb06, m_DA_Calb06);
-    DDX_Text(pDX, IDC_EDIT_DA_Calb07, m_DA_Calb07);
+    //{{AFX_DATA_MAP(CDA_Channel)
+
+    // Resource ID arrays for DDX_Text loops
+    static constexpr std::array<int, CHANNELS_DA> IDS_CALA{{IDC_EDIT_DA_Cala00, IDC_EDIT_DA_Cala01, IDC_EDIT_DA_Cala02,
+                                                            IDC_EDIT_DA_Cala03, IDC_EDIT_DA_Cala04, IDC_EDIT_DA_Cala05,
+                                                            IDC_EDIT_DA_Cala06, IDC_EDIT_DA_Cala07}};
+
+    static constexpr std::array<int, CHANNELS_DA> IDS_CALB{{IDC_EDIT_DA_Calb00, IDC_EDIT_DA_Calb01, IDC_EDIT_DA_Calb02,
+                                                            IDC_EDIT_DA_Calb03, IDC_EDIT_DA_Calb04, IDC_EDIT_DA_Calb05,
+                                                            IDC_EDIT_DA_Calb06, IDC_EDIT_DA_Calb07}};
+
+    // Use loops for array-based DDX
+    for (size_t i = 0; i < CHANNELS_DA; ++i)
+    {
+        DDX_Text(pDX, IDS_CALA[i], m_DA_Cala[i]);
+        DDX_Text(pDX, IDS_CALB[i], m_DA_Calb[i]);
+    }
+    //}}AFX_DATA_MAP
 }
 
-BEGIN_MESSAGE_MAP(CDA_Channel, CDialog)
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF(CDA_Channel, CDialog)
+//{{AFX_MSG_MAP(CDA_Channel)
+//}}AFX_MSG_MAP
+END_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF()
+
+/////////////////////////////////////////////////////////////////////////////
+// CDA_Channel メッセージ ハンドラ
 
 void CDA_Channel::OnOK()
 {
+    // TODO: この位置にその他の検証用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    ctx->cal.DA_a[0] = m_DA_Cala00;
-    ctx->cal.DA_a[1] = m_DA_Cala01;
-    ctx->cal.DA_a[2] = m_DA_Cala02;
-    ctx->cal.DA_a[3] = m_DA_Cala03;
-    ctx->cal.DA_a[4] = m_DA_Cala04;
-    ctx->cal.DA_a[5] = m_DA_Cala05;
-    ctx->cal.DA_a[6] = m_DA_Cala06;
-    ctx->cal.DA_a[7] = m_DA_Cala07;
-    ctx->cal.DA_b[0] = m_DA_Calb00;
-    ctx->cal.DA_b[1] = m_DA_Calb01;
-    ctx->cal.DA_b[2] = m_DA_Calb02;
-    ctx->cal.DA_b[3] = m_DA_Calb03;
-    ctx->cal.DA_b[4] = m_DA_Calb04;
-    ctx->cal.DA_b[5] = m_DA_Calb05;
-    ctx->cal.DA_b[6] = m_DA_Calb06;
-    ctx->cal.DA_b[7] = m_DA_Calb07;
+    for (size_t i = 0; i < CHANNELS_DA; ++i)
+    {
+        DA_Cal_a[i] = m_DA_Cala[i];
+        DA_Cal_b[i] = m_DA_Calb[i];
+    }
     CDialog::OnOK();
 }

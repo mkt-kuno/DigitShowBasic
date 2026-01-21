@@ -1,0 +1,20 @@
+{
+  "$schema": "../schemas/control_script.schema.json",
+  "version": "d30dfc77241073d695648a5c6ec894790a3d1bbd-dirty",
+  "steps": [
+    {
+      "name": "Sample test with dirty build version",
+      "use": "monotonic_loading_constant_pressure",
+      "with": {
+        "direction": "load",
+        "motor_rpm": 0.1,
+        "tau_kPa": 100.0,
+        "sigma_kPa": 60.0
+      }
+    },
+    {
+      "name": "End",
+      "use": "no_control"
+    }
+  ]
+}

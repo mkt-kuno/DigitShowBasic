@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/takker99/DigitShowDST/schemas/calibration_factor.schema.json",
+  "title": "Calibration Factor Data",
+  "description": "Calibration coefficients for A/D channels and initial specimen data in triaxial testing apparatus",
+  "type": "object",
+  "required": [
+    "calibration_data"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Git commit hash of the program version that created/last saved this file (optional, for version tracking)"
+    },
+    "calibration_data": {
+      "type": "array",
+      "description": "Array of calibration coefficients for each channel (0-64 items). Omitted channels default to a=0, b=0, c=0.",
+      "minItems": 0,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "required": [
+          "channel",
+          "cal_a",
+          "cal_b",
+          "cal_c"
+        ],
+        "properties": {
+          "channel": {
+            "type": "integer",
+            "description": "Channel number (0-63)",
+            "minimum": 0,
+            "maximum": 63
+          },
+          "cal_a": {
+            "type": "number",
+            "description": "Quadratic coefficient (a) in: Physical Value = a*V^2 + b*V + c"
+          },
+          "cal_b": {
+            "type": "number",
+            "description": "Linear coefficient (b) in: Physical Value = a*V^2 + b*V + c"
+          },
+          "cal_c": {
+            "type": "number",
+            "description": "Constant coefficient (c) in: Physical Value = a*V^2 + b*V + c"
+          },
+          "amp_pb": {
+            "type": "number",
+            "description": "Physical value at base point for amplifier calibration (optional, omitted if 0)"
+          },
+          "amp_po": {
+            "type": "number",
+            "description": "Physical value at offset point for amplifier calibration (optional, omitted if 0)"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "initial_specimen": {
+      "type": "object",
+      "description": "Initial specimen dimensions at test start. Present specimen is tracked dynamically.",
+      "required": [
+        "height_mm",
+        "area_mm2",
+        "weight_g",
+        "box_weight_g"
+      ],
+      "properties": {
+        "height_mm": {
+          "type": "number",
+          "description": "Initial specimen height [mm]",
+          "minimum": 0
+        },
+        "area_mm2": {
+          "type": "number",
+          "description": "Initial cross-sectional area [mm²]",
+          "minimum": 0
+        },
+        "weight_g": {
+          "type": "number",
+          "description": "Initial specimen weight [g]",
+          "minimum": 0
+        },
+        "box_weight_g": {
+          "type": "number",
+          "description": "Box weight [g]",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "calibration_data": [
+        {
+          "channel": 0,
+          "cal_a": 0.0,
+          "cal_b": 1.0,
+          "cal_c": 0.0
+        },
+        {
+          "channel": 1,
+          "cal_a": 0.0,
+          "cal_b": 1.0,
+          "cal_c": 0.0
+        }
+      ],
+      "initial_specimen": {
+        "height_mm": 120.0,
+        "area_mm2": 14400.0,
+        "weight_g": 0.0,
+        "box_weight_g": 10000.0
+      }
+    }
+  ]
+}

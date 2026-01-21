@@ -1,0 +1,164 @@
+{
+  // Keep resource-related files in UTF-8 with BOM as well
+  "[cpp][*.rc][*.rc2]": {
+    "files.encoding": "utf8bom"
+  },
+  "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+  "C_Cpp.experimentalFeatures": "enabled",
+  "C_Cpp.codeAnalysis.exclude": {
+    "**/.venv": true,
+    "vcpkg/**": true,
+    "vcpkg_installed/**": true
+  },
+  "C_Cpp.codeAnalysis.clangTidy.args": [
+    "-fix",
+    "-fix-errors"
+  ],
+  "C_Cpp.formatting": "clangFormat",
+  // Terminal profiles to auto-load VS Dev Shell for MSBuild tasks
+  "chat.tools.terminal.terminalProfile.windows": {
+    "args": [
+      "-NoLogo",
+      "-NoExit",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-Command",
+      ". ${workspaceFolder}\\scripts\\profile.ps1"
+    ],
+    "path": "${env:SystemRoot}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+  },
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "flake.lock": "json",
+    "*.yaml": "yaml",
+    "*.vcxproj": "xml",
+    "algorithm": "cpp",
+    "any": "cpp",
+    "array": "cpp",
+    "atomic": "cpp",
+    "bit": "cpp",
+    "cctype": "cpp",
+    "charconv": "cpp",
+    "chrono": "cpp",
+    "cinttypes": "cpp",
+    "clocale": "cpp",
+    "cmath": "cpp",
+    "compare": "cpp",
+    "concepts": "cpp",
+    "csignal": "cpp",
+    "cstddef": "cpp",
+    "cstdint": "cpp",
+    "cstdio": "cpp",
+    "cstdlib": "cpp",
+    "cstring": "cpp",
+    "ctime": "cpp",
+    "cwchar": "cpp",
+    "cwctype": "cpp",
+    "exception": "cpp",
+    "expected": "cpp",
+    "filesystem": "cpp",
+    "format": "cpp",
+    "forward_list": "cpp",
+    "fstream": "cpp",
+    "functional": "cpp",
+    "initializer_list": "cpp",
+    "iomanip": "cpp",
+    "ios": "cpp",
+    "iosfwd": "cpp",
+    "iostream": "cpp",
+    "istream": "cpp",
+    "iterator": "cpp",
+    "limits": "cpp",
+    "list": "cpp",
+    "locale": "cpp",
+    "map": "cpp",
+    "memory": "cpp",
+    "mutex": "cpp",
+    "new": "cpp",
+    "numeric": "cpp",
+    "optional": "cpp",
+    "ostream": "cpp",
+    "random": "cpp",
+    "ranges": "cpp",
+    "ratio": "cpp",
+    "regex": "cpp",
+    "set": "cpp",
+    "span": "cpp",
+    "sstream": "cpp",
+    "stdexcept": "cpp",
+    "stdfloat": "cpp",
+    "stop_token": "cpp",
+    "streambuf": "cpp",
+    "string": "cpp",
+    "system_error": "cpp",
+    "thread": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "typeinfo": "cpp",
+    "unordered_map": "cpp",
+    "unordered_set": "cpp",
+    "utility": "cpp",
+    "valarray": "cpp",
+    "variant": "cpp",
+    "vector": "cpp",
+    "xfacet": "cpp",
+    "xhash": "cpp",
+    "xiosbase": "cpp",
+    "xlocale": "cpp",
+    "xlocbuf": "cpp",
+    "xlocinfo": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp",
+    "xmemory": "cpp",
+    "xstring": "cpp",
+    "xtr1common": "cpp",
+    "xtree": "cpp",
+    "xutility": "cpp",
+    "cfenv": "cpp",
+    "condition_variable": "cpp",
+    "coroutine": "cpp",
+    "csetjmp": "cpp",
+    "cstdarg": "cpp",
+    "deque": "cpp",
+    "numbers": "cpp",
+    "print": "cpp",
+    "queue": "cpp",
+    "source_location": "cpp",
+    "stack": "cpp",
+    "typeindex": "cpp",
+    "bitset": "cpp",
+    "complex": "cpp"
+  },
+  "terminal.integrated.automationProfile.windows": {
+    "path": "${env:SystemRoot}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+  },
+  "terminal.integrated.defaultProfile.windows": "VSDev PowerShell",
+  "terminal.integrated.profiles.windows": {
+    "VSDev PowerShell": {
+      "args": [
+        "-NoLogo",
+        "-NoExit",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        ". ${workspaceFolder}\\scripts\\profile.ps1"
+      ],
+      "icon": "terminal-powershell",
+      "overrideName": true,
+      "source": "PowerShell"
+    }
+  },
+  "yaml.customTags": [
+    "!include scalar"
+  ],
+  // YAML schema association for control workflow files
+  "yaml.schemas": {
+    "./knowledge/control_workflow.schema.json": [
+      "*.control.yaml",
+      "workflows/*.yaml",
+      "test_data/*.yaml"
+    ]
+  }
+}

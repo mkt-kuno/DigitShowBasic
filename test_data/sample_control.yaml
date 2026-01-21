@@ -1,0 +1,23 @@
+# Sample control script in YAML format
+# This demonstrates the equivalent YAML representation of the JSON control script
+
+steps:
+  - name: Initial consolidation
+    use: constant_tau_consolidation
+    with:
+      direction: compression
+      motor_rpm: 50.0
+      tau_kPa: 5.0
+      consolidation_rate_kPa_per_min: 20.0
+      target_sigma_kPa: 60.0
+
+  - name: Undrained compression test
+    use: monotonic_loading_constant_pressure
+    with:
+      direction: load
+      motor_rpm: 0.1
+      tau_kPa: 100.0
+      sigma_kPa: 60.0
+
+  - name: End of test
+    use: no_control

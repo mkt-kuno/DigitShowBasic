@@ -1,0 +1,14 @@
+version: 1
+metadata:
+  name: Invalid Unknown Strategy Test
+  specimen_profile: default
+  calibration_profile: default
+execution:
+  simulation: true
+  logging:
+    basename: invalid_run
+steps:
+  - id: invalid_step
+    uses: unknown_strategy_name # Unknown strategy - should fail
+    with:
+      duration: 10s

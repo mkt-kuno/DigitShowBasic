@@ -1,0 +1,5 @@
+# Test file with missing required field
+name: "Missing use field"
+with:
+  motor_rpm: 1.0
+  tau_kPa: 100

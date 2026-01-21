@@ -1,0 +1,48 @@
+{
+    "configurations": [
+        {
+            "compilerPath": "cl.exe",
+            "cppStandard": "c++26",
+            "cStandard": "c23",
+            "defines": [
+                "_WINDOWS",
+                "C4_MSVC",
+                "UNICODE",
+                "SPDLOG_USE_STD_FORMAT",
+                "ENABLE_RYML_HEADERS"
+            ],
+            "forcedInclude": [
+                "${workspaceFolder}/src/StdAfx.h"
+            ],
+            "includePath": [
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/vcpkg_installed/x64-windows-static/x64-windows-static/include"
+            ],
+            "intelliSenseMode": "windows-msvc-x64",
+            "name": "MSVC x64"
+        },
+        {
+            "compilerPath": "cl.exe",
+            "cppStandard": "c++26",
+            "cStandard": "c23",
+            "defines": [
+                "WIN32",
+                "_WINDOWS",
+                "C4_MSVC",
+                "UNICODE",
+                "ENABLE_RYML_HEADERS"
+            ],
+            "forcedInclude": [
+                "${workspaceFolder}/src/StdAfx.h"
+            ],
+            "includePath": [
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/vcpkg_installed/x86-windows-static/x86-windows-static/include"
+            ],
+            "intelliSenseMode": "windows-msvc-x86",
+            "name": "MSVC Win32"
+        }
+    ],
+    "enableConfigurationSquiggles": true,
+    "version": 4
+}

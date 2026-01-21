@@ -1,0 +1,388 @@
+{
+  "calibration_data": [
+    {
+      "channel": 0,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 1,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 2,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 3,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 4,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 5,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 6,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 7,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 8,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 9,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 10,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 11,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 12,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 13,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 14,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 15,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 16,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 17,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 18,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 19,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 20,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 21,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 22,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 23,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 24,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 25,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 26,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 27,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 28,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 29,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 30,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 31,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 32,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 33,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 34,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 35,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 36,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 37,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 38,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 39,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 40,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 41,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 42,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 43,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 44,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 45,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 46,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 47,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 48,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 49,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 50,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 51,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 52,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 53,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 54,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 55,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 56,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 57,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 58,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 59,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 60,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 61,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 62,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    },
+    {
+      "channel": 63,
+      "cal_a": 0.0,
+      "cal_b": 1.0,
+      "cal_c": 0.0
+    }
+  ]
+}

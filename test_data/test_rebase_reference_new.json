@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/control_script.schema.json",
+  "steps": [
+    {
+      "name": "Rebase reference (new name)",
+      "use": "rebase_reference"
+    },
+    {
+      "name": "End of control",
+      "use": "no_control"
+    }
+  ]
+}

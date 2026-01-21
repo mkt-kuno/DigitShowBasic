@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigitShowDST Sensor Data Viewer</title>
+
+  <!-- uPlot CSS -->
+  <link rel="stylesheet" href="https://esm.sh/uplot@1/dist/uPlot.min.css">
+
+  <!-- Pico.css -->
+  <link rel="stylesheet" href="https://esm.sh/@picocss/pico@2">
+
+  <style>
+    body {
+      padding: 1rem;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #6c757d;
+      transition: background-color 0.3s;
+    }
+
+    .status-indicator.connected {
+      background-color: #28a745;
+      animation: pulse 2s infinite;
+    }
+
+    .status-indicator.disconnected {
+      background-color: #dc3545;
+    }
+
+    .status-indicator.connecting {
+      background-color: #ffc107;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .controls input[type="text"],
+    .controls input[type="number"] {
+      margin: 0;
+    }
+
+    .chart-container {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: var(--card-background-color);
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-title {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .error-message {
+      padding: 1rem;
+      background-color: #f8d7da;
+      color: #721c24;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #f5c6cb;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      padding: 1rem;
+      background: var(--card-background-color);
+      border-radius: 0.5rem;
+      text-align: center;
+      border: 1px solid var(--card-border-color);
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: var(--muted-color);
+      margin: 0;
+    }
+
+    .uplot text {
+      fill: var(--muted-color, #e5e7eb);
+    }
+
+    .uplot .u-axis line,
+    .uplot .u-grid line {
+      stroke: var(--muted-color, #9ca3af);
+      stroke-opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="module">
+    import { createElement, Fragment, useState, useEffect, useRef, useCallback, useMemo } from 'https://esm.sh/react@19';
+    import { createRoot } from 'https://esm.sh/react-dom@19/client';
+    import htm from 'https://esm.sh/htm@3';
+    import uPlot from 'https://esm.sh/uplot@1';
+
+    const html = htm.bind(createElement);
+
+    function movingAverage(rawValues, timestamps, windowMs) {
+      if (!rawValues || rawValues.length === 0) return [];
+      if (windowMs <= 0) return [...rawValues];
+
+      const windowSec = windowMs / 1000;
+      const result = new Array(rawValues.length);
+
+      for (let i = 0; i < rawValues.length; i++) {
+        const centerTime = timestamps[i];
+        const windowStart = centerTime - windowSec / 2;
+        const windowEnd = centerTime + windowSec / 2;
+
+        let sum = 0;
+        let count = 0;
+        let startIdx = 0;
+        let endIdx = -1;
+
+        for (let j = 0; j < timestamps.length; j++) {
+          if (timestamps[j] >= windowStart) startIdx = j;
+          if (timestamps[j] <= windowEnd) endIdx = j;
+          else if (timestamps[j] > windowEnd) break;
+        }
+
+        if (endIdx >= startIdx && startIdx >= 0) {
+          for (let j = startIdx; j <= endIdx; j++) {
+            sum += rawValues[j];
+            count++;
+          }
+          result[i] = count > 0 ? sum / count : rawValues[i];
+        } else {
+          result[i] = rawValues[i];
+        }
+      }
+      return result;
+    }
+
+    function lowPassFilter(rawValues, timestamps, cutoffFrequencyHz) {
+      if (!rawValues || rawValues.length === 0) return [];
+      if (cutoffFrequencyHz <= 0) return [...rawValues];
+
+      const result = [rawValues[0]];
+
+      for (let i = 1; i < rawValues.length; i++) {
+        const dt = timestamps[i] - timestamps[i - 1];
+        if (dt <= 0) {
+          result.push(rawValues[i]);
+          continue;
+        }
+
+        const RC = 1.0 / (2.0 * Math.PI * cutoffFrequencyHz);
+        const alpha = dt / (RC + dt);
+        const filtered = alpha * rawValues[i] + (1 - alpha) * result[i - 1];
+        result.push(filtered);
+      }
+
+      return result;
+    }
+
+    function applyFilter(rawValues, timestamps, filterType, filterParam) {
+      if (filterType === 'lowpass') {
+        return lowPassFilter(rawValues, timestamps, filterParam);
+      } else if (filterType === 'movavg') {
+        return movingAverage(rawValues, timestamps, filterParam);
+      }
+      return rawValues;
+    }
+
+    function hexToRgba(hexColor, alpha = 1) {
+      const hex = hexColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function formatAxisValue(self, splits, axisIdx, foundSpace, foundIncr) {
+      // 目盛り値の最小差を検出して、それが表現できる桁数を決定
+      const validSplits = splits.filter(v => v !== null);
+      if (validSplits.length === 0) return splits.map(() => null);
+
+      // 隣接する値の差の最小値を計算
+      let minDiff = Infinity;
+      for (let i = 1; i < validSplits.length; i++) {
+        const diff = Math.abs(validSplits[i] - validSplits[i - 1]);
+        if (diff > 0) minDiff = Math.min(minDiff, diff);
+      }
+
+      // 最小差が表現できる小数点以下桁数を計算
+      let decimalPlaces = 0;
+      if (minDiff !== Infinity && minDiff > 0) {
+        decimalPlaces = Math.max(0, Math.ceil(-Math.log10(minDiff)));
+      }
+
+      // 全体の値の範囲を確認して指数表記が必要か判断
+      const maxAbsValue = Math.max(...validSplits.map(Math.abs));
+      const useExponential = maxAbsValue >= 1e5 || (maxAbsValue > 0 && maxAbsValue < 1e-4);
+
+      return splits.map(value => {
+        if (value === null) return null;
+        if (value === 0) return '0';
+
+        if (useExponential) {
+          return value.toExponential(Math.max(2, Math.min(decimalPlaces, 4)));
+        }
+
+        // 小数点以下の桁数を最大10桁に制限（可読性のため）
+        return value.toFixed(Math.min(decimalPlaces, 10));
+      });
+    }
+
+    function UPlotChart({ data, options }) {
+      const containerRef = useRef(null);
+      const plotRef = useRef(null);
+      const [size, setSize] = useState({ width: 0, height: 0 });
+
+      useEffect(() => {
+        if (!containerRef.current) return;
+
+        const updateSize = () => {
+          if (containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            setSize({ width: rect.width, height: 300 });
+          }
+        };
+
+        updateSize();
+        const resizeObserver = new ResizeObserver(updateSize);
+        resizeObserver.observe(containerRef.current);
+        return () => resizeObserver.disconnect();
+      }, []);
+
+      useEffect(() => {
+        if (!containerRef.current || size.width === 0) return;
+
+        if (plotRef.current) {
+          plotRef.current.destroy();
+          plotRef.current = null;
+        }
+
+        const opts = { ...options, width: size.width, height: size.height };
+        plotRef.current = new uPlot(opts, data, containerRef.current);
+
+        return () => {
+          if (plotRef.current) {
+            plotRef.current.destroy();
+            plotRef.current = null;
+          }
+        };
+      }, [options, size]);
+
+      useEffect(() => {
+        if (plotRef.current && data) {
+          plotRef.current.setData(data);
+        }
+      }, [data]);
+
+      return html`<div ref=${containerRef} />`;
+    }
+
+    function App() {
+      const [status, setStatus] = useState('disconnected');
+      const [error, setError] = useState(null);
+      const [latestData, setLatestData] = useState(null);
+      const [dataHistory, setDataHistory] = useState({
+        timestamps: [], shearForce: [], verticalForce: [], shearDisp: [], normalDisp: [],
+        frontVerticalDisp: [], rearVerticalDisp: [], tiltMm: [], shearStress: [], verticalStress: [],
+        motorRpm: [], frontEp: [], rearEp: [], frontFriction: [], rearFriction: [],
+      });
+      const [displayWindowSec, setDisplayWindowSec] = useState(60);
+      const [apiUrl, setApiUrl] = useState('http://localhost:8080');
+      const [enableSmoothing, setEnableSmoothing] = useState(false);
+      const [filterType, setFilterType] = useState('lowpass');
+      const [cutoffFrequencyHz, setCutoffFrequencyHz] = useState(2.0);
+      const [smoothingWindowMs, setSmoothingWindowMs] = useState(500);
+      const [smoothingPreset, setSmoothingPreset] = useState('medium');
+
+      const eventSourceRef = useRef(null);
+      const startTimeRef = useRef(null);
+      const displayWindowSecRef = useRef(60);
+
+      const connectToStream = useCallback(() => {
+        if (eventSourceRef.current) eventSourceRef.current.close();
+        setStatus('connecting');
+        setError(null);
+        startTimeRef.current = null;
+
+        try {
+          const es = new EventSource(`${apiUrl}/api/sensor-data/stream`);
+
+          es.onopen = () => {
+            setStatus('connected');
+            console.log('SSE connection established');
+          };
+
+          es.addEventListener('data', (event) => {
+            try {
+              const sensorData = JSON.parse(event.data);
+              setLatestData(sensorData);
+
+              setDataHistory(prev => {
+                const newHistory = { ...prev };
+                if (startTimeRef.current === null) startTimeRef.current = sensorData.timestamp;
+
+                const relativeTime = (sensorData.timestamp - startTimeRef.current) / 1000;
+
+                newHistory.timestamps = [...prev.timestamps, relativeTime];
+                newHistory.shearForce = [...prev.shearForce, sensorData.physical_input.shear_force_N];
+                newHistory.verticalForce = [...prev.verticalForce, sensorData.physical_input.vertical_force_N];
+                newHistory.shearDisp = [...prev.shearDisp, sensorData.physical_input.shear_displacement_mm];
+                newHistory.normalDisp = [...prev.normalDisp, sensorData.physical_input.normal_displacement_mm];
+                newHistory.frontVerticalDisp = [...prev.frontVerticalDisp, sensorData.physical_input.front_vertical_disp_mm];
+                newHistory.rearVerticalDisp = [...prev.rearVerticalDisp, sensorData.physical_input.rear_vertical_disp_mm];
+                newHistory.tiltMm = [...prev.tiltMm, sensorData.physical_input.tilt_mm];
+                newHistory.shearStress = [...prev.shearStress, sensorData.physical_input.shear_stress_kpa];
+                newHistory.verticalStress = [...prev.verticalStress, sensorData.physical_input.vertical_stress_kpa];
+                newHistory.motorRpm = [...prev.motorRpm, sensorData.physical_output.motor_rpm];
+                newHistory.frontEp = [...prev.frontEp, sensorData.physical_output.front_ep_kpa];
+                newHistory.rearEp = [...prev.rearEp, sensorData.physical_output.rear_ep_kpa];
+                newHistory.frontFriction = [...prev.frontFriction, sensorData.physical_input.front_friction_force_N];
+                newHistory.rearFriction = [...prev.rearFriction, sensorData.physical_input.rear_friction_force_N];
+
+                const timeWindow = Math.max(displayWindowSecRef.current, 1);
+                const cutoffTime = relativeTime - timeWindow;
+
+                if (newHistory.timestamps.length > 0 && newHistory.timestamps[0] < cutoffTime) {
+                  const startIdx = newHistory.timestamps.findIndex(t => t >= cutoffTime);
+                  if (startIdx >= 0) {
+                    Object.keys(newHistory).forEach(key => {
+                      newHistory[key] = newHistory[key].slice(startIdx);
+                    });
+                  }
+                }
+
+                if (window.performance && window.performance.memory && Math.random() < 0.01) {
+                  console.debug('Memory:', {
+                    usedJSHeapSize: (performance.memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+                    jsHeapSizeLimit: (performance.memory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
+                    historyLength: newHistory.timestamps.length
+                  });
+                }
+
+                return newHistory;
+              });
+            } catch (err) {
+              console.error('Failed to parse sensor data:', err);
+            }
+          });
+
+          es.onerror = () => {
+            console.error('SSE error');
+            setStatus('disconnected');
+            setError('Connection lost. Please check if the server is running.');
+            es.close();
+            eventSourceRef.current = null;
+          };
+
+          eventSourceRef.current = es;
+        } catch (err) {
+          setError(`Failed to connect: ${err.message}`);
+          setStatus('disconnected');
+        }
+      }, [apiUrl]);
+
+      const disconnect = useCallback(() => {
+        if (eventSourceRef.current) {
+          eventSourceRef.current.close();
+          eventSourceRef.current = null;
+        }
+        setStatus('disconnected');
+      }, []);
+
+      const clearData = useCallback(() => {
+        startTimeRef.current = null;
+        setDataHistory({
+          timestamps: [], shearForce: [], verticalForce: [], shearDisp: [], normalDisp: [],
+          frontVerticalDisp: [], rearVerticalDisp: [], tiltMm: [], shearStress: [], verticalStress: [],
+          motorRpm: [], frontEp: [], rearEp: [], frontFriction: [], rearFriction: [],
+        });
+      }, []);
+
+      useEffect(() => {
+        return () => {
+          if (eventSourceRef.current) eventSourceRef.current.close();
+        };
+      }, []);
+
+      const getStatusText = () => {
+        const map = { connected: 'Connected', connecting: 'Connecting...', disconnected: 'Disconnected' };
+        return map[status] || 'Unknown';
+      };
+
+      const filterParam = filterType === 'lowpass' ? cutoffFrequencyHz : smoothingWindowMs;
+
+      const totalFriction = useMemo(() =>
+        dataHistory.frontFriction.length > 0
+          ? dataHistory.frontFriction.map((front, i) => front + dataHistory.rearFriction[i])
+          : [],
+        [dataHistory.frontFriction, dataHistory.rearFriction]
+      );
+
+      const filteredShearForce = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.shearForce.length > 0
+          ? applyFilter(dataHistory.shearForce, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.shearForce,
+        [dataHistory.shearForce, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredFrontFriction = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.frontFriction.length > 0
+          ? applyFilter(dataHistory.frontFriction, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.frontFriction,
+        [dataHistory.frontFriction, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredRearFriction = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.rearFriction.length > 0
+          ? applyFilter(dataHistory.rearFriction, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.rearFriction,
+        [dataHistory.rearFriction, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredTotalFriction = useMemo(() =>
+        enableSmoothing && filterParam > 0 && totalFriction.length > 0
+          ? applyFilter(totalFriction, dataHistory.timestamps, filterType, filterParam)
+          : totalFriction,
+        [totalFriction, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredVerticalForce = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.verticalForce.length > 0
+          ? applyFilter(dataHistory.verticalForce, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.verticalForce,
+        [dataHistory.verticalForce, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredVerticalStress = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.verticalStress.length > 0
+          ? applyFilter(dataHistory.verticalStress, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.verticalStress,
+        [dataHistory.verticalStress, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredNormalDisp = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.normalDisp.length > 0
+          ? applyFilter(dataHistory.normalDisp, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.normalDisp,
+        [dataHistory.normalDisp, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredShearStress = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.shearStress.length > 0
+          ? applyFilter(dataHistory.shearStress, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.shearStress,
+        [dataHistory.shearStress, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredShearDisp = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.shearDisp.length > 0
+          ? applyFilter(dataHistory.shearDisp, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.shearDisp,
+        [dataHistory.shearDisp, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredFrontVerticalDisp = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.frontVerticalDisp.length > 0
+          ? applyFilter(dataHistory.frontVerticalDisp, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.frontVerticalDisp,
+        [dataHistory.frontVerticalDisp, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredRearVerticalDisp = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.rearVerticalDisp.length > 0
+          ? applyFilter(dataHistory.rearVerticalDisp, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.rearVerticalDisp,
+        [dataHistory.rearVerticalDisp, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const filteredTiltMm = useMemo(() =>
+        enableSmoothing && filterParam > 0 && dataHistory.tiltMm.length > 0
+          ? applyFilter(dataHistory.tiltMm, dataHistory.timestamps, filterType, filterParam)
+          : dataHistory.tiltMm,
+        [dataHistory.tiltMm, dataHistory.timestamps, enableSmoothing, filterType, filterParam]
+      );
+
+      const shearForceData = useMemo(() =>
+        enableSmoothing && filterParam > 0
+          ? [dataHistory.timestamps, dataHistory.shearForce, dataHistory.frontFriction, dataHistory.rearFriction, totalFriction,
+            filteredShearForce, filteredFrontFriction, filteredRearFriction, filteredTotalFriction]
+          : [dataHistory.timestamps, dataHistory.shearForce, dataHistory.frontFriction, dataHistory.rearFriction, totalFriction],
+        [dataHistory.timestamps, dataHistory.shearForce, dataHistory.frontFriction, dataHistory.rearFriction, totalFriction,
+          filteredShearForce, filteredFrontFriction, filteredRearFriction, filteredTotalFriction, enableSmoothing, filterParam]
+      );
+
+      const verticalForceData = useMemo(() =>
+        enableSmoothing && filterParam > 0
+          ? [dataHistory.timestamps, dataHistory.verticalForce, filteredVerticalForce]
+          : [dataHistory.timestamps, dataHistory.verticalForce],
+        [dataHistory.timestamps, dataHistory.verticalForce, filteredVerticalForce, enableSmoothing, filterParam]
+      );
+
+      const verticalStressData = useMemo(() =>
+        enableSmoothing && filterParam > 0
+          ? [dataHistory.timestamps, dataHistory.verticalStress, dataHistory.normalDisp, filteredVerticalStress, filteredNormalDisp]
+          : [dataHistory.timestamps, dataHistory.verticalStress, dataHistory.normalDisp],
+        [dataHistory.timestamps, dataHistory.verticalStress, dataHistory.normalDisp, filteredVerticalStress, filteredNormalDisp, enableSmoothing, filterParam]
+      );
+
+      const shearStressData = useMemo(() =>
+        enableSmoothing && filterParam > 0
+          ? [dataHistory.timestamps, dataHistory.shearStress, dataHistory.shearDisp, filteredShearStress, filteredShearDisp]
+          : [dataHistory.timestamps, dataHistory.shearStress, dataHistory.shearDisp],
+        [dataHistory.timestamps, dataHistory.shearStress, dataHistory.shearDisp, filteredShearStress, filteredShearDisp, enableSmoothing, filterParam]
+      );
+
+      const verticalDispTiltData = useMemo(() =>
+        enableSmoothing && filterParam > 0
+          ? [dataHistory.timestamps, dataHistory.frontVerticalDisp, dataHistory.rearVerticalDisp, dataHistory.tiltMm,
+            filteredFrontVerticalDisp, filteredRearVerticalDisp, filteredTiltMm]
+          : [dataHistory.timestamps, dataHistory.frontVerticalDisp, dataHistory.rearVerticalDisp, dataHistory.tiltMm],
+        [dataHistory.timestamps, dataHistory.frontVerticalDisp, dataHistory.rearVerticalDisp, dataHistory.tiltMm,
+          filteredFrontVerticalDisp, filteredRearVerticalDisp, filteredTiltMm, enableSmoothing, filterParam]
+      );
+
+      const epData = useMemo(() => [dataHistory.timestamps, dataHistory.frontEp, dataHistory.rearEp],
+        [dataHistory.timestamps, dataHistory.frontEp, dataHistory.rearEp]
+      );
+
+      const rpmData = useMemo(() => [dataHistory.timestamps, dataHistory.motorRpm],
+        [dataHistory.timestamps, dataHistory.motorRpm]
+      );
+
+      const palette = useMemo(() => ({
+        shear: '#2563eb', shearAlt: '#38bdf8', vertical: '#dc2626', verticalAlt: '#f97316',
+        verticalFront: '#b91c1c', verticalRear: '#fb7185', tilt: '#94a3b8',
+        epFront: '#0f766e', epRear: '#14b8a6', rpm: '#06b6d4',
+        shearFront: '#1d4ed8', shearRear: '#60a5fa',
+        frictionFront: '#7c3aed', frictionRear: '#a78bfa', frictionTotal: '#8b5cf6',
+      }), []);
+
+      const axisTheme = useMemo(() => ({
+        text: getComputedStyle(document.documentElement).getPropertyValue('--muted-color').trim() || '#e5e7eb',
+        grid: getComputedStyle(document.documentElement).getPropertyValue('--card-border-color').trim() || '#4b5563',
+        font: '12px "Segoe UI", sans-serif'
+      }), []);
+
+      const shearForceOptions = useMemo(() => ({
+        series: [
+          { label: "Time (s)", scale: "x" },
+          { label: "Shear Force (N)", stroke: enableSmoothing ? hexToRgba(palette.shear, 0.3) : palette.shear, width: 1.5, scale: "force" },
+          { label: "Front Friction (N)", stroke: enableSmoothing ? hexToRgba(palette.frictionFront, 0.3) : palette.frictionFront, width: 1.5, scale: "friction", show: false },
+          { label: "Rear Friction (N)", stroke: enableSmoothing ? hexToRgba(palette.frictionRear, 0.3) : palette.frictionRear, width: 1.5, scale: "friction", show: false },
+          { label: "Total Friction (N)", stroke: enableSmoothing ? hexToRgba(palette.frictionTotal, 0.3) : palette.frictionTotal, width: 1.5, scale: "friction" },
+          ...(enableSmoothing ? [
+            { label: "Shear Smoothed", stroke: palette.shear, width: 1.0, scale: "force" },
+            { label: "Front Friction Smoothed", stroke: palette.frictionFront, width: 1.0, scale: "friction", show: false },
+            { label: "Rear Friction Smoothed", stroke: palette.frictionRear, width: 1.0, scale: "friction", show: false },
+            { label: "Total Friction Smoothed", stroke: palette.frictionTotal, width: 1.0, scale: "friction" }
+          ] : [])
+        ],
+        axes: [
+          { stroke: axisTheme.text, font: axisTheme.font, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "force", label: "Shear Force (N)", labelSize: 30, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "friction", label: "Friction (N)", labelSize: 30, side: 1, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } }
+        ],
+        scales: { x: { time: false }, force: {}, friction: {} }
+      }), [axisTheme, palette, enableSmoothing]);
+
+      const verticalForceOptions = useMemo(() => ({
+        series: [
+          { label: "Time (s)" },
+          { label: "Vertical Force (N)", stroke: enableSmoothing ? hexToRgba(palette.vertical, 0.3) : palette.vertical, width: 1.5 },
+          ...(enableSmoothing ? [{ label: "Smoothed", stroke: palette.vertical, width: 1.0 }] : [])
+        ],
+        axes: [
+          { stroke: axisTheme.text, font: axisTheme.font, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { label: "Force (N)", labelSize: 30, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } }
+        ],
+        scales: { x: { time: false }, y: {} }
+      }), [axisTheme, palette, enableSmoothing]);
+
+      const verticalStressOptions = useMemo(() => ({
+        series: [
+          { label: "Time (s)", scale: "x" },
+          { label: "Vertical Stress (kPa)", stroke: enableSmoothing ? hexToRgba(palette.vertical, 0.3) : palette.vertical, width: 1.5, scale: "stress" },
+          { label: "Normal Disp. (mm)", stroke: enableSmoothing ? hexToRgba(palette.verticalAlt, 0.3) : palette.verticalAlt, width: 1.5, scale: "disp" },
+          ...(enableSmoothing ? [
+            { label: "Stress Smoothed", stroke: palette.vertical, width: 1.0, scale: "stress" },
+            { label: "Disp Smoothed", stroke: palette.verticalAlt, width: 1.0, scale: "disp" }
+          ] : [])
+        ],
+        axes: [
+          { stroke: axisTheme.text, font: axisTheme.font, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "stress", label: "Stress (kPa)", labelSize: 30, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "disp", label: "Disp (mm)", labelSize: 30, side: 1, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } }
+        ],
+        scales: { x: { time: false }, stress: {}, disp: {} }
+      }), [axisTheme, palette, enableSmoothing]);
+
+      const shearStressOptions = useMemo(() => ({
+        series: [
+          { label: "Time (s)", scale: "x" },
+          { label: "Shear Stress (kPa)", stroke: enableSmoothing ? hexToRgba(palette.shear, 0.3) : palette.shear, width: 1.5, scale: "stress" },
+          { label: "Shear Disp. (mm)", stroke: enableSmoothing ? hexToRgba(palette.shearAlt, 0.3) : palette.shearAlt, width: 1.5, scale: "disp" },
+          ...(enableSmoothing ? [
+            { label: "Stress Smoothed", stroke: palette.shear, width: 1.0, scale: "stress" },
+            { label: "Disp Smoothed", stroke: palette.shearAlt, width: 1.0, scale: "disp" }
+          ] : [])
+        ],
+        axes: [
+          { stroke: axisTheme.text, font: axisTheme.font, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "stress", label: "Stress (kPa)", labelSize: 30, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "disp", label: "Disp (mm)", labelSize: 30, side: 1, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } }
+        ],
+        scales: { x: { time: false }, stress: {}, disp: {} }
+      }), [axisTheme, palette, enableSmoothing]);
+
+      const verticalDispTiltOptions = useMemo(() => ({
+        series: [
+          { label: "Time (s)", scale: "x" },
+          { label: "Front Disp (mm)", stroke: enableSmoothing ? hexToRgba(palette.verticalFront, 0.3) : palette.verticalFront, width: 1.5, scale: "disp", show: false },
+          { label: "Rear Disp (mm)", stroke: enableSmoothing ? hexToRgba(palette.verticalRear, 0.3) : palette.verticalRear, width: 1.5, scale: "disp", show: false },
+          { label: "Tilt (mm)", stroke: enableSmoothing ? hexToRgba(palette.tilt, 0.3) : palette.tilt, width: 1.5, scale: "tilt" },
+          ...(enableSmoothing ? [
+            { label: "Front Smoothed", stroke: palette.verticalFront, width: 1.0, scale: "disp", show: false },
+            { label: "Rear Smoothed", stroke: palette.verticalRear, width: 1.0, scale: "disp", show: false },
+            { label: "Tilt Smoothed", stroke: palette.tilt, width: 1.0, scale: "tilt" }
+          ] : [])
+        ],
+        axes: [
+          { stroke: axisTheme.text, font: axisTheme.font, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "disp", label: "Disp (mm)", labelSize: 30, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { scale: "tilt", label: "Tilt (mm)", labelSize: 30, side: 1, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, values: formatAxisValue, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } }
+        ],
+        scales: { x: { time: false }, disp: {}, tilt: {} }
+      }), [axisTheme, palette, enableSmoothing]);
+
+      const epOptions = useMemo(() => ({
+        series: [
+          { label: "Time (s)" },
+          { label: "Front EP (kPa)", stroke: palette.epFront, width: 1.5 },
+          { label: "Rear EP (kPa)", stroke: palette.epRear, width: 1.5 }
+        ],
+        axes: [
+          { stroke: axisTheme.text, font: axisTheme.font, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { label: "EP (kPa)", labelSize: 30, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } }
+        ],
+        scales: { x: { time: false }, y: {} }
+      }), [axisTheme, palette]);
+
+      const rpmOptions = useMemo(() => ({
+        series: [
+          { label: "Time (s)" },
+          { label: "Motor RPM", stroke: palette.rpm, width: 1.5 }
+        ],
+        axes: [
+          { stroke: axisTheme.text, font: axisTheme.font, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } },
+          { label: "RPM", labelSize: 30, stroke: axisTheme.text, font: axisTheme.font, labelFont: axisTheme.font, labelStroke: axisTheme.text, grid: { stroke: axisTheme.grid, width: 1 }, ticks: { stroke: axisTheme.text, width: 1 } }
+        ],
+        scales: { x: { time: false }, y: {} }
+      }), [axisTheme, palette]);
+
+      return html`
+        <main className="container">
+          <div className="header">
+            <h1>DigitShowDST Sensor Data Viewer</h1>
+            <div className="status">
+              <div className=${'status-indicator ' + status}></div>
+              <span>${getStatusText()}</span>
+            </div>
+          </div>
+
+          ${error ? html`<div className="error-message"><strong>Error:</strong> ${error}</div>` : null}
+
+          <div className="controls">
+            <input type="text" value=${apiUrl} onChange=${(e) => setApiUrl(e.target.value)} placeholder="API URL" style=${{ maxWidth: '300px' }} />
+            <button onClick=${connectToStream} disabled=${status === 'connected'}>Connect</button>
+            <button onClick=${disconnect} disabled=${status === 'disconnected'}>Disconnect</button>
+            <button onClick=${clearData}>Clear Data</button>
+            <label>Display Window (s): <input type="number" value=${displayWindowSec} onChange=${(e) => { const next = Math.max(5, parseInt(e.target.value, 10) || 60); displayWindowSecRef.current = next; setDisplayWindowSec(next); }} min="5" max="600" step="5" style=${{ width: '110px' }} /></label>
+          </div>
+
+          <div className="controls">
+            <label><input type="checkbox" checked=${enableSmoothing} onChange=${(e) => setEnableSmoothing(e.target.checked)} /> Smoothing</label>
+            ${enableSmoothing ? html`
+              <${Fragment}>
+                <select key="filterType" value=${filterType} onChange=${(e) => setFilterType(e.target.value)} style=${{ width: 'auto', minWidth: '150px' }}>
+                  <option key="lowpass" value="lowpass">Low-Pass Filter</option>
+                  <option key="movavg" value="movavg">Moving Average</option>
+                </select>
+                ${filterType === 'lowpass' ? html`
+                  <${Fragment}>
+                    <select key="preset" value=${smoothingPreset} onChange=${(e) => { const val = e.target.value; setSmoothingPreset(val); const presets = { light: 5.0, medium: 2.0, heavy: 0.5 }; setCutoffFrequencyHz(presets[val] || 2.0); }} style=${{ width: 'auto', minWidth: '150px' }}>
+                      <option key="light" value="light">Light (5 Hz)</option>
+                      <option key="medium" value="medium">Medium (2 Hz)</option>
+                      <option key="heavy" value="heavy">Heavy (0.5 Hz)</option>
+                      <option key="custom" value="custom">Custom</option>
+                    </select>
+                    ${smoothingPreset === 'custom' ? html`<label key="cutoff">Cutoff (Hz): <input type="number" value=${cutoffFrequencyHz} onChange=${(e) => { const val = Math.max(0.1, Math.min(50, parseFloat(e.target.value) || 2.0)); setCutoffFrequencyHz(val); setSmoothingPreset('custom'); }} min="0.1" max="50" step="0.1" style=${{ width: 'auto', minWidth: '80px' }} /></label>` : null}
+                  <//>
+                ` : html`
+                  <${Fragment}>
+                    <select key="preset" value=${smoothingPreset} onChange=${(e) => { const val = e.target.value; setSmoothingPreset(val); const presets = { light: 200, medium: 500, heavy: 1000 }; setSmoothingWindowMs(presets[val] || 500); }} style=${{ width: 'auto', minWidth: '150px' }}>
+                      <option key="light" value="light">Light (200ms)</option>
+                      <option key="medium" value="medium">Medium (500ms)</option>
+                      <option key="heavy" value="heavy">Heavy (1000ms)</option>
+                      <option key="custom" value="custom">Custom</option>
+                    </select>
+                    ${smoothingPreset === 'custom' ? html`<label key="window">Window (ms): <input type="number" value=${smoothingWindowMs} onChange=${(e) => { const val = Math.max(50, Math.min(60 * 1000, parseInt(e.target.value, 10) || 500)); setSmoothingWindowMs(val); setSmoothingPreset('custom'); }} min="50" max="60000" step="50" style=${{ width: 'auto', minWidth: '80px' }} /></label>` : null}
+                  <//>
+                `}
+              <//>
+            ` : null}
+          </div>
+
+          ${latestData ? html`
+            <div className="metrics">
+              <div className="metric-card"><p className="metric-label">Shear Force</p><p className="metric-value">${latestData.physical_input.shear_force_N.toFixed(2)} N</p></div>
+              <div className="metric-card"><p className="metric-label">Vertical Force</p><p className="metric-value">${latestData.physical_input.vertical_force_N.toFixed(2)} N</p></div>
+              <div className="metric-card"><p className="metric-label">Shear Stress</p><p className="metric-value">${latestData.physical_input.shear_stress_kpa.toFixed(2)} kPa</p></div>
+              <div className="metric-card"><p className="metric-label">Motor RPM</p><p className="metric-value">${latestData.physical_output.motor_rpm.toFixed(1)}</p></div>
+            </div>
+          ` : null}
+
+          <div className="chart-grid">
+            <div className="chart-container"><h3 className="chart-title">Shear Force & Friction</h3><${UPlotChart} data=${shearForceData} options=${shearForceOptions} /></div>
+            <div className="chart-container"><h3 className="chart-title">Vertical Force</h3><${UPlotChart} data=${verticalForceData} options=${verticalForceOptions} /></div>
+            <div className="chart-container"><h3 className="chart-title">Shear Stress & Shear Disp.</h3><${UPlotChart} data=${shearStressData} options=${shearStressOptions} /></div>
+            <div className="chart-container"><h3 className="chart-title">Vertical Stress & Normal Disp.</h3><${UPlotChart} data=${verticalStressData} options=${verticalStressOptions} /></div>
+            <div className="chart-container"><h3 className="chart-title">Front/Rear Vertical Disp. & Tilt</h3><${UPlotChart} data=${verticalDispTiltData} options=${verticalDispTiltOptions} /></div>
+            <div className="chart-container"><h3 className="chart-title">EP (kPa)</h3><${UPlotChart} data=${epData} options=${epOptions} /></div>
+            <div className="chart-container"><h3 className="chart-title">Motor RPM</h3><${UPlotChart} data=${rpmData} options=${rpmOptions} /></div>
+          </div>
+        </main>
+      `;
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(html`<${App} />`);
+  </script>
+</body>
+
+</html>

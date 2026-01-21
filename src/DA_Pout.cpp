@@ -1,6 +1,6 @@
 ﻿/*
- * DigitShowBasic - Triaxial Test Machine Control Software
- * Copyright (C) 2025 Makoto KUNO
+ * DigitShowDST - Direct Shear Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO, Takuto ISHII
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,179 +16,160 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "DigitShowBasic.h"
+/**
+ * @file DA_Pout.cpp
+ * @brief Implementation of D/A physical output dialog
+ *
+ * インプリメンテーション ファイル
+ */
+#include "StdAfx.h"
+
 #include "DA_Pout.h"
-#include "DigitShowContext.h"
+#include "Variables.hpp"
+#include "control/measurement.hpp"
+#include "resource.h"
+#include <spdlog/spdlog.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+using namespace variables;
 
-CDA_Pout::CDA_Pout(CWnd* pParent)
-    : CDialog(CDA_Pout::IDD, pParent)
+/////////////////////////////////////////////////////////////////////////////
+// CDA_Pout ダイアログ
+
+CDA_Pout::CDA_Pout(CWnd *pParent /*=NULL*/) : CDialog(CDA_Pout::IDD, pParent)
 {
-    DigitShowContext* ctx = GetContext();
-    m_DACala00 = ctx->cal.DA_a[0];
-    m_DACala01 = ctx->cal.DA_a[1];
-    m_DACala02 = ctx->cal.DA_a[2];
-    m_DACala03 = ctx->cal.DA_a[3];
-    m_DACala04 = ctx->cal.DA_a[4];
-    m_DACala05 = ctx->cal.DA_a[5];
-    m_DACala06 = ctx->cal.DA_a[6];
-    m_DACala07 = ctx->cal.DA_a[7];
-    m_DACalb00 = ctx->cal.DA_b[0];
-    m_DACalb01 = ctx->cal.DA_b[1];
-    m_DACalb02 = ctx->cal.DA_b[2];
-    m_DACalb03 = ctx->cal.DA_b[3];
-    m_DACalb04 = ctx->cal.DA_b[4];
-    m_DACalb05 = ctx->cal.DA_b[5];
-    m_DACalb06 = ctx->cal.DA_b[6];
-    m_DACalb07 = ctx->cal.DA_b[7];
-    m_DAPvalue00 = 0.0;
-    m_DAPvalue01 = 0.0;
-    m_DAPvalue02 = 0.0;
-    m_DAPvalue03 = 0.0;
-    m_DAPvalue04 = 0.0;
-    m_DAPvalue05 = 0.0;
-    m_DAPvalue06 = 0.0;
-    m_DAPvalue07 = 0.0;
-    m_DAVout00 = ctx->DAVout[0];
-    m_DAVout01 = ctx->DAVout[1];
-    m_DAVout02 = ctx->DAVout[2];
-    m_DAVout03 = ctx->DAVout[3];
-    m_DAVout04 = ctx->DAVout[4];
-    m_DAVout05 = ctx->DAVout[5];
-    m_DAVout06 = ctx->DAVout[6];
-    m_DAVout07 = ctx->DAVout[7];
+    //{{AFX_DATA_INIT(CDA_Pout)
+
+    //}}AFX_DATA_INIT
+
+    // Initialize arrays with current values
+    for (size_t i = 0; i < CHANNELS_DA_POUT; ++i)
+    {
+        m_DACala[i] = DA_Cal_a[i];
+        m_DACalb[i] = DA_Cal_b[i];
+        m_DAVout[i] = DAVout[i];
+    }
 }
 
-void CDA_Pout::DoDataExchange(CDataExchange* pDX)
+void CDA_Pout::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
-    DDX_Text(pDX, IDC_EDIT_DACala00, m_DACala00);
-    DDX_Text(pDX, IDC_EDIT_DACala01, m_DACala01);
-    DDX_Text(pDX, IDC_EDIT_DACala02, m_DACala02);
-    DDX_Text(pDX, IDC_EDIT_DACala03, m_DACala03);
-    DDX_Text(pDX, IDC_EDIT_DACala04, m_DACala04);
-    DDX_Text(pDX, IDC_EDIT_DACala05, m_DACala05);
-    DDX_Text(pDX, IDC_EDIT_DACala06, m_DACala06);
-    DDX_Text(pDX, IDC_EDIT_DACala07, m_DACala07);
-    DDX_Text(pDX, IDC_EDIT_DACalb00, m_DACalb00);
-    DDX_Text(pDX, IDC_EDIT_DACalb01, m_DACalb01);
-    DDX_Text(pDX, IDC_EDIT_DACalb02, m_DACalb02);
-    DDX_Text(pDX, IDC_EDIT_DACalb03, m_DACalb03);
-    DDX_Text(pDX, IDC_EDIT_DACalb04, m_DACalb04);
-    DDX_Text(pDX, IDC_EDIT_DACalb05, m_DACalb05);
-    DDX_Text(pDX, IDC_EDIT_DACalb06, m_DACalb06);
-    DDX_Text(pDX, IDC_EDIT_DACalb07, m_DACalb07);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue00, m_DAPvalue00);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue01, m_DAPvalue01);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue02, m_DAPvalue02);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue03, m_DAPvalue03);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue04, m_DAPvalue04);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue05, m_DAPvalue05);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue06, m_DAPvalue06);
-    DDX_Text(pDX, IDC_EDIT_DAPvalue07, m_DAPvalue07);
-    DDX_Text(pDX, IDC_EDIT_DAVout00, m_DAVout00);
-    DDX_Text(pDX, IDC_EDIT_DAVout01, m_DAVout01);
-    DDX_Text(pDX, IDC_EDIT_DAVout02, m_DAVout02);
-    DDX_Text(pDX, IDC_EDIT_DAVout03, m_DAVout03);
-    DDX_Text(pDX, IDC_EDIT_DAVout04, m_DAVout04);
-    DDX_Text(pDX, IDC_EDIT_DAVout05, m_DAVout05);
-    DDX_Text(pDX, IDC_EDIT_DAVout06, m_DAVout06);
-    DDX_Text(pDX, IDC_EDIT_DAVout07, m_DAVout07);
+    //{{AFX_DATA_MAP(CDA_Pout)
+
+    // Resource ID arrays for DDX_Text loops
+    static constexpr int IDS_DACALA[CHANNELS_DA_POUT] = {IDC_EDIT_DACala00, IDC_EDIT_DACala01, IDC_EDIT_DACala02,
+                                                         IDC_EDIT_DACala03, IDC_EDIT_DACala04, IDC_EDIT_DACala05,
+                                                         IDC_EDIT_DACala06, IDC_EDIT_DACala07};
+
+    static constexpr int IDS_DACALB[CHANNELS_DA_POUT] = {IDC_EDIT_DACalb00, IDC_EDIT_DACalb01, IDC_EDIT_DACalb02,
+                                                         IDC_EDIT_DACalb03, IDC_EDIT_DACalb04, IDC_EDIT_DACalb05,
+                                                         IDC_EDIT_DACalb06, IDC_EDIT_DACalb07};
+
+    static constexpr int IDS_DAPVALUE[CHANNELS_DA_POUT] = {
+        IDC_EDIT_DAPvalue00, IDC_EDIT_DAPvalue01, IDC_EDIT_DAPvalue02, IDC_EDIT_DAPvalue03,
+        IDC_EDIT_DAPvalue04, IDC_EDIT_DAPvalue05, IDC_EDIT_DAPvalue06, IDC_EDIT_DAPvalue07};
+
+    static constexpr int IDS_DAVOUT[CHANNELS_DA_POUT] = {IDC_EDIT_DAVout00, IDC_EDIT_DAVout01, IDC_EDIT_DAVout02,
+                                                         IDC_EDIT_DAVout03, IDC_EDIT_DAVout04, IDC_EDIT_DAVout05,
+                                                         IDC_EDIT_DAVout06, IDC_EDIT_DAVout07};
+
+    // Use loops for array-based DDX
+    for (size_t i = 0; i < CHANNELS_DA_POUT; ++i)
+    {
+        DDX_Text(pDX, IDS_DACALA[i], m_DACala[i]);
+        DDX_Text(pDX, IDS_DACALB[i], m_DACalb[i]);
+        DDX_Text(pDX, IDS_DAPVALUE[i], m_DAPvalue[i]);
+        DDX_Text(pDX, IDS_DAVOUT[i], m_DAVout[i]);
+    }
+    //}}AFX_DATA_MAP
 }
 
-BEGIN_MESSAGE_MAP(CDA_Pout, CDialog)
-    ON_BN_CLICKED(IDC_BUTTON_DAOutput, OnBUTTONDAOutput)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation00, OnBUTTONCalculation00)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation01, OnBUTTONCalculation01)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation02, OnBUTTONCalculation02)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation03, OnBUTTONCalculation03)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation04, OnBUTTONCalculation04)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation05, OnBUTTONCalculation05)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation06, OnBUTTONCalculation06)
-    ON_BN_CLICKED(IDC_BUTTON_Calculation07, OnBUTTONCalculation07)
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF(CDA_Pout, CDialog)
+//{{AFX_MSG_MAP(CDA_Pout)
+ON_BN_CLICKED(IDC_BUTTON_DAOutput, &CDA_Pout::OnBUTTONDAOutput)
+ON_BN_CLICKED(IDC_BUTTON_Calculation00, &CDA_Pout::OnBUTTONCalculation00)
+ON_BN_CLICKED(IDC_BUTTON_Calculation01, &CDA_Pout::OnBUTTONCalculation01)
+ON_BN_CLICKED(IDC_BUTTON_Calculation02, &CDA_Pout::OnBUTTONCalculation02)
+ON_BN_CLICKED(IDC_BUTTON_Calculation03, &CDA_Pout::OnBUTTONCalculation03)
+ON_BN_CLICKED(IDC_BUTTON_Calculation04, &CDA_Pout::OnBUTTONCalculation04)
+ON_BN_CLICKED(IDC_BUTTON_Calculation05, &CDA_Pout::OnBUTTONCalculation05)
+ON_BN_CLICKED(IDC_BUTTON_Calculation06, &CDA_Pout::OnBUTTONCalculation06)
+ON_BN_CLICKED(IDC_BUTTON_Calculation07, &CDA_Pout::OnBUTTONCalculation07)
+//}}AFX_MSG_MAP
+END_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF()
+
+/////////////////////////////////////////////////////////////////////////////
+// CDA_Pout メッセージ ハンドラ
 
 void CDA_Pout::OnBUTTONDAOutput()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    ctx->DAVout[0] = m_DAVout00;
-    ctx->DAVout[1] = m_DAVout01;
-    ctx->DAVout[2] = m_DAVout02;
-    ctx->DAVout[3] = m_DAVout03;
-    ctx->DAVout[4] = m_DAVout04;
-    ctx->DAVout[5] = m_DAVout05;
-    ctx->DAVout[6] = m_DAVout06;
-    ctx->DAVout[7] = m_DAVout07;
-    pDoc2->DA_OUTPUT();
+    if (const auto result = variables::set_output_voltages(m_DAVout); !result)
+    {
+        spdlog::warn("set_output_voltages failed: {}", result.error());
+    }
 }
 
 void CDA_Pout::OnBUTTONCalculation00()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout00 = float(ctx->cal.DA_a[0] * m_DAPvalue00 + ctx->cal.DA_b[0]);
+    m_DAVout[0] = static_cast<float>(control::toVoltage(m_DAPvalue[0], DA_Cal_a[0], DA_Cal_b[0]));
     UpdateData(FALSE);
 }
 
 void CDA_Pout::OnBUTTONCalculation01()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout01 = float(ctx->cal.DA_a[1] * m_DAPvalue01 + ctx->cal.DA_b[1]);
+    m_DAVout[1] = static_cast<float>(control::toVoltage(m_DAPvalue[1], DA_Cal_a[1], DA_Cal_b[1]));
     UpdateData(FALSE);
 }
 
 void CDA_Pout::OnBUTTONCalculation02()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout02 = float(ctx->cal.DA_a[2] * m_DAPvalue02 + ctx->cal.DA_b[2]);
+    m_DAVout[2] = static_cast<float>(control::toVoltage(m_DAPvalue[2], DA_Cal_a[2], DA_Cal_b[2]));
     UpdateData(FALSE);
 }
 
 void CDA_Pout::OnBUTTONCalculation03()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout03 = float(ctx->cal.DA_a[3] * m_DAPvalue03 + ctx->cal.DA_b[3]);
+    m_DAVout[3] = static_cast<float>(control::toVoltage(m_DAPvalue[3], DA_Cal_a[3], DA_Cal_b[3]));
     UpdateData(FALSE);
 }
 
 void CDA_Pout::OnBUTTONCalculation04()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout04 = float(ctx->cal.DA_a[4] * m_DAPvalue04 + ctx->cal.DA_b[4]);
+    m_DAVout[4] = static_cast<float>(control::toVoltage(m_DAPvalue[4], DA_Cal_a[4], DA_Cal_b[4]));
     UpdateData(FALSE);
 }
 
 void CDA_Pout::OnBUTTONCalculation05()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout05 = float(ctx->cal.DA_a[5] * m_DAPvalue05 + ctx->cal.DA_b[5]);
+    m_DAVout[5] = static_cast<float>(control::toVoltage(m_DAPvalue[5], DA_Cal_a[5], DA_Cal_b[5]));
     UpdateData(FALSE);
 }
 
 void CDA_Pout::OnBUTTONCalculation06()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout06 = float(ctx->cal.DA_a[6] * m_DAPvalue06 + ctx->cal.DA_b[6]);
+    m_DAVout[6] = static_cast<float>(control::toVoltage(m_DAPvalue[6], DA_Cal_a[6], DA_Cal_b[6]));
     UpdateData(FALSE);
 }
 
 void CDA_Pout::OnBUTTONCalculation07()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_DAVout07 = float(ctx->cal.DA_a[7] * m_DAPvalue07 + ctx->cal.DA_b[7]);
+    m_DAVout[7] = static_cast<float>(control::toVoltage(m_DAPvalue[7], DA_Cal_a[7], DA_Cal_b[7]));
     UpdateData(FALSE);
 }

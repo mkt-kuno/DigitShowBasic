@@ -1,0 +1,922 @@
+// Microsoft Visual C++ generated resource script.
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 (日本) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 17, 1\r\n"
+    "#pragma code_page(65001)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\DigitShowDST.rc2""  // Microsoft Visual C++ 以外のツールで編集されたリソース\r\n"
+    "#include ""l.jpn\\afxres.rc""          // 標準のコンポーネント\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\DigitShowDST.ico"
+
+IDR_DIGITSTYPE          ICON                    "res\\DigitShowDSTDoc.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "View"
+    BEGIN
+        MENUITEM "Board Settings\tCtrl+B",      ID_BoardSettings
+        MENUITEM "SamplingSettings\tCtrl+Alt+S", ID_SamplingSettings
+    END
+    POPUP "AD Input"
+    BEGIN
+        MENUITEM "Calibration Factors\tCtrl+Alt+F", ID_Calibration_Factor
+        MENUITEM "Transducers\tCtrl+Alt+T",         ID_TransAdjustment
+    END
+    MENUITEM "Control (Ctrl+Alt+C)", ID_Control_File
+    POPUP "DA Output"
+    BEGIN
+        MENUITEM "DA Channels\tCtrl+Alt+D",    ID_DA_Channel
+        MENUITEM "Voltage Output\tCtrl+Alt+V",  ID_DA_Vout
+        MENUITEM "Physical Output\tCtrl+Alt+P", ID_DA_Pout
+    END
+    MENUITEM "Version.(&A)", ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+    "B",            ID_BoardSettings,       VIRTKEY, CONTROL
+    "S",            ID_SamplingSettings,    VIRTKEY, CONTROL, ALT
+    "F",            ID_Calibration_Factor,  VIRTKEY, CONTROL, ALT
+    "T",            ID_TransAdjustment,     VIRTKEY, CONTROL, ALT
+    "C",            ID_Control_File,        VIRTKEY, CONTROL, ALT
+    "D",            ID_DA_Channel,          VIRTKEY, CONTROL, ALT
+    "V",            ID_DA_Vout,             VIRTKEY, CONTROL, ALT
+    "P",            ID_DA_Pout,             VIRTKEY, CONTROL, ALT
+    VK_F1,          ID_APP_ABOUT,           VIRTKEY
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "DigitShowDSTのﾊﾞｰｼﾞｮﾝ情報"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "DigitShowDST Version 2.0, 2005/07/20",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2005",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+END
+
+IDD_AppInfo DIALOGEX 0, 0, 400, 350
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About DigitShowDST"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_AppInfo_FreeText,7,7,386,315,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,293,329,50,14
+    PUSHBUTTON      "Copy Diff",IDC_AppInfo_CopyDiff2ClipBoard,237,329,50,14
+END
+
+IDD_DIGITSHOWDST_FORM DIALOGEX 0, 0, 569, 300
+STYLE DS_SETFONT | WS_CHILD
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    // Voltage Input section (top, channels in left-to-right order)
+    GROUPBOX        "Voltage Input",IDC_STATIC,7,7,550,39
+    LTEXT           "Shear LC (CH1)",IDC_STATIC,27,19,56,8
+    EDITTEXT        IDC_EDIT_Vout00,27,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Vertical LC (CH2)",IDC_STATIC,87,19,60,8
+    EDITTEXT        IDC_EDIT_Vout01,87,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "H-LVDT(CH3)",IDC_STATIC,147,19,54,8
+    EDITTEXT        IDC_EDIT_Vout02,147,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "V-front-LVDT(CH4)",IDC_STATIC,207,19,71,8
+    EDITTEXT        IDC_EDIT_Vout03,207,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "V-rear-LVDT(CH5)",IDC_STATIC,267,19,63,8
+    EDITTEXT        IDC_EDIT_Vout04,267,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Front friction(CH6)",IDC_STATIC,327,19,71,8
+    EDITTEXT        IDC_EDIT_Vout05,327,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Rear friction(CH7)",IDC_STATIC,387,19,65,8
+    EDITTEXT        IDC_EDIT_Vout06,387,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "CH8",IDC_STATIC,447,19,14,8
+    EDITTEXT        IDC_EDIT_Vout07,447,28,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+
+    // Physical Input section (channels in left-to-right order)
+    GROUPBOX        "Physical Input",IDC_STATIC,7,58,550,39
+    LTEXT           "Shear load(N)",IDC_STATIC,27,70,56,8
+    EDITTEXT        IDC_EDIT_Phyout00,27,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Vertical Load (N)",IDC_STATIC,87,70,58,8
+    EDITTEXT        IDC_EDIT_Phyout01,87,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Shear disp. (mm)",IDC_STATIC,147,70,53,8
+    EDITTEXT        IDC_EDIT_Phyout02,147,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "V-front-disp.(mm)",IDC_STATIC,207,70,70,8
+    EDITTEXT        IDC_EDIT_Phyout03,207,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "V-rear-disp.(mm)",IDC_STATIC,267,70,54,8
+    EDITTEXT        IDC_EDIT_Phyout04,267,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Front friction (N)",IDC_STATIC,327,70,57,8
+    EDITTEXT        IDC_EDIT_Phyout05,327,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Rear friction (N)",IDC_STATIC,387,70,56,8
+    EDITTEXT        IDC_EDIT_Phyout06,387,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "CH8",IDC_STATIC,447,70,14,8
+    EDITTEXT        IDC_EDIT_Phyout07,447,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+
+    // Parameter sections (left-to-right order)
+    GROUPBOX        "Parameter of Physical Input",IDC_STATIC,7,105,182,68
+    LTEXT           "Tau (kPa)",IDC_STATIC,10,118,44,8
+    EDITTEXT        IDC_EDIT_Para00,10,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Sigma (kPa)",IDC_STATIC,70,118,50,8
+    EDITTEXT        IDC_EDIT_Para02,70,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Shear disp. (mm)",IDC_STATIC,10,145,56,8
+    EDITTEXT        IDC_EDIT_Para01,10,155,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "V-ave-disp. (mm)",IDC_STATIC,70,145,56,8
+    EDITTEXT        IDC_EDIT_Para03,70,155,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "ev_diff/2 (mm)",IDC_STATIC,130,145,49,8
+    EDITTEXT        IDC_EDIT_Para04,130,155,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+
+    GROUPBOX        "Parameter of Physical Output",IDC_STATIC,191,105,182,40
+    LTEXT           "RPM (1/min)",IDC_STATIC,194,118,56,8
+    EDITTEXT        IDC_EDIT_Para07,194,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Front EP (kPa)",IDC_STATIC,254,118,56,8
+    EDITTEXT        IDC_EDIT_Para08,254,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Rear EP (kPa)",IDC_STATIC,314,118,56,8
+    EDITTEXT        IDC_EDIT_Para09,314,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+
+    GROUPBOX        "Voltage Output",IDC_STATIC,375,105,182,40
+    LTEXT           "RPM (V)",IDC_STATIC,378,118,54,8
+    EDITTEXT        IDC_EDIT_Para10,378,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Front EP (V)",IDC_STATIC,438,118,52,8
+    EDITTEXT        IDC_EDIT_Para11,438,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Rear EP (V)",IDC_STATIC,498,118,47,8
+    EDITTEXT        IDC_EDIT_Para12,498,127,56,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+
+    // Consolidated Control & Sampling section
+    GROUPBOX        "Control & Sampling",IDC_STATIC,7,180,550,100
+
+    // Control fields (left area)
+    LTEXT           "Control No.",IDC_STATIC,15,193,40,8
+    EDITTEXT        IDC_EDIT_Para14,82,191,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Step time (s)",IDC_STATIC,15,210,45,8
+    EDITTEXT        IDC_EDIT_Para15,82,208,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Number of cycles",IDC_STATIC,15,227,56,8
+    EDITTEXT        IDC_EDIT_Para13,82,225,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Sequent Time (s)",IDC_STATIC,15,244,56,8
+    EDITTEXT        IDC_EDIT_SeqTime,82,242,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+
+    // Sampling settings (bottom left)
+    LTEXT           "Sampling Time (ms)",IDC_STATIC,15,262,65,8
+    EDITTEXT        IDC_EDIT_SamplingTime,82,262,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    COMBOBOX        IDC_COMBO_SamplingTime,122,262,36,86,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Set",IDC_BUTTON_SetTimeInterval,162,262,24,14
+
+    // Control buttons and display fields (right area)
+    PUSHBUTTON      "Start Control",IDC_BUTTON_CtrlOn,190,191,60,14
+    PUSHBUTTON      "Stop Control",IDC_BUTTON_CtrlOff,255,191,60,14
+    PUSHBUTTON      "Intercept Saving",IDC_BUTTON_InterceptSave,320,191,80,14
+    LTEXT           "Current Time:",IDC_STATIC,190,211,44,8
+    EDITTEXT        IDC_EDIT_NowTime,238,211,77,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "File Name:",IDC_STATIC,190,228,36,8
+    EDITTEXT        IDC_EDIT_FileName,238,228,77,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_BoardSettings DIALOG 0, 0, 299, 103
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Sampling Condition"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,242,74,50,14
+    LTEXT           "Input method",IDC_STATIC,12,22,39,8
+    GROUPBOX        "A/D boards",IDC_STATIC,7,2,173,86
+    EDITTEXT        IDC_EDIT_ADMethod0,58,19,54,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ADMethod1,118,19,54,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "1st.",IDC_STATIC,78,10,11,8
+    LTEXT           "2nd.",IDC_STATIC,140,10,12,8
+    LTEXT           "Resolution",IDC_STATIC,12,37,32,8
+    EDITTEXT        IDC_EDIT_ADResolution0,58,36,54,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ADResolution1,118,36,54,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "Range",IDC_STATIC,12,53,19,8
+    EDITTEXT        IDC_EDIT_ADRange0,58,52,54,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ADRange1,118,52,54,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ADMaxChannel0,58,68,54,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ADMaxChannel1,118,68,54,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "Max. Channel",IDC_STATIC,12,72,40,8
+    GROUPBOX        "D/A boards",IDC_STATIC,184,2,108,71
+    LTEXT           "Resolution",IDC_STATIC,187,22,32,8
+    EDITTEXT        IDC_EDIT_DAResolution0,231,19,54,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "Range",IDC_STATIC,187,39,19,8
+    EDITTEXT        IDC_EDIT_DARange0,231,36,54,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAMaxChannel0,231,52,54,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "Max. Channel",IDC_STATIC,187,54,40,8
+    LTEXT           "1st.",IDC_STATIC,249,10,11,8
+END
+
+IDD_Calibration_Factor DIALOGEX 0, 0, 362, 280
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Calibration Factors && Initial Specimen"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,307,260,50,14
+    GROUPBOX        "Calibration Factors (CH0-CH7)",IDC_STATIC,4,7,300,145
+    LTEXT           "a * x^2   +     b * x     +       c       = Physical Value",IDC_STATIC,80,18,158,8
+    LTEXT           "Statics",IDC_STATIC_C00,8,32,64,8
+    EDITTEXT        IDC_EDIT_CFA00,74,30,35,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB00,116,30,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC00,157,30,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero00,244,30,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp00,273,30,29,14
+    EDITTEXT        IDC_EDIT_CFP00,198,30,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Statics",IDC_STATIC_C01,8,48,64,8
+    EDITTEXT        IDC_EDIT_CFA01,74,46,36,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB01,116,46,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC01,157,46,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero01,244,46,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp01,273,46,29,14
+    EDITTEXT        IDC_EDIT_CFP01,198,46,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Statics",IDC_STATIC_C02,8,64,64,8
+    EDITTEXT        IDC_EDIT_CFA02,74,62,36,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB02,116,62,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC02,157,62,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero02,244,62,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp02,273,62,29,14
+    EDITTEXT        IDC_EDIT_CFP02,198,62,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Statics",IDC_STATIC_C03,8,80,64,8
+    EDITTEXT        IDC_EDIT_CFA03,74,78,36,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB03,116,78,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC03,157,78,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero03,244,78,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp03,273,78,29,14
+    EDITTEXT        IDC_EDIT_CFP03,198,78,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Statics",IDC_STATIC_C04,8,96,64,8
+    EDITTEXT        IDC_EDIT_CFA04,74,94,36,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB04,116,94,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC04,157,94,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero04,244,94,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp04,273,94,29,14
+    EDITTEXT        IDC_EDIT_CFP04,198,94,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Statics",IDC_STATIC_C05,8,112,64,8
+    EDITTEXT        IDC_EDIT_CFA05,74,110,36,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB05,116,110,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC05,157,110,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero05,244,110,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp05,273,110,29,14
+    EDITTEXT        IDC_EDIT_CFP05,198,110,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Statics",IDC_STATIC_C06,8,128,64,8
+    EDITTEXT        IDC_EDIT_CFA06,74,126,36,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB06,116,126,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC06,157,126,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero06,244,126,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp06,273,126,29,14
+    EDITTEXT        IDC_EDIT_CFP06,198,126,40,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Statics",IDC_STATIC_C07,8,144,64,8
+    EDITTEXT        IDC_EDIT_CFA07,74,142,36,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFB07,116,142,34,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CFC07,157,142,34,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Zero",IDC_BUTTON_Zero07,244,142,25,14
+    PUSHBUTTON      "Amp.",IDC_BUTTON_Amp07,273,142,29,14
+    EDITTEXT        IDC_EDIT_CFP07,198,142,40,14,ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "Initial Specimen Data",IDC_STATIC_InitSpecGroup,4,156,300,72
+    LTEXT           "Height (mm)",IDC_STATIC,12,172,38,8
+    EDITTEXT        IDC_EDIT_InitSpecHeight,52,170,50,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Area (mm^2)",IDC_STATIC,110,172,40,8
+    EDITTEXT        IDC_EDIT_InitSpecArea,152,170,50,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Weight (g)",IDC_STATIC,210,172,32,8
+    EDITTEXT        IDC_EDIT_InitSpecWeight,250,170,50,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Box Weight (g)",IDC_STATIC,12,192,48,8
+    EDITTEXT        IDC_EDIT_InitSpecBoxWeight,60,190,50,14,ES_RIGHT | ES_AUTOHSCROLL
+    PUSHBUTTON      "Update",IDC_BUTTON_CFUpdate,310,12,48,14
+    PUSHBUTTON      "Load",IDC_BUTTON_CFLoadConfig,310,30,48,14
+    PUSHBUTTON      "Save",IDC_BUTTON_CFSaveConfig,310,48,48,14
+    LTEXT           "",IDC_STATIC_STATUS,5,264,297,10
+END
+
+IDD_CalibrationAmp DIALOG 0, 0, 179, 99
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Get Amp. Condition"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,123,78,50,14
+    LTEXT           "Amp. No. :",IDC_STATIC,26,15,30,8
+    LTEXT           "Voltage",IDC_STATIC,77,30,23,8
+    LTEXT           "Physical Value",IDC_STATIC,125,30,44,8
+    PUSHBUTTON      "Update",IDC_BUTTON_AmpUpdate,70,78,50,14
+    EDITTEXT        IDC_EDIT_AmpNO,69,12,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Base",IDC_BUTTON_AmpBase,7,38,50,14
+    PUSHBUTTON      "Offset",IDC_BUTTON_AmpOffset,7,55,50,14
+    EDITTEXT        IDC_EDIT_AmpVB,69,38,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_AmpPB,127,38,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_AmpVO,69,55,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_AmpPO,126,55,40,14,ES_AUTOHSCROLL
+    LTEXT           "",IDC_STATIC_STATUS,7,85,110,10
+END
+
+IDD_DA_Vout DIALOGEX 0, 0, 186, 155
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Voltage Output on D/A Board"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,128,134,50,14
+    LTEXT           "CH0 (Motor: On/Off)",IDC_STATIC,11,24,70,8
+    LTEXT           "CH1 (Motor Cluch)",IDC_STATIC,11,41,73,8
+    EDITTEXT        IDC_EDIT_DAVout01,80,21,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAVout02,80,38,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "CH2 (Motor Speed)",IDC_STATIC,11,57,75,8
+    LTEXT           "CH3 (EP1)",IDC_STATIC,11,73,81,8
+    EDITTEXT        IDC_EDIT_DAVout03,80,54,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAVout04,80,70,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "CH4 (EP2)",IDC_STATIC,11,89,63,8
+    LTEXT           "CH5",IDC_STATIC,11,105,14,8
+    EDITTEXT        IDC_EDIT_DAVout05,80,86,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAVout06,80,102,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "CH6",IDC_STATIC,11,121,14,8
+    LTEXT           "CH7",IDC_STATIC,11,135,14,8
+    EDITTEXT        IDC_EDIT_DAVout07,80,118,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAVout08,80,134,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Voltage (V)",IDC_STATIC,82,9,35,8
+    PUSHBUTTON      "Output",IDC_BUTTON_DA_Vout,128,37,50,14
+    PUSHBUTTON      "Reflesh",IDC_BUTTON_Reflesh,128,19,50,14
+END
+
+IDD_DA_Pout DIALOGEX 0, 0, 386, 197
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Voltage Output from Physical Value"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,330,176,50,14
+    LTEXT           "CH.0 (Motor)",IDC_STATIC,10,29,38,8
+    LTEXT           "CH.1 (Motor Cluch) ",IDC_STATIC,10,47,59,8
+    LTEXT           "CH.2 (Motor Speed)",IDC_STATIC,10,65,58,8
+    LTEXT           "CH.3 (EP1)",IDC_STATIC,10,83,58,8
+    LTEXT           "CH.5 (-----------)",IDC_STATIC,10,119,59,8
+    LTEXT           "CH.4(EP2)",IDC_STATIC,10,101,57,8
+    EDITTEXT        IDC_EDIT_DAVout00,88,29,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAVout01,88,47,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAVout02,88,65,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAVout03,88,83,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAVout04,88,101,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAVout05,88,119,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala02,148,65,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala03,148,83,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala04,148,101,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala05,148,119,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAPvalue02,208,65,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAPvalue03,208,83,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAPvalue04,208,101,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAPvalue05,208,119,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DACalb02,275,65,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACalb03,275,83,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACalb04,275,101,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACalb05,275,119,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Cal_a (V/Physical)",IDC_STATIC,138,13,56,8
+    LTEXT           "Physical Value",IDC_STATIC,202,13,44,8
+    LTEXT           "Cal_b (V)",IDC_STATIC,278,14,28,8
+    LTEXT           "Voltage (V)",IDC_STATIC,89,13,35,8
+    CTEXT           "+",IDC_STATIC,258,96,8,8
+    LTEXT           "x",IDC_STATIC,196,96,8,8
+    LTEXT           "=",IDC_STATIC,136,95,8,8
+    PUSHBUTTON      "Voltage Output",IDC_BUTTON_DAOutput,277,176,50,14
+    LTEXT           "CH.7 (-----------)",IDC_STATIC,10,156,59,8
+    LTEXT           "CH.6 (-----------)",IDC_STATIC,10,138,59,8
+    EDITTEXT        IDC_EDIT_DAVout06,88,138,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAVout07,88,156,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala06,148,138,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala07,148,156,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAPvalue06,208,138,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAPvalue07,208,156,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DACalb06,275,138,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACalb07,275,156,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala00,148,29,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACala01,148,47,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DAPvalue00,208,29,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DAPvalue01,208,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DACalb00,275,29,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_DACalb01,275,47,40,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation00,330,29,50,14
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation01,330,48,50,14
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation02,330,66,50,14
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation03,330,84,50,14
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation04,330,102,50,14
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation05,330,120,50,14
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation06,330,138,50,14
+    PUSHBUTTON      "Calculation",IDC_BUTTON_Calculation07,330,156,50,14
+END
+
+IDD_DA_Channel DIALOGEX 0, 0, 255, 181
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "D/A Channel"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,145,161,50,14
+    LTEXT           "CH.0 (Motor)",IDC_STATIC,12,26,71,8
+    LTEXT           "DA_Cal_a[ ]",IDC_STATIC,89,12,35,8
+    GROUPBOX        "Calibration Factors",IDC_STATIC,7,2,241,154
+    LTEXT           "(V/rpm)",IDC_STATIC,134,58,24,8
+    LTEXT           "(V/kPa)",IDC_STATIC,134,74,24,8
+    LTEXT           "(V/---)",IDC_STATIC,134,26,24,8
+    LTEXT           "(V)",IDC_STATIC,227,26,10,8
+    LTEXT           "(V)",IDC_STATIC,227,43,10,8
+    LTEXT           "(V)",IDC_STATIC,227,58,10,8
+    LTEXT           "(V)",IDC_STATIC,227,74,10,8
+    LTEXT           "CH.1 (Motor Cruch)",IDC_STATIC,12,43,90,8
+    LTEXT           "CH.2 (Motor Speed)",IDC_STATIC,12,58,80,8
+    LTEXT           "CH.3 (EP1)",IDC_STATIC,12,74,71,8
+    LTEXT           "CH.4 (EP2)",IDC_STATIC,12,91,56,8
+    LTEXT           "CH.5 (----------)",IDC_STATIC,12,107,56,8
+    LTEXT           "CH.6 (----------)",IDC_STATIC,12,123,56,8
+    LTEXT           "CH.7(----------)",IDC_STATIC,12,140,54,8
+    EDITTEXT        IDC_EDIT_DA_Cala00,87,23,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Cala01,87,40,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Cala02,87,56,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Cala03,87,72,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Cala04,87,88,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Cala05,87,104,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Cala06,87,120,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Cala07,87,136,40,14,ES_AUTOHSCROLL
+    LTEXT           "(V/---)",IDC_STATIC,134,43,24,8
+    LTEXT           "(V/kPa)",IDC_STATIC,134,91,24,8
+    LTEXT           "(V/---)",IDC_STATIC,134,107,24,8
+    LTEXT           "(V/---)",IDC_STATIC,134,123,24,8
+    LTEXT           "(V/---)",IDC_STATIC,134,140,24,8
+    LTEXT           "DA_Cal_b[ ]",IDC_STATIC,178,13,35,8
+    EDITTEXT        IDC_EDIT_DA_Calb00,176,23,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Calb01,176,40,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Calb02,176,56,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Calb03,176,72,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Calb04,176,88,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Calb05,176,104,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Calb06,176,120,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DA_Calb07,176,136,40,14,ES_AUTOHSCROLL
+    LTEXT           "(V)",IDC_STATIC,227,91,10,8
+    LTEXT           "(V)",IDC_STATIC,227,107,10,8
+    LTEXT           "(V)",IDC_STATIC,227,123,10,8
+    LTEXT           "(V)",IDC_STATIC,227,140,10,8
+    PUSHBUTTON      "Cancel",IDCANCEL,196,160,50,14
+END
+
+IDD_Control_File DIALOGEX 0, 0, 620, 400
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Control Parameters from a file"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Control Execution",IDC_STATIC,7,7,606,90
+    LTEXT           "",IDC_STATIC_ExecLabel,13,18,580,24
+    PUSHBUTTON      "<",IDC_BUTTON_ExecPrev,13,48,24,14
+    PUSHBUTTON      ">",IDC_BUTTON_ExecNext,42,48,24,14
+    PUSHBUTTON      "Start",IDC_BUTTON_Start,360,48,45,14
+    PUSHBUTTON      "Stop",IDC_BUTTON_Stop,408,48,45,14
+    PUSHBUTTON      "Pause",IDC_BUTTON_Pause,456,48,45,14
+    PUSHBUTTON      "Resume",IDC_BUTTON_Resume,504,48,45,14
+    DEFPUSHBUTTON   "OK",IDOK,504,68,45,14
+    PUSHBUTTON      "Cancel",IDCANCEL,456,68,45,14
+
+    GROUPBOX        "Patterns Management",IDC_STATIC,7,102,606,45
+    LTEXT           "Import",IDC_STATIC,13,116,30,8
+    EDITTEXT        IDC_EDIT_FilePath,46,114,420,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Import",IDC_BUTTON_Import,472,114,60,14
+    PUSHBUTTON      "Export",IDC_BUTTON_Export,538,114,60,14
+
+    GROUPBOX        "Step Editor",IDC_STATIC,7,152,606,230
+    LTEXT           "",IDC_STATIC_EditLabel,13,168,580,24
+    PUSHBUTTON      "<",IDC_BUTTON_EditPrev,272,198,24,14
+    PUSHBUTTON      ">",IDC_BUTTON_EditNext,299,198,24,14
+    PUSHBUTTON      "Update",IDC_BUTTON_Update,330,198,50,14
+    PUSHBUTTON      "Clear",IDC_BUTTON_Clear,385,198,50,14
+    LTEXT           "Validation:",IDC_STATIC,13,224,45,16
+    LTEXT           "",IDC_STATIC_VALIDATION,62,224,540,24
+    EDITTEXT        IDC_EDIT_Yaml,13,252,588,130,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
+END
+
+IDD_SamplingSettings DIALOG 0, 0, 227, 261
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Sampling Conditions with FIFO"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,109,240,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,170,240,50,14
+    LTEXT           "Channels",IDC_STATIC,15,114,28,8
+    EDITTEXT        IDC_EDIT_Channels,118,110,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Check",IDC_BUTTON_Check,166,95,50,14
+    LTEXT           "Time Interval (ms) to display",IDC_STATIC,14,24,86,8
+    LTEXT           "Time Interval (ms) to feed back",IDC_STATIC,14,41,94,8
+    LTEXT           "Time Interval (ms) to save data",IDC_STATIC,14,57,94,8
+    EDITTEXT        IDC_EDIT_TimeInterval1,118,22,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_TimeInterval2,118,39,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_TimeInterval3,118,56,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "Sampling Settings of Timers",IDC_STATIC,7,7,213,66
+    GROUPBOX        "Sampling Conditions with FIFO Memory",IDC_STATIC,7,79,213,157
+    LTEXT           "Number of data to average (n)",IDC_STATIC,15,149,90,8
+    EDITTEXT        IDC_EDIT_AvSmplNum,118,146,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_TransAdjustment DIALOG 0, 0, 165, 167
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Adjustment of Transducers"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    PUSHBUTTON      "Close",IDCANCEL,107,146,50,14
+    PUSHBUTTON      "Initial",IDC_BUTTON_InitialBullet,127,91,28,14
+    PUSHBUTTON      "End",IDC_BUTTON_EndBullet,127,108,28,14
+    EDITTEXT        IDC_EDIT_InitialBullet,79,91,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_FinalBullet,79,108,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Initial Value (mm3)",IDC_STATIC,13,94,56,8
+    LTEXT           "Final Value (mm3)",IDC_STATIC,13,112,55,8
+    GROUPBOX        "Bullet Adjustment (Drained Volume)",IDC_STATIC,7,76,151,65
+    GROUPBOX        "Displacement Adjustment",IDC_STATIC,7,7,150,62
+    LTEXT           "Initial Value (mm)",IDC_STATIC,13,23,53,8
+    LTEXT           "Final Value (mm)",IDC_STATIC,13,38,51,8
+    EDITTEXT        IDC_EDIT_InitialDisp,79,20,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    PUSHBUTTON      "Initial",IDC_BUTTON_InitialDisp,127,20,28,14
+    PUSHBUTTON      "End",IDC_BUTTON_EndDisp,127,36,28,14
+    EDITTEXT        IDC_EDIT_FinalDisp,79,36,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    PUSHBUTTON      "Adjust",IDC_BUTTON_UpdateDisp,127,53,28,14
+    PUSHBUTTON      "Adjust",IDC_BUTTON_UpdateBullet,127,125,28,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "FileDescription", "DigitShowDST MFC ｱﾌﾟﾘｹｰｼｮﾝ"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "DigitShowDST"
+            VALUE "LegalCopyright", "Copyright (C) 2001"
+            VALUE "OriginalFilename", "DigitShowDST.EXE"
+            VALUE "ProductName", "DigitShowDST ｱﾌﾟﾘｹｰｼｮﾝ"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_DIGITSHOWDST_FORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 262
+        HORZGUIDE, 58
+    END
+
+    IDD_BoardSettings, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 292
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 89
+    END
+
+    IDD_Calibration_Factor, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 357
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 322
+    END
+
+    IDD_CalibrationAmp, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 172
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 92
+    END
+
+    IDD_DA_Vout, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 178
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 148
+    END
+
+    IDD_DA_Pout, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 380
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 190
+    END
+
+    IDD_DA_Channel, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 248
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 174
+    END
+
+    IDD_Control_Sensitivity, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 206
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 87
+    END
+
+    IDD_Control_File, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 552
+        TOPMARGIN, 7
+    END
+
+    IDD_SamplingSettings, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 254
+    END
+
+    IDD_TransAdjustment, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 158
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 160
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_Control_File AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIGITSHOWDST_FORM AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DA_Channel AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DA_Vout AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DA_Pout AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_Calibration_Factor AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "DigitShowDST\n\nDigitS\n\n\nDigitShowDST.Document\nDigitS Document"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "DigitShowDST"
+    AFX_IDS_IDLEMESSAGE     "ﾚﾃﾞｨ"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "上書"
+    ID_INDICATOR_REC        "記録"
+    ID_INDICATOR_KANA       "ｶﾅ"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "新規にﾌｧｲﾙを作成\n新規ﾌｧｲﾙ"
+    ID_FILE_OPEN            "既存のﾌｧｲﾙを開く\n開く"
+    ID_FILE_CLOSE           "作業中のﾌｧｲﾙを閉じる\n閉じる"
+    ID_FILE_SAVE            "作業中のﾌｧｲﾙを上書きして保存\n保存"
+    ID_FILE_SAVE_AS         "作業中のﾌｧｲﾙを新しい名前で保存\n名前をつけて保存"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "ﾌﾟﾛｸﾞﾗﾑの情報、ﾊﾞｰｼﾞｮﾝそして著作権を表示\nﾊﾞｰｼﾞｮﾝ情報"
+    ID_APP_EXIT             "ｱﾌﾟﾘｹｰｼｮﾝを終了し、ﾌｧｲﾙの保存を指示\n終了"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_MRU_FILE1       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE2       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE3       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE4       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE5       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE6       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE7       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE8       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE9       "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE10      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE11      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE12      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE13      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE14      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE15      "指定のﾌｧｲﾙを開く"
+    ID_FILE_MRU_FILE16      "指定のﾌｧｲﾙを開く"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "次のｳｨﾝﾄﾞｳに切り替える\n次のﾍﾟｲﾝ"
+    ID_PREV_PANE            "前のｳｨﾝﾄﾞｳに切り替える\n前のﾍﾟｲﾝ"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_SPLIT         "作業中のｳｨﾝﾄﾞｳを分割\n分割"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "選択範囲を消去\n消去"
+    ID_EDIT_CLEAR_ALL       "すべて消去\nすべて消去"
+    ID_EDIT_COPY            "選択範囲をｺﾋﾟｰしてｸﾘｯﾌﾟﾎﾞｰﾄﾞに保存\nｺﾋﾟｰ"
+    ID_EDIT_CUT             "選択範囲を切り取ってｸﾘｯﾌﾟﾎﾞｰﾄﾞに保存\n切り取り"
+    ID_EDIT_FIND            "指定した文字列の検索\n検索"
+    ID_EDIT_PASTE           "ｸﾘｯﾌﾟﾎﾞｰﾄﾞの内容を貼り付け\n貼り付け"
+    ID_EDIT_REPEAT          "直前に行った動作を繰り返す\n繰り返し"
+    ID_EDIT_REPLACE         "指定した文字列を他の文字列で置換\n置換"
+    ID_EDIT_SELECT_ALL      "ﾌｧｲﾙ内のすべてを選択\nすべて選択"
+    ID_EDIT_UNDO            "直前に行った動作を元に戻す\n元に戻す"
+    ID_EDIT_REDO            "直前に行った動作を繰り返す\n繰り返す"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCSIZE          "ｳｨﾝﾄﾞｳのｻｲｽﾞを変更"
+    AFX_IDS_SCMOVE          "ｳｨﾝﾄﾞｳの位置を変更"
+    AFX_IDS_SCMINIMIZE      "ｳｨﾝﾄﾞｳを最小化する"
+    AFX_IDS_SCMAXIMIZE      "ｳｨﾝﾄﾞｳを最大化する"
+    AFX_IDS_SCNEXTWINDOW    "次のｳｨﾝﾄﾞｳに切り替える"
+    AFX_IDS_SCPREVWINDOW    "前のｳｨﾝﾄﾞｳに切り替える"
+    AFX_IDS_SCCLOSE         "作業中のｳｨﾝﾄﾞｳを閉じ、変更したﾌｧｲﾙの保存を指示"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCRESTORE       "ｳｨﾝﾄﾞｳを通常のｻｲｽﾞに戻す"
+    AFX_IDS_SCTASKLIST      "ｱﾌﾟﾘｹｰｼｮﾝの切り替え"
+END
+
+#endif    // 日本語 (日本) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE 17, 1
+#pragma code_page(65001)
+#endif //_WIN32
+#include "res\DigitShowDST.rc2"  // Microsoft Visual C++ 以外のツールで編集されたリソース
+#include "l.jpn\afxres.rc"          // 標準のコンポーネント
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED

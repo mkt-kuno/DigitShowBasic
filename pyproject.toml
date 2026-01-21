@@ -1,0 +1,22 @@
+[project]
+name = "digitshowdst-analysis"
+version = "0.1.0"
+description = "Data analysis and visualization tools for DigitShowDST log files (.dat/.vlt/.out)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "matplotlib>=3.7.0",
+    "scipy>=1.15.3",
+]
+
+[project.optional-dependencies]
+dev = ["jupyter>=1.0.0", "ipython>=8.0.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["scripts"]

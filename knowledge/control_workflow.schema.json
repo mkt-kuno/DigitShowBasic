@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/takker99/DigitShowDST/control_workflow.schema.json",
+  "title": "DigitShowDST Control Workflow",
+  "description": "YAML schema for soil testing control workflows. Schema version 1 - uses/with/guards minimal design.",
+  "type": "object",
+  "required": [
+    "version",
+    "metadata",
+    "execution",
+    "steps"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version (must be 1)"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "specimen_profile",
+        "calibration_profile"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable workflow name",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "description": "Creator identification"
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "description": "Creation timestamp (ISO-8601)"
+        },
+        "specimen_profile": {
+          "type": "string",
+          "description": "Reference to specimen configuration",
+          "minLength": 1
+        },
+        "calibration_profile": {
+          "type": "string",
+          "description": "Reference to calibration configuration",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed notes"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "simulation",
+        "logging"
+      ],
+      "properties": {
+        "simulation": {
+          "type": "boolean",
+          "description": "Hardware simulation mode (true=offline)"
+        },
+        "logging": {
+          "type": "object",
+          "required": [
+            "basename"
+          ],
+          "properties": {
+            "basename": {
+              "type": "string",
+              "description": "Base filename for TSV outputs",
+              "minLength": 1
+            },
+            "interval_ms": {
+              "type": "integer",
+              "description": "Timer 3 interval (100-5000 ms, default 1000)",
+              "minimum": 100,
+              "maximum": 5000,
+              "default": 1000
+            }
+          }
+        }
+      }
+    },
+    "guards": {
+      "type": "array",
+      "description": "Cross-cutting safety rules (checked every Timer 2 tick)",
+      "items": {
+        "$ref": "#/$defs/GuardRule"
+      }
+    },
+    "steps": {
+      "type": "array",
+      "description": "Ordered sequence of control steps",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/ControlStep"
+      }
+    },
+    "postprocessing": {
+      "type": "object",
+      "properties": {
+        "export_fifo": {
+          "type": "boolean",
+          "description": "Enable FIFO export via SaveToFile2",
+          "default": false
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional operator notes"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "GuardRule": {
+      "type": "object",
+      "required": [
+        "when",
+        "action"
+      ],
+      "properties": {
+        "when": {
+          "type": "string",
+          "description": "Expression string (e.g., 'abs(q_kpa) > 500')",
+          "minLength": 1
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "emergency_stop",
+            "pid_stop_all",
+            "pause",
+            "abort"
+          ],
+          "description": "Action to take when condition is true"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable description"
+        }
+      }
+    },
+    "ControlStep": {
+      "type": "object",
+      "required": [
+        "id",
+        "uses",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$",
+          "description": "Unique step identifier"
+        },
+        "uses": {
+          "$ref": "#/$defs/StrategyName"
+        },
+        "with": {
+          "type": "object",
+          "description": "Strategy-specific parameters",
+          "additionalProperties": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional step description"
+        }
+      }
+    },
+    "StrategyName": {
+      "type": "string",
+      "enum": [
+        "no_control",
+        "wait",
+        "specimen_state_capture",
+        "pre_consolidation",
+        "monotonic_loading_constant_pressure",
+        "monotonic_loading_constant_volume",
+        "cyclic_stress_loading_constant_pressure",
+        "cyclic_stress_loading_constant_volume",
+        "cyclic_strain_loading_constant_pressure",
+        "cyclic_strain_loading_constant_volume",
+        "creep_constant_pressure",
+        "creep_constant_volume",
+        "relaxation_constant_pressure",
+        "relaxation_constant_volume",
+        "displacement_loading_constant_pressure",
+        "displacement_loading_constant_volume",
+        "cyclic_displacement_loading_constant_pressure",
+        "cyclic_displacement_loading_constant_volume",
+        "acceleration_constant_pressure",
+        "acceleration_constant_volume",
+        "constant_tau_consolidation",
+        "stress_path_loading_constant_pressure",
+        "creep_constant_pressure_fast",
+        "creep_constant_pressure_fast_ref"
+      ],
+      "description": "Control strategy type"
+    }
+  }
+}

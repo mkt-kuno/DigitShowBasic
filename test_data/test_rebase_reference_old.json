@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/control_script.schema.json",
+  "steps": [
+    {
+      "name": "Before consolidation (old name)",
+      "use": "before_consolidation"
+    },
+    {
+      "name": "After consolidation (old name)",
+      "use": "after_consolidation"
+    },
+    {
+      "name": "End of control",
+      "use": "no_control"
+    }
+  ]
+}

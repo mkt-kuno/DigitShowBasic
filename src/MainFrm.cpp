@@ -1,6 +1,6 @@
 ﻿/*
- * DigitShowBasic - Triaxial Test Machine Control Software
- * Copyright (C) 2025 Makoto KUNO
+ * DigitShowDST - Direct Shear Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO, Takuto ISHII
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "DigitShowBasic.h"
-#include "DigitShowBasicDoc.h"
+/**
+ * @file MainFrm.cpp
+ * @brief Implementation of CMainFrame class
+ *
+ * Implements main frame window functionality and menu command handlers.
+ * CMainFrame クラスの動作の定義を行います。
+ */
 
-#include "MainFrm.h"
+#include "StdAfx.h"
+
+#include "AppInfoDlg.h"
+#include "Board.hpp"
 #include "BoardSettings.h"
-#include "SamplingSettings.h"
 #include "CalibrationFactor.h"
-#include "Specimen.h"
-#include "TransAdjustment.h"
-#include "Control_ID.h"
-#include "Control_Sensitivity.h"
-#include "Control_PreConsolidation.h"
-#include "Control_Consolidation.h"
-#include "Control_MLoading.h"
-#include "Control_CLoading.h"
-#include "Control_LinearStressPath.h"
 #include "Control_File.h"
-#include "DA_Vout.h"
-#include "DA_Pout.h"
 #include "DA_Channel.h"
+#include "DA_Pout.h"
+#include "DA_Vout.h"
+#include "MainFrm.h"
+#include "SamplingSettings.h"
+#include "TransAdjustment.h"
+#include "resource.h"
+#include <spdlog/spdlog.h>
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && !defined(__clang__)
 #define new DEBUG_NEW
 #undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+static constexpr const char *THIS_FILE = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -49,57 +51,38 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
 
-BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
-    //{{AFX_MSG_MAP(CMainFrame)
-    ON_COMMAND(ID_BoardSettings, OnBoardSettings)
-    ON_COMMAND(ID_Calibration_Factor, OnCalibrationFactor)
-    ON_COMMAND(ID_SpecimenData, OnSpecimenData)
-    ON_COMMAND(ID_DA_Vout, OnDAVout)
-    ON_COMMAND(ID_Control_ID, OnControlID)
-    ON_COMMAND(ID_DA_Pout, OnDAPout)
-    ON_COMMAND(ID_DA_Channel, OnDAChannel)
-    ON_COMMAND(ID_Control_Consolidation, OnControlConsolidation)
-    ON_COMMAND(ID_Control_MLoading, OnControlMLoading)
-    ON_COMMAND(ID_Control_Sensitivity, OnControlSensitivity)
-    ON_COMMAND(ID_Control_CLoading, OnControlCLoading)
-    ON_COMMAND(ID_Control_File, OnControlFile)
-    ON_COMMAND(ID_SamplingSettings, OnSamplingSettings)
-    ON_COMMAND(ID_Control_PreConsolidation, OnControlPreConsolidation)
-    ON_COMMAND(ID_TransAdjustment, OnTransAdjustment)
-    ON_COMMAND(ID_Control_LinearStressPath, OnControlLinearStressPath)
-    //}}AFX_MSG_MAP
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF(CMainFrame, CFrameWnd)
+//{{AFX_MSG_MAP(CMainFrame)
+ON_COMMAND(ID_APP_ABOUT, &CMainFrame::OnAppAbout)
+ON_COMMAND(ID_BoardSettings, &CMainFrame::OnBoardSettings)
+ON_COMMAND(ID_Calibration_Factor, &CMainFrame::OnCalibrationFactor)
+ON_COMMAND(ID_DA_Vout, &CMainFrame::OnDAVout)
+ON_COMMAND(ID_DA_Pout, &CMainFrame::OnDAPout)
+ON_COMMAND(ID_DA_Channel, &CMainFrame::OnDAChannel)
+ON_COMMAND(ID_Control_File, &CMainFrame::OnControlFile)
+ON_COMMAND(ID_SamplingSettings, &CMainFrame::OnSamplingSettings)
+ON_COMMAND(ID_TransAdjustment, &CMainFrame::OnTransAdjustment)
+//}}AFX_MSG_MAP
+END_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF()
 
 /////////////////////////////////////////////////////////////////////////////
-// CMainFrame クラスの構築/消滅
 
-CMainFrame::CMainFrame()
+BOOL CMainFrame::PreCreateWindow(CREATESTRUCT &cs)
 {
-
-}
-
-CMainFrame::~CMainFrame()
-{
-}
-
-BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
-{
-
+    // TODO: この位置で CREATESTRUCT cs を修正して、Window クラスやスタイルを
     //       修正してください。
 
-    //Get system height and widths- added later
+    // Get system height and widths- added later
     cs.cy = ::GetSystemMetrics(SM_CYSCREEN);
     cs.cx = ::GetSystemMetrics(SM_CXSCREEN);
     cs.y = 0;
     cs.x = 0;
-    //over: Get...added later
-    //If previous saved Window_size could not be read,Set default value
+    // over: Get...added later
+    // If previous saved Window_size could not be read,Set default value
 
-    cs.style ^=(LONG)FWS_ADDTOTITLE;
-    //Not showing title of child window in main window
+    cs.style ^= (LONG)FWS_ADDTOTITLE; // Not showing title of child window in main window
 
     return CFrameWnd::PreCreateWindow(cs);
-
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -111,7 +94,7 @@ void CMainFrame::AssertValid() const
     CFrameWnd::AssertValid();
 }
 
-void CMainFrame::Dump(CDumpContext& dc) const
+void CMainFrame::Dump(CDumpContext &dc) const
 {
     CFrameWnd::Dump(dc);
 }
@@ -121,125 +104,87 @@ void CMainFrame::Dump(CDumpContext& dc) const
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame メッセージ ハンドラ
 
-void CMainFrame::OnBoardSettings() 
+void CMainFrame::OnAppAbout()
 {
-
-        CBoardSettings BoardSettings;
-        nResult = BoardSettings.DoModal();
-        // Display a device open dialog.
+    spdlog::info("About dialog menu selected");
+    CAppInfoDlg appInfoDlg;
+    nResult = appInfoDlg.DoModal();
 }
 
-void CMainFrame::OnSamplingSettings() 
+void CMainFrame::OnBoardSettings()
 {
-
-        CSamplingSettings SamplingSettings;
-        nResult = SamplingSettings.DoModal();
-        // Display a device open dialog.
+    spdlog::info("Board Settings menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
+    CBoardSettings BoardSettings;
+    nResult = BoardSettings.DoModal(); // Display a device open dialog.
 }
 
-void CMainFrame::OnCalibrationFactor() 
+void CMainFrame::OnSamplingSettings()
 {
-    DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
-        AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
+    spdlog::info("Sampling Settings menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
+    CSamplingSettings SamplingSettings;
+    nResult = SamplingSettings.DoModal(); // Display a device open dialog.
+}
+
+void CMainFrame::OnCalibrationFactor()
+{
+    spdlog::info("Calibration Factor menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
+    if (board::Flag_SetBoard == FALSE)
+    {
+        spdlog::warn("Calibration Factor accessed but board not initialized");
+        AfxMessageBox(_T("BoardSettings has not been accomplished !"), MB_ICONEXCLAMATION | MB_OK);
     }
     CCalibrationFactor CalibrationFactor;
-    nResult = CalibrationFactor.DoModal();        
+    nResult = CalibrationFactor.DoModal();
 }
 
-void CMainFrame::OnSpecimenData() 
+void CMainFrame::OnTransAdjustment()
 {
-
-    CSpecimen Specimen;
-    nResult = Specimen.DoModal();        
-}
-
-void CMainFrame::OnTransAdjustment() 
-{
-
+    spdlog::info("Trans Adjustment menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
     CTransAdjustment TransAdjustment;
-    nResult = TransAdjustment.DoModal();        
+    nResult = TransAdjustment.DoModal();
 }
 
-void CMainFrame::OnDAChannel() 
+void CMainFrame::OnDAChannel()
 {
-
+    spdlog::info("DA Channel menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
     CDA_Channel DA_Channel;
-    nResult = DA_Channel.DoModal();    
+    nResult = DA_Channel.DoModal();
 }
-void CMainFrame::OnDAVout() 
+void CMainFrame::OnDAVout()
 {
-    DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
-        AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
+    spdlog::info("DA Vout menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
+    if (board::Flag_SetBoard == FALSE)
+    {
+        spdlog::warn("DA Vout accessed but board not initialized");
+        AfxMessageBox(_T("BoardSettings has not been accomplished !"), MB_ICONEXCLAMATION | MB_OK);
     }
     CDA_Vout DA_Vout;
-    nResult = DA_Vout.DoModal();        
+    nResult = DA_Vout.DoModal();
 }
 
-void CMainFrame::OnDAPout() 
+void CMainFrame::OnDAPout()
 {
-    DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
-        AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
+    spdlog::info("DA Pout menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
+    if (board::Flag_SetBoard == FALSE)
+    {
+        spdlog::warn("DA Pout accessed but board not initialized");
+        AfxMessageBox(_T("BoardSettings has not been accomplished !"), MB_ICONEXCLAMATION | MB_OK);
     }
     CDA_Pout DA_Pout;
-    nResult = DA_Pout.DoModal();    
+    nResult = DA_Pout.DoModal();
 }
 
-void CMainFrame::OnControlSensitivity() 
+void CMainFrame::OnControlFile()
 {
-
-    CControl_Sensitivity Control_Sensitivity;
-    nResult = Control_Sensitivity.DoModal();        
-}
-
-void CMainFrame::OnControlID() 
-{
-
-    CControl_ID Control_ID;
-    nResult = Control_ID.DoModal();    
-}
-
-void CMainFrame::OnControlPreConsolidation() 
-{
-
-    CControl_PreConsolidation Control_PreConsolidation;
-    nResult = Control_PreConsolidation.DoModal();    
-}
-
-void CMainFrame::OnControlConsolidation() 
-{
-
-    CControl_Consolidation Control_Consolidation;
-    nResult = Control_Consolidation.DoModal();    
-}
-
-void CMainFrame::OnControlMLoading() 
-{
-
-    CControl_MLoading Control_MLoading;
-    nResult = Control_MLoading.DoModal();    
-}
-
-void CMainFrame::OnControlCLoading() 
-{
-
-    CControl_CLoading Control_CLoading;
-    nResult = Control_CLoading.DoModal();    
-}
-
-void CMainFrame::OnControlLinearStressPath() 
-{
-
-    CControl_LinearStressPath Control_LinearStressPath;
-    nResult = Control_LinearStressPath.DoModal();    
-    
-}
-
-void CMainFrame::OnControlFile() 
-{
-
+    spdlog::info("Control File menu selected");
+    // TODO: この位置にコマンド ハンドラ用のコードを追加してください
     CControl_File Control_File;
-    nResult = Control_File.DoModal();    
+    nResult = Control_File.DoModal();
 }

@@ -1,0 +1,18 @@
+version: 1
+metadata:
+  name: Duplicate ID Test
+  specimen_profile: default
+  calibration_profile: default
+execution:
+  simulation: true
+  logging:
+    basename: duplicate_run
+steps:
+  - id: step_1
+    uses: wait
+    with:
+      duration: 10s
+  - id: step_1 # Duplicate ID - should fail
+    uses: wait
+    with:
+      duration: 20s

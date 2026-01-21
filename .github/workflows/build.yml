@@ -1,0 +1,62 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - "*"
+  pull_request:
+    branches: [main, dst, dst-temp]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        platform: [x64]
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup vcpkg binary sources
+        shell: pwsh
+        run: |
+          echo "VCPKG_BINARY_SOURCES=clear;files,${{ runner.temp }}/vcpkg_cache,readwrite" >> $env:GITHUB_ENV
+
+      - name: Cache vcpkg
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ runner.temp }}/vcpkg_cache
+            vcpkg_installed
+          key: vcpkg-${{ runner.os }}-${{ matrix.platform }}-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            vcpkg-${{ runner.os }}-${{ matrix.platform }}-
+            vcpkg-${{ runner.os }}-
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3
+
+      - name: Build
+        shell: cmd
+        run: msbuild .\DigitShowDST.vcxproj /t:Build /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} /m
+
+      - name: Upload Release asset
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') && matrix.configuration == 'Release'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          artifacts: bin/${{ matrix.platform }}/${{ matrix.configuration }}/DigitShowDST.exe
+          artifactContentType: application/octet-stream
+          generateReleaseNotes: true

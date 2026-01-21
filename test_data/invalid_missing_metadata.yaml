@@ -1,0 +1,13 @@
+version: 1
+metadata:
+  name: Invalid Test
+  # Missing specimen_profile and calibration_profile
+execution:
+  simulation: true
+  logging:
+    basename: invalid_run
+steps:
+  - id: pause
+    uses: wait
+    with:
+      duration: 10s

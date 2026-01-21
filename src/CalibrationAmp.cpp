@@ -1,6 +1,6 @@
 ﻿/*
- * DigitShowBasic - Triaxial Test Machine Control Software
- * Copyright (C) 2025 Makoto KUNO
+ * DigitShowDST - Direct Shear Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO, Takuto ISHII
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,70 +16,96 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "DigitShowBasic.h"
+/**
+ * @file CalibrationAmp.cpp
+ * @brief Implementation of amplifier calibration dialog
+ *
+ * インプリメンテーション ファイル
+ */
+#include "StdAfx.h"
+
 #include "CalibrationAmp.h"
-#include "DigitShowContext.h"
+#include "Variables.hpp"
+#include "resource.h"
+#include "ui_helpers.hpp"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+using namespace variables;
 
-CCalibrationAmp::CCalibrationAmp(CWnd* pParent)
-    : CDialog(CCalibrationAmp::IDD, pParent)
+/////////////////////////////////////////////////////////////////////////////
+// CCalibrationAmp ダイアログ
+
+CCalibrationAmp::CCalibrationAmp(CWnd *pParent /*=NULL*/) : CDialog(CCalibrationAmp::IDD, pParent), m_AmpNo(AmpID)
 {
-    DigitShowContext* ctx = GetContext();
-    m_AmpNo = ctx->AmpID;
-    m_AmpPB = 0.0f;
-    m_AmpVB = 0.0f;
-    m_AmpVO = 0.0f;
-    m_AmpPO = 0.0f;
 }
 
-void CCalibrationAmp::DoDataExchange(CDataExchange* pDX)
+void CCalibrationAmp::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
+    //{{AFX_DATA_MAP(CCalibrationAmp)
     DDX_Text(pDX, IDC_EDIT_AmpNO, m_AmpNo);
     DDX_Text(pDX, IDC_EDIT_AmpPB, m_AmpPB);
     DDX_Text(pDX, IDC_EDIT_AmpVB, m_AmpVB);
     DDX_Text(pDX, IDC_EDIT_AmpVO, m_AmpVO);
     DDX_Text(pDX, IDC_EDIT_AmpPO, m_AmpPO);
+    //}}AFX_DATA_MAP
 }
 
-BEGIN_MESSAGE_MAP(CCalibrationAmp, CDialog)
-    ON_BN_CLICKED(IDC_BUTTON_AmpBase, OnBUTTONAmpBase)
-    ON_BN_CLICKED(IDC_BUTTON_AmpOffset, OnBUTTONAmpOffset)
-    ON_BN_CLICKED(IDC_BUTTON_AmpUpdate, OnBUTTONAmpUpdate)
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF(CCalibrationAmp, CDialog)
+//{{AFX_MSG_MAP(CCalibrationAmp)
+ON_BN_CLICKED(IDC_BUTTON_AmpBase, &CCalibrationAmp::OnBUTTONAmpBase)
+ON_BN_CLICKED(IDC_BUTTON_AmpOffset, &CCalibrationAmp::OnBUTTONAmpOffset)
+ON_BN_CLICKED(IDC_BUTTON_AmpUpdate, &CCalibrationAmp::OnBUTTONAmpUpdate)
+//}}AFX_MSG_MAP
+END_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF()
+
+/////////////////////////////////////////////////////////////////////////////
+// CCalibrationAmp メッセージ ハンドラ
+
+BOOL CCalibrationAmp::OnInitDialog()
+{
+    CDialog::OnInitDialog();
+
+    // Initialize status control
+    SetDlgItemText(IDC_STATIC_STATUS, _T(""));
+
+    m_AmpPB = AmpPB[AmpID];
+    m_AmpPO = AmpPO[AmpID];
+
+    UpdateData(FALSE);
+
+    return TRUE;
+}
 
 void CCalibrationAmp::OnBUTTONAmpBase()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_AmpVB = ctx->Vout[ctx->AmpID];
+    m_AmpVB = Vout[AmpID];
     UpdateData(FALSE);
 }
 
 void CCalibrationAmp::OnBUTTONAmpOffset()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    DigitShowContext* ctx = GetContext();
-    m_AmpVO = ctx->Vout[ctx->AmpID];
+    m_AmpVO = Vout[AmpID];
     UpdateData(FALSE);
 }
 
 void CCalibrationAmp::OnBUTTONAmpUpdate()
 {
+    // TODO: この位置にコントロール通知ハンドラ用のコードを追加してください
     UpdateData(TRUE);
-    if (m_AmpVO - m_AmpVB == 0.0) {
-        AfxMessageBox("Can not get calibration factors!", MB_ICONEXCLAMATION | MB_OK);
+    if (m_AmpVO - m_AmpVB == 0.0)
+    {
+        AfxMessageBox(_T("Can not get calibration factors!"), MB_ICONEXCLAMATION | MB_OK);
     }
-    else {
-        DigitShowContext* ctx = GetContext();
-        ctx->cal.b[ctx->AmpID] = (m_AmpPO - m_AmpPB) / (m_AmpVO - m_AmpVB);
-        ctx->cal.c[ctx->AmpID] = m_AmpPB - ctx->cal.b[ctx->AmpID] * m_AmpVB;
-        AfxMessageBox("Get calibration factors!", MB_ICONEXCLAMATION | MB_OK);
+    else
+    {
+        Cal_b[AmpID] = (m_AmpPO - m_AmpPB) / (m_AmpVO - m_AmpVB);
+        Cal_c[AmpID] = m_AmpPB - Cal_b[AmpID] * m_AmpVB;
+        AmpPB[AmpID] = m_AmpPB;
+        AmpPO[AmpID] = m_AmpPO;
+        set_status_text_and_fit_dialog(*this, IDC_STATIC_STATUS, "Calibration factors computed.");
     }
 }

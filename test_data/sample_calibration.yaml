@@ -1,0 +1,14 @@
+calibration_data:
+  - channel: 0
+    cal_a: 0.0
+    cal_b: 1.0
+    cal_c: 0.0
+  - channel: 1
+    cal_a: 0.0
+    cal_b: 1.0
+    cal_c: 0.0
+initial_specimen:
+  height_mm: 120.0
+  area_mm2: 14400.0
+  weight_g: 0.0
+  box_weight_g: 10000.0

@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/takker99/DigitShowDST/schemas/api_config.schema.json",
+  "title": "API Configuration",
+  "description": "Configuration for REST API server with server-sent events",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Git commit hash of the program version that created/last saved this file (optional, for version tracking)"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Enable or disable the API server",
+      "default": false
+    },
+    "host": {
+      "type": "string",
+      "description": "Host address to bind the API server",
+      "default": "127.0.0.1",
+      "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$|^localhost$|^0\\.0\\.0\\.0$"
+    },
+    "port": {
+      "type": "integer",
+      "description": "Port number for the API server",
+      "default": 8080,
+      "minimum": 1024,
+      "maximum": 65535
+    },
+    "update_interval_ms": {
+      "type": "integer",
+      "description": "Interval in milliseconds for sending sensor data updates via SSE",
+      "default": 100,
+      "minimum": 10,
+      "maximum": 10000
+    },
+    "cors_enabled": {
+      "type": "boolean",
+      "description": "Enable CORS headers for cross-origin requests",
+      "default": true
+    },
+    "max_connections": {
+      "type": "integer",
+      "description": "Maximum number of concurrent SSE connections",
+      "default": 10,
+      "minimum": 1,
+      "maximum": 100
+    }
+  },
+  "required": [
+    "enabled"
+  ],
+  "additionalProperties": false
+}

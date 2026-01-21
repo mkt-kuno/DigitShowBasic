@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectName>DigitShowDST</ProjectName>
+    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{1AD0A0AF-D066-4208-AA36-80ED2F2C99F6}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!-- Common configuration settings for all platforms/configurations -->
+  <PropertyGroup Label="Configuration">
+    <PlatformToolset>ClangCL</PlatformToolset>
+    <!-- <PlatformToolset>v143</PlatformToolset> -->
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <MaxNumberOfProcesses>0</MaxNumberOfProcesses>
+    <VcpkgRoot>$(SolutionDir)vcpkg\</VcpkgRoot>
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <!-- Set UseDebugLibraries before importing vcpkg targets -->
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="$(VcpkgRoot)scripts\buildsystems\msbuild\vcpkg.targets"
+    Condition="Exists('$(VcpkgRoot)scripts\buildsystems\msbuild\vcpkg.targets')" />
+  <!-- Link incrementally only for Debug builds -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <!-- Common compiler settings for all configurations -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel Condition="'$(PlatformToolset)'!='ClangCL'">EnableAllWarnings</WarningLevel>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <!-- warning C4711: function 'function' selected for inline expansion
+      (https://learn.microsoft.com/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4711) -->
+      <!-- warning C5045: Compiler will insert Spectre mitigation for memory load if /Qspectre
+      switch specified (https://learn.microsoft.com/cpp/error-messages/compiler-warnings/c5045) -->
+      <DisableSpecificWarnings Condition="'$(PlatformToolset)'!='ClangCL'">
+        4623;4625;4626;4711;5026;5027;5045;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>src/StdAfx.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>
+        _WINDOWS;C4_MSVC;SPDLOG_USE_STD_FORMAT;RYML_DEFAULT_CALLBACK_USES_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>true</EnablePREfast>
+      <AdditionalOptions Condition="'$(PlatformToolset)'!='ClangCL'">/utf-8 /external:anglebrackets
+        /external:templates- /analyze:external-
+        %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(PlatformToolset)'=='ClangCL'">/W4 -Wno-c++98-compat
+        -Wno-c++98-compat-pedantic -Wno-microsoft-include -fms-extensions -fms-compatibility
+        %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0411</Culture>
+    </ResourceCompile>
+    <Midl>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+    </Midl>
+    <Xdcmake>
+      <OutputFile>$(TargetDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <Bscmake>
+      <OutputFile>$(TargetDir)$(TargetName).bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <OutputFile>$(TargetDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ProfileGuidedDatabase>$(TargetDir)$(TargetName).pgd</ProfileGuidedDatabase>
+      <AdditionalDependencies Condition="'$(PlatformToolset)'=='ClangCL'">
+        ryml.lib;c4core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Configuration-specific settings (Debug) -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- Suppress MFC DEBUG_NEW for clang-cl to reduce duplicate operator new[] collision -->
+      <PreprocessorDefinitions Condition="'$(PlatformToolset)'=='ClangCL'">
+        _DEBUG;_AFX_NO_DEBUG_CRT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- Workaround: Allow duplicate operator new[] from static MFC + static CRT in Debug -->
+      <AdditionalOptions Condition="'$(PlatformToolset)'=='ClangCL'">/FORCE:MULTIPLE
+        %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Configuration-specific settings (Release) -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>MaxSpeed</Optimization>
+      <StringPooling>true</StringPooling>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Platform-specific settings (Win32) -->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4738;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalDependencies>
+        $(ProjectDir)src\caio_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Platform-specific settings (x64) -->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <Link>
+      <AdditionalDependencies>
+        $(ProjectDir)src\caio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Release-specific linker settings -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <Link>
+      <StackReserveSize>20971520</StackReserveSize>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Link>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src/ApiServer.cpp" />
+    <ClCompile Include="src/board_control.cpp" />
+    <ClCompile Include="src/BoardSettings.cpp" />
+    <ClCompile Include="src/CalibrationAmp.cpp" />
+    <ClCompile Include="src/CalibrationFactor.cpp" />
+    <ClCompile Include="src/ControlConfig.cpp" />
+    <ClCompile Include="src/Control_File.cpp" />
+    <ClCompile Include="src/control/strategy_factory.cpp" />
+    <ClCompile Include="src/DA_Channel.cpp" />
+    <ClCompile Include="src/DA_Pout.cpp" />
+    <ClCompile Include="src/DA_Vout.cpp" />
+    <ClCompile Include="src/digitshow_operations.cpp" />
+    <ClCompile Include="src/AppInfoDlg.cpp" />
+    <ClCompile Include="src/DigitShowDST.cpp" />
+    <ClCompile Include="src/DigitShowDSTDoc.cpp" />
+    <ClCompile Include="src/DigitShowDSTView.cpp" />
+    <ClCompile Include="src/MainFrm.cpp" />
+    <ClCompile Include="src/SamplingSettings.cpp" />
+    <ClCompile Include="src/physical_variables.cpp" />
+    <ClCompile Include="src/Variables.cpp" />
+    <ClCompile Include="src/StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">src/StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+        src/StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">src/StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">src/StdAfx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src/TransAdjustment.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src/ApiServer.hpp" />
+    <ClInclude Include="src/openapi_spec.hpp" />
+    <ClInclude Include="src/StdAfx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src/DigitShowDST.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\DigitShowDST.ico" />
+    <Image Include="res\DigitShowDSTDoc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="res\DigitShowDST.rc2" />
+  </ItemGroup>
+  <Target Name="GenerateGitVersionHeader" BeforeTargets="InitializeBuildStatus">
+    <Message Text="Generating git_version.hpp ..." Importance="high" />
+    <Exec
+      Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)scripts\generate_git_version.ps1&quot; -OutDir &quot;$(ProjectDir)generated&quot;"
+      ContinueOnError="false" />
+    <ItemGroup>
+      <ClInclude Include="$(ProjectDir)generated\git_version.hpp" />
+    </ItemGroup>
+  </Target>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+  <Target Name="BootstrapVcpkg" BeforeTargets="InitializeBuildStatus"
+    Condition="!Exists('$(VcpkgRoot)vcpkg.exe')">
+    <Exec
+      Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(VcpkgRoot)scripts\bootstrap.ps1&quot; -disableMetrics" />
+  </Target>
+</Project>

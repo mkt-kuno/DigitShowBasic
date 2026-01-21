@@ -1,31 +1,153 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build (Debug)",
-            "type": "shell",
-            "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
-            "args": [
-                "DigitShowBasic.sln",
-                "/p:Configuration=Debug",
-                "/p:Platform=x64",
-                "/p:WarningLevel=Level4"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "build (Release)",
-            "type": "shell",
-            "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
-            "args": [
-                "DigitShowBasic.sln",
-                "/p:Configuration=Release",
-                "/p:Platform=x64",
-                "/p:WarningLevel=Level4"
-            ],
-            "group": "build",
-            "problemMatcher": "$msCompile"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "MSBuild: Build Release",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Build -p:Configuration=Release"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "MSBuild: Build Debug",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Build -p:Configuration=Debug"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "MSBuild: Clean Release",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Clean -p:Configuration=Release"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "MSBuild: Clean Debug",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Clean -p:Configuration=Debug"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "MSBuild: Build Release x64",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Build -p:Configuration=Release -p:Platform=x64"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "MSBuild: Build Debug x64",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Build -p:Configuration=Debug -p:Platform=x64"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "MSBuild: Clean Release x64",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Clean -p:Configuration=Release -p:Platform=x64"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"presentation": {
+				"reveal": "always"
+			}
+		},
+		{
+			"label": "MSBuild: Clean Debug x64",
+			"type": "shell",
+			"command": [
+				"Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force;",
+				". ${workspaceFolder}\\scripts\\Load-DevEnv.ps1;",
+				"msbuild .\\DigitShowDST.vcxproj -t:Clean -p:Configuration=Debug -p:Platform=x64"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"presentation": {
+				"reveal": "always"
+			}
+		}
+	]
 }

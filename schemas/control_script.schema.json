@@ -1,0 +1,1228 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/takker99/DigitShowDST/schemas/control_script.schema.json",
+  "title": "Control Script",
+  "description": "DigitShowDST control script for triaxial test automation",
+  "type": "object",
+  "required": [
+    "steps"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference (optional, allows IDE validation support)"
+    },
+    "version": {
+      "type": "string",
+      "description": "Git commit hash of the program version that created/last saved this file (optional, for version tracking)"
+    },
+    "steps": {
+      "type": "array",
+      "description": "Sequence of control steps to execute",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/no_control"
+          },
+          {
+            "$ref": "#/definitions/monotonic_loading_constant_pressure"
+          },
+          {
+            "$ref": "#/definitions/monotonic_loading_constant_volume"
+          },
+          {
+            "$ref": "#/definitions/cyclic_loading_constant_pressure"
+          },
+          {
+            "$ref": "#/definitions/cyclic_loading_constant_volume"
+          },
+          {
+            "$ref": "#/definitions/creep_constant_pressure"
+          },
+          {
+            "$ref": "#/definitions/creep_constant_volume"
+          },
+          {
+            "$ref": "#/definitions/relaxation_constant_pressure"
+          },
+          {
+            "$ref": "#/definitions/relaxation_constant_volume"
+          },
+          {
+            "$ref": "#/definitions/monotonic_loading_displacement_constant_pressure"
+          },
+          {
+            "$ref": "#/definitions/monotonic_loading_displacement_constant_volume"
+          },
+          {
+            "$ref": "#/definitions/cyclic_loading_displacement_constant_pressure"
+          },
+          {
+            "$ref": "#/definitions/cyclic_loading_displacement_constant_volume"
+          },
+          {
+            "$ref": "#/definitions/acceleration_constant_pressure"
+          },
+          {
+            "$ref": "#/definitions/acceleration_constant_volume"
+          },
+          {
+            "$ref": "#/definitions/constant_tau_consolidation"
+          },
+          {
+            "$ref": "#/definitions/k_consolidation"
+          },
+          {
+            "$ref": "#/definitions/creep_constant_pressure_fast"
+          },
+          {
+            "$ref": "#/definitions/creep_constant_pressure_fast_ref"
+          },
+          {
+            "$ref": "#/definitions/pre_consolidation"
+          },
+          {
+            "$ref": "#/definitions/rebase_reference"
+          },
+          {
+            "$ref": "#/definitions/before_consolidation"
+          },
+          {
+            "$ref": "#/definitions/after_consolidation"
+          },
+          {
+            "$ref": "#/definitions/wait"
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "step_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+$",
+      "description": "Optional step identifier. Must match GitHub Actions-like workflow identifiers: ASCII letters, digits, dot, underscore, hyphen."
+    },
+    "step_name": {
+      "type": "string",
+      "description": "Optional human-readable step name for documentation and UI display."
+    },
+    "vertical_stress_parameters": {
+      "type": "object",
+      "required": [
+        "target_sigma_kPa"
+      ],
+      "properties": {
+        "target_sigma_kPa": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Radial effective stress (σ). Units: kPa."
+        },
+        "vertical_stress_error_kpa": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Vertical stress tolerance override. Units: kPa."
+        },
+        "vertical_stress_ki_kpa_per_kpa_m2": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Vertical stress loop gain override. Units: kPa/(kPa·m²)."
+        },
+        "ep_output_limit_kpa": {
+          "type": "number",
+          "minimum": 0,
+          "description": "EP output limit per tick. Units: kPa."
+        }
+      }
+    },
+    "shear_stress_parameters": {
+      "type": "object",
+      "required": [
+        "target_tau_kPa"
+      ],
+      "properties": {
+        "target_tau_kPa": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Target shear effective stress (τ). Units: kPa."
+        },
+        "shear_stress_error_kpa": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Shear stress tolerance override. Units: kPa."
+        },
+        "shear_stress_kp_rpm_per_kpa": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Shear stress proportional gain override. Units: RPM/kPa."
+        },
+        "motor_output_limit_rpm": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Motor output limit per control tick. Units: RPM."
+        }
+      }
+    },
+    "normal_displacement_parameters": {
+      "type": "object",
+      "properties": {
+        "normal_displacement_error_mm": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Normal displacement tolerance override. Units: mm."
+        },
+        "normal_displacement_ki_kpa_per_mm": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Normal displacement gain override. Units: kPa/mm."
+        },
+        "ep_output_limit_kpa": {
+          "type": "number",
+          "minimum": 0,
+          "description": "EP output limit per tick. Units: kPa."
+        }
+      }
+    },
+    "tilt_parameters": {
+      "type": "object",
+      "properties": {
+        "tilt_error_mm": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Tilt balance tolerance override. Units: mm."
+        },
+        "tilt_ki_kpa_per_mm": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Tilt control gain override. Units: kPa/mm."
+        }
+      }
+    },
+    "no_control": {
+      "type": "object",
+      "required": [
+        "use"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "no_control",
+          "description": "Identifier for 'no control' — motor clutch ON but no rotation; EP outputs hold previous voltages."
+        }
+      },
+      "additionalProperties": false
+    },
+    "monotonic_loading_constant_pressure": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "monotonic_loading_constant_pressure",
+          "description": "Monotonic axial loading (stress-controlled) — maintain target deviator stress while actively controlling radial stress."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "target_tau_kPa"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "target_tau_kPa": {
+              "type": "number",
+              "description": "Target deviator stress (τ). Units: kPa."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "monotonic_loading_constant_volume": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "monotonic_loading_constant_volume",
+          "description": "Monotonic axial loading under constant-volume constraint."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/normal_displacement_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "target_tau_kPa"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "target_tau_kPa": {
+              "type": "number",
+              "description": "Target deviator stress (τ). Units: kPa."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "cyclic_loading_constant_pressure": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "cyclic_loading_constant_pressure",
+          "description": "Cyclic axial loading (stress-controlled) between specified deviator limits while maintaining radial stress."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "tau_lower_kPa",
+            "tau_upper_kPa",
+            "num_cycles"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "tau_lower_kPa": {
+              "type": "number",
+              "description": "Lower deviator stress limit. Units: kPa."
+            },
+            "tau_upper_kPa": {
+              "type": "number",
+              "description": "Upper deviator stress limit. Units: kPa."
+            },
+            "num_cycles": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of full cycles to perform."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "cyclic_loading_constant_volume": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "cyclic_loading_constant_volume",
+          "description": "Cyclic axial loading under constant-volume conditions."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            },
+            {
+              "$ref": "#/definitions/normal_displacement_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "tau_lower_kPa",
+            "tau_upper_kPa",
+            "num_cycles"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "tau_lower_kPa": {
+              "type": "number",
+              "description": "Lower deviator stress limit. Units: kPa."
+            },
+            "tau_upper_kPa": {
+              "type": "number",
+              "description": "Upper deviator stress limit. Units: kPa."
+            },
+            "num_cycles": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of full cycles to perform."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "creep_constant_pressure": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "creep_constant_pressure",
+          "description": "Creep step: hold constant deviator stress while observing time-dependent deformation."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/shear_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "time_min"
+          ],
+          "properties": {
+            "time_min": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Duration of the step. Units: minutes."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "creep_constant_volume": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "creep_constant_volume",
+          "description": "Creep step under constant-volume constraint."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/shear_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            },
+            {
+              "$ref": "#/definitions/normal_displacement_parameters"
+            }
+          ],
+          "required": [
+            "time_min"
+          ],
+          "properties": {
+            "time_min": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Duration of the step. Units: minutes."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relaxation_constant_pressure": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "relaxation_constant_pressure",
+          "description": "Stress relaxation step under constant radial stress."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "time_min"
+          ],
+          "properties": {
+            "time_min": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Duration of the step. Units: minutes."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relaxation_constant_volume": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "relaxation_constant_volume",
+          "description": "Stress relaxation step at constant volume."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            },
+            {
+              "$ref": "#/definitions/normal_displacement_parameters"
+            }
+          ],
+          "required": [
+            "time_min"
+          ],
+          "properties": {
+            "time_min": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Duration of the step. Units: minutes."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "monotonic_loading_displacement_constant_pressure": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "monotonic_loading_displacement_constant_pressure",
+          "description": "Displacement-targeted monotonic loading with active radial stress control."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "target_displacement_mm",
+            "target_sigma_kPa"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "target_displacement_mm": {
+              "type": "number",
+              "description": "Target displacement to reach. Units: mm."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "monotonic_loading_displacement_constant_volume": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "monotonic_loading_displacement_constant_volume",
+          "description": "Displacement-targeted monotonic loading under constant-volume conditions."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            },
+            {
+              "$ref": "#/definitions/normal_displacement_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "target_displacement_mm"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "target_displacement_mm": {
+              "type": "number",
+              "description": "Target displacement to reach. Units: mm."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "cyclic_loading_displacement_constant_pressure": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "cyclic_loading_displacement_constant_pressure",
+          "description": "Cyclic displacement-targeted loading with active radial stress control."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "displacement_lower_mm",
+            "displacement_upper_mm",
+            "num_cycles"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "displacement_lower_mm": {
+              "type": "number",
+              "description": "Lower displacement limit. Units: mm."
+            },
+            "displacement_upper_mm": {
+              "type": "number",
+              "description": "Upper displacement limit. Units: mm."
+            },
+            "num_cycles": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of full cycles to perform."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "cyclic_loading_displacement_constant_volume": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "cyclic_loading_displacement_constant_volume",
+          "description": "Cyclic displacement-targeted loading under constant-volume conditions."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            },
+            {
+              "$ref": "#/definitions/normal_displacement_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "displacement_lower_mm",
+            "displacement_upper_mm",
+            "num_cycles"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=load/compression, negative=unload/dilation. Units: RPM."
+            },
+            "displacement_lower_mm": {
+              "type": "number",
+              "description": "Lower displacement limit. Units: mm."
+            },
+            "displacement_upper_mm": {
+              "type": "number",
+              "description": "Upper displacement limit. Units: mm."
+            },
+            "num_cycles": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of full cycles to perform."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "acceleration_constant_pressure": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "acceleration_constant_pressure",
+          "description": "Motor acceleration with stress control and constant radial pressure."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "acceleration_rate_rpm_per_min",
+            "target_tau_kPa"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM. Units: RPM."
+            },
+            "acceleration_rate_rpm_per_min": {
+              "type": "number",
+              "description": "Rate of acceleration. Units: RPM/min."
+            },
+            "target_tau_kPa": {
+              "type": "number",
+              "description": "Target deviator stress (τ). Units: kPa."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "acceleration_constant_volume": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "acceleration_constant_volume",
+          "description": "Motor acceleration with stress control under constant-volume conditions."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            },
+            {
+              "$ref": "#/definitions/normal_displacement_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "acceleration_rate_rpm_per_min",
+            "target_rpm",
+            "target_tau_kPa"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Initial motor speed. Units: RPM."
+            },
+            "acceleration_rate_rpm_per_min": {
+              "type": "number",
+              "description": "Rate of acceleration. Units: RPM/min."
+            },
+            "target_rpm": {
+              "type": "number",
+              "description": "Target motor speed. Units: RPM."
+            },
+            "target_tau_kPa": {
+              "type": "number",
+              "description": "Target deviator stress (τ). Units: kPa."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "constant_tau_consolidation": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "constant_tau_consolidation",
+          "description": "Consolidation while holding constant deviator stress τ."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/shear_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "target_tau_kPa",
+            "consolidation_rate_kPa_per_min",
+            "target_sigma_kPa"
+          ],
+          "properties": {
+            "consolidation_rate_kPa_per_min": {
+              "type": "number",
+              "description": "Rate at which radial effective stress should be changed. Units: kPa/min."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "k_consolidation": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "k_consolidation",
+          "description": "K-value consolidation (stress-path)."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "motor_rpm",
+            "target_tau_kPa",
+            "sigma_start_kPa",
+            "sigma_end_kPa",
+            "k_value",
+            "target_sigma_kPa"
+          ],
+          "properties": {
+            "motor_rpm": {
+              "type": "number",
+              "description": "Motor speed in RPM with sign indicating direction: positive=compression, negative=dilation. Units: RPM."
+            },
+            "target_tau_kPa": {
+              "type": "number",
+              "description": "Target deviator stress for control. Units: kPa."
+            },
+            "sigma_start_kPa": {
+              "type": "number",
+              "description": "Initial radial effective stress σ₀. Units: kPa."
+            },
+            "sigma_end_kPa": {
+              "type": "number",
+              "description": "Final radial effective stress σ_end. Units: kPa."
+            },
+            "k_value": {
+              "type": "number",
+              "description": "K value defining the stress-path slope."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "creep_constant_pressure_fast": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "creep_constant_pressure_fast",
+          "description": "Fast creep step: hold constant deviator stress while observing time-dependent deformation (fast variant)."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/shear_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "time_min"
+          ],
+          "properties": {
+            "time_min": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Duration of the step. Units: minutes."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "creep_constant_pressure_fast_ref": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "creep_constant_pressure_fast_ref",
+          "description": "Fast creep reference step (alternative variant)."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/shear_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "time_min"
+          ],
+          "properties": {
+            "time_min": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Duration of the step. Units: minutes."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "pre_consolidation": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "pre_consolidation",
+          "description": "Pre-consolidation step."
+        },
+        "with": {
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/shear_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/vertical_stress_parameters"
+            },
+            {
+              "$ref": "#/definitions/tilt_parameters"
+            }
+          ],
+          "required": [
+            "target_tau_kPa",
+            "target_sigma_kPa"
+          ],
+          "properties": {}
+        }
+      },
+      "additionalProperties": false
+    },
+    "rebase_reference": {
+      "type": "object",
+      "required": [
+        "use"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "rebase_reference",
+          "description": "Rebase reference measurements (no parameters required)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "before_consolidation": {
+      "type": "object",
+      "required": [
+        "use"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "before_consolidation",
+          "description": "Before consolidation marker step."
+        }
+      },
+      "additionalProperties": false
+    },
+    "after_consolidation": {
+      "type": "object",
+      "required": [
+        "use"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "after_consolidation",
+          "description": "After consolidation marker step."
+        }
+      },
+      "additionalProperties": false
+    },
+    "wait": {
+      "type": "object",
+      "required": [
+        "use",
+        "with"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/step_id"
+        },
+        "name": {
+          "$ref": "#/definitions/step_name"
+        },
+        "use": {
+          "const": "wait",
+          "description": "Wait for a specified duration without control action."
+        },
+        "with": {
+          "type": "object",
+          "required": [
+            "time_min"
+          ],
+          "properties": {
+            "time_min": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Duration to wait. Units: minutes."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

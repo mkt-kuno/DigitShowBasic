@@ -1,0 +1,14 @@
+# Missing version field - should fail validation
+metadata:
+  name: Invalid Test
+  specimen_profile: default
+  calibration_profile: default
+execution:
+  simulation: true
+  logging:
+    basename: invalid_run
+steps:
+  - id: pause
+    uses: wait
+    with:
+      duration: 10s

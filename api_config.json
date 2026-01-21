@@ -1,0 +1,10 @@
+{
+  "$schema": "schemas/api_config.schema.json",
+  "version": "example-commit-hash-for-api-config",
+  "enabled": false,
+  "host": "127.0.0.1",
+  "port": 8080,
+  "update_interval_ms": 100,
+  "cors_enabled": true,
+  "max_connections": 10
+}

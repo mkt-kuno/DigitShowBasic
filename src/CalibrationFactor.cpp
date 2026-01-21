@@ -1,6 +1,6 @@
 ﻿/*
- * DigitShowBasic - Triaxial Test Machine Control Software
- * Copyright (C) 2025 Makoto KUNO
+ * DigitShowDST - Direct Shear Test Machine Control Software
+ * Copyright (C) 2025 Makoto KUNO, Takuto ISHII
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,975 +16,580 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file CalibrationFactor.cpp
+ * @brief Implementation of calibration factor dialog
+ *
+ * インプリメンテーション ファイル
+ */
+#include "StdAfx.h"
+#pragma warning(push)
+#pragma warning(disable : 4800 4866)
 
-#include "stdafx.h"
-#include "DigitShowBasic.h"
-#include "CalibrationFactor.h"
-
+#include "Board.hpp"
 #include "CalibrationAmp.h"
+#include "CalibrationFactor.h"
+#include "Variables.hpp"
+#include "charconv.hpp"
+#include "control/json.hpp"
+#include "physical_variables.hpp"
+#include "resource.h"
+#include "ui_helpers.hpp"
+#include "version_info.hpp"
+#include <array>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <ranges>
+#include <ryml/ryml.hpp>
+#include <ryml/ryml_std.hpp>
+#include <spdlog/spdlog.h>
+#include <sstream>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+using namespace variables;
 
-CCalibrationFactor::CCalibrationFactor(CWnd* pParent /*=NULL*/)
-    : CDialog(CCalibrationFactor::IDD, pParent)
+/////////////////////////////////////////////////////////////////////////////
+// CCalibrationFactor ダイアログ
+// CDigitShowDSTView
+
+CCalibrationFactor::CCalibrationFactor(CWnd *pParent /*=NULL*/)
+    : CDialog(CCalibrationFactor::IDD, pParent), m_CFP{}, m_C{}
 {
     //{{AFX_DATA_INIT(CCalibrationFactor)
-    m_CFP00 = _T("");
-    m_CFP01 = _T("");
-    m_CFP02 = _T("");
-    m_CFP03 = _T("");
-    m_CFP04 = _T("");
-    m_CFP05 = _T("");
-    m_CFP06 = _T("");
-    m_CFP07 = _T("");
-    m_CFP08 = _T("");
-    m_CFP09 = _T("");
-    m_CFP10 = _T("");
-    m_CFP11 = _T("");
-    m_CFP12 = _T("");
-    m_CFP13 = _T("");
-    m_CFP14 = _T("");
-    m_CFP15 = _T("");
-    m_CFA00 = 0.0;
-    m_CFB00 = 0.0;
-    m_CFC00 = 0.0;
-    m_CFA01 = 0.0;
-    m_CFB01 = 0.0;
-    m_CFC01 = 0.0;
-    m_CFA02 = 0.0;
-    m_CFB02 = 0.0;
-    m_CFC02 = 0.0;
-    m_CFA03 = 0.0;
-    m_CFB03 = 0.0;
-    m_CFC03 = 0.0;
-    m_CFA04 = 0.0;
-    m_CFB04 = 0.0;
-    m_CFC04 = 0.0;
-    m_CFA05 = 0.0;
-    m_CFB05 = 0.0;
-    m_CFC05 = 0.0;
-    m_CFA06 = 0.0;
-    m_CFB06 = 0.0;
-    m_CFC06 = 0.0;
-    m_CFA07 = 0.0;
-    m_CFB07 = 0.0;
-    m_CFC07 = 0.0;
-    m_CFA08 = 0.0;
-    m_CFB08 = 0.0;
-    m_CFC08 = 0.0;
-    m_CFA09 = 0.0;
-    m_CFB09 = 0.0;
-    m_CFC09 = 0.0;
-    m_CFA10 = 0.0;
-    m_CFB10 = 0.0;
-    m_CFC10 = 0.0;
-    m_CFA11 = 0.0;
-    m_CFB11 = 0.0;
-    m_CFC11 = 0.0;
-    m_CFA12 = 0.0;
-    m_CFB12 = 0.0;
-    m_CFC12 = 0.0;
-    m_CFA13 = 0.0;
-    m_CFB13 = 0.0;
-    m_CFC13 = 0.0;
-    m_CFA14 = 0.0;
-    m_CFB14 = 0.0;
-    m_CFC14 = 0.0;
-    m_CFA15 = 0.0;
-    m_CFB15 = 0.0;
-    m_CFC15 = 0.0;
-    m_Channels = _T("");
-    m_C00 = _T("");
-    m_C01 = _T("");
-    m_C02 = _T("");
-    m_C03 = _T("");
-    m_C04 = _T("");
-    m_C05 = _T("");
-    m_C06 = _T("");
-    m_C07 = _T("");
-    m_C08 = _T("");
-    m_C09 = _T("");
-    m_C10 = _T("");
-    m_C11 = _T("");
-    m_C12 = _T("");
-    m_C13 = _T("");
-    m_C14 = _T("");
-    m_C15 = _T("");
+
     //}}AFX_DATA_INIT
 }
 
-void CCalibrationFactor::DoDataExchange(CDataExchange* pDX)
+void CCalibrationFactor::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CCalibrationFactor)
-    DDX_Text(pDX, IDC_EDIT_CFP00, m_CFP00);
-    DDX_Text(pDX, IDC_EDIT_CFP01, m_CFP01);
-    DDX_Text(pDX, IDC_EDIT_CFP02, m_CFP02);
-    DDX_Text(pDX, IDC_EDIT_CFP03, m_CFP03);
-    DDX_Text(pDX, IDC_EDIT_CFP04, m_CFP04);
-    DDX_Text(pDX, IDC_EDIT_CFP05, m_CFP05);
-    DDX_Text(pDX, IDC_EDIT_CFP06, m_CFP06);
-    DDX_Text(pDX, IDC_EDIT_CFP07, m_CFP07);
-    DDX_Text(pDX, IDC_EDIT_CFP08, m_CFP08);
-    DDX_Text(pDX, IDC_EDIT_CFP09, m_CFP09);
-    DDX_Text(pDX, IDC_EDIT_CFP10, m_CFP10);
-    DDX_Text(pDX, IDC_EDIT_CFP11, m_CFP11);
-    DDX_Text(pDX, IDC_EDIT_CFP12, m_CFP12);
-    DDX_Text(pDX, IDC_EDIT_CFP13, m_CFP13);    
-    DDX_Text(pDX, IDC_EDIT_CFP14, m_CFP14);
-    DDX_Text(pDX, IDC_EDIT_CFP15, m_CFP15);
-    DDX_Text(pDX, IDC_EDIT_CFA00, m_CFA00);
-    DDX_Text(pDX, IDC_EDIT_CFA01, m_CFA01);
-    DDX_Text(pDX, IDC_EDIT_CFA02, m_CFA02);
-    DDX_Text(pDX, IDC_EDIT_CFA03, m_CFA03);
-    DDX_Text(pDX, IDC_EDIT_CFA04, m_CFA04);
-    DDX_Text(pDX, IDC_EDIT_CFA05, m_CFA05);
-    DDX_Text(pDX, IDC_EDIT_CFA06, m_CFA06);
-    DDX_Text(pDX, IDC_EDIT_CFA07, m_CFA07);
-    DDX_Text(pDX, IDC_EDIT_CFA08, m_CFA08);
-    DDX_Text(pDX, IDC_EDIT_CFA09, m_CFA09);
-    DDX_Text(pDX, IDC_EDIT_CFA10, m_CFA10);
-    DDX_Text(pDX, IDC_EDIT_CFA11, m_CFA11);
-    DDX_Text(pDX, IDC_EDIT_CFA12, m_CFA12);
-    DDX_Text(pDX, IDC_EDIT_CFA13, m_CFA13);
-    DDX_Text(pDX, IDC_EDIT_CFA14, m_CFA14);
-    DDX_Text(pDX, IDC_EDIT_CFA15, m_CFA15);
-    DDX_Text(pDX, IDC_EDIT_CFB00, m_CFB00);
-    DDX_Text(pDX, IDC_EDIT_CFB01, m_CFB01);
-    DDX_Text(pDX, IDC_EDIT_CFB02, m_CFB02);
-    DDX_Text(pDX, IDC_EDIT_CFB03, m_CFB03);
-    DDX_Text(pDX, IDC_EDIT_CFB04, m_CFB04);
-    DDX_Text(pDX, IDC_EDIT_CFB05, m_CFB05);
-    DDX_Text(pDX, IDC_EDIT_CFB06, m_CFB06);
-    DDX_Text(pDX, IDC_EDIT_CFB07, m_CFB07);
-    DDX_Text(pDX, IDC_EDIT_CFB08, m_CFB08);
-    DDX_Text(pDX, IDC_EDIT_CFB09, m_CFB09);
-    DDX_Text(pDX, IDC_EDIT_CFB10, m_CFB10);
-    DDX_Text(pDX, IDC_EDIT_CFB11, m_CFB11);
-    DDX_Text(pDX, IDC_EDIT_CFB12, m_CFB12);
-    DDX_Text(pDX, IDC_EDIT_CFB13, m_CFB13);
-    DDX_Text(pDX, IDC_EDIT_CFB14, m_CFB14);
-    DDX_Text(pDX, IDC_EDIT_CFB15, m_CFB15);
-    DDX_Text(pDX, IDC_EDIT_CFC00, m_CFC00);
-    DDX_Text(pDX, IDC_EDIT_CFC01, m_CFC01);
-    DDX_Text(pDX, IDC_EDIT_CFC02, m_CFC02);
-    DDX_Text(pDX, IDC_EDIT_CFC03, m_CFC03);
-    DDX_Text(pDX, IDC_EDIT_CFC04, m_CFC04);
-    DDX_Text(pDX, IDC_EDIT_CFC05, m_CFC05);
-    DDX_Text(pDX, IDC_EDIT_CFC06, m_CFC06);
-    DDX_Text(pDX, IDC_EDIT_CFC07, m_CFC07);
-    DDX_Text(pDX, IDC_EDIT_CFC08, m_CFC08);
-    DDX_Text(pDX, IDC_EDIT_CFC09, m_CFC09);
-    DDX_Text(pDX, IDC_EDIT_CFC10, m_CFC10);
-    DDX_Text(pDX, IDC_EDIT_CFC11, m_CFC11);
-    DDX_Text(pDX, IDC_EDIT_CFC12, m_CFC12);
-    DDX_Text(pDX, IDC_EDIT_CFC13, m_CFC13);
-    DDX_Text(pDX, IDC_EDIT_CFC14, m_CFC14);
-    DDX_Text(pDX, IDC_EDIT_CFC15, m_CFC15);
-    DDX_Text(pDX, IDC_EDIT_Channels, m_Channels);
-    DDX_Text(pDX, IDC_STATIC_C00, m_C00);
-    DDX_Text(pDX, IDC_STATIC_C01, m_C01);
-    DDX_Text(pDX, IDC_STATIC_C02, m_C02);
-    DDX_Text(pDX, IDC_STATIC_C03, m_C03);
-    DDX_Text(pDX, IDC_STATIC_C04, m_C04);
-    DDX_Text(pDX, IDC_STATIC_C05, m_C05);
-    DDX_Text(pDX, IDC_STATIC_C06, m_C06);
-    DDX_Text(pDX, IDC_STATIC_C07, m_C07);
-    DDX_Text(pDX, IDC_STATIC_C08, m_C08);
-    DDX_Text(pDX, IDC_STATIC_C09, m_C09);
-    DDX_Text(pDX, IDC_STATIC_C10, m_C10);
-    DDX_Text(pDX, IDC_STATIC_C11, m_C11);
-    DDX_Text(pDX, IDC_STATIC_C12, m_C12);
-    DDX_Text(pDX, IDC_STATIC_C13, m_C13);
-    DDX_Text(pDX, IDC_STATIC_C14, m_C14);
-    DDX_Text(pDX, IDC_STATIC_C15, m_C15);
+
+    // Resource ID arrays for DDX_Text loops (ch0-ch7 only)
+    static constexpr std::array<int, CHANNELS_CAL> IDS_CFP = {IDC_EDIT_CFP00, IDC_EDIT_CFP01, IDC_EDIT_CFP02,
+                                                              IDC_EDIT_CFP03, IDC_EDIT_CFP04, IDC_EDIT_CFP05,
+                                                              IDC_EDIT_CFP06, IDC_EDIT_CFP07};
+
+    static constexpr std::array<int, CHANNELS_CAL> IDS_CFA = {IDC_EDIT_CFA00, IDC_EDIT_CFA01, IDC_EDIT_CFA02,
+                                                              IDC_EDIT_CFA03, IDC_EDIT_CFA04, IDC_EDIT_CFA05,
+                                                              IDC_EDIT_CFA06, IDC_EDIT_CFA07};
+
+    static constexpr std::array<int, CHANNELS_CAL> IDS_CFB = {IDC_EDIT_CFB00, IDC_EDIT_CFB01, IDC_EDIT_CFB02,
+                                                              IDC_EDIT_CFB03, IDC_EDIT_CFB04, IDC_EDIT_CFB05,
+                                                              IDC_EDIT_CFB06, IDC_EDIT_CFB07};
+
+    static constexpr std::array<int, CHANNELS_CAL> IDS_CFC = {IDC_EDIT_CFC00, IDC_EDIT_CFC01, IDC_EDIT_CFC02,
+                                                              IDC_EDIT_CFC03, IDC_EDIT_CFC04, IDC_EDIT_CFC05,
+                                                              IDC_EDIT_CFC06, IDC_EDIT_CFC07};
+
+    static constexpr std::array<int, CHANNELS_CAL> IDS_C = {IDC_STATIC_C00, IDC_STATIC_C01, IDC_STATIC_C02,
+                                                            IDC_STATIC_C03, IDC_STATIC_C04, IDC_STATIC_C05,
+                                                            IDC_STATIC_C06, IDC_STATIC_C07};
+
+    for (const auto &&[id, value] :
+         std::views::join(std::array{std::views::zip(IDS_CFP, m_CFP), std::views::zip(IDS_C, m_C)}))
+    {
+        DDX_Text(pDX, id, value);
+    }
+    for (const auto &&[id, value] : std::views::join(std::array{
+             std::views::zip(IDS_CFA, m_CFA), std::views::zip(IDS_CFB, m_CFB), std::views::zip(IDS_CFC, m_CFC)}))
+    {
+        DDX_Text(pDX, id, value);
+    }
+
+    // Initial specimen data
+    DDX_Text(pDX, IDC_EDIT_InitSpecHeight, m_InitSpecHeight);
+    DDX_Text(pDX, IDC_EDIT_InitSpecArea, m_InitSpecArea);
+    DDX_Text(pDX, IDC_EDIT_InitSpecWeight, m_InitSpecWeight);
+    DDX_Text(pDX, IDC_EDIT_InitSpecBoxWeight, m_InitSpecBoxWeight);
     //}}AFX_DATA_MAP
 }
 
-
-BEGIN_MESSAGE_MAP(CCalibrationFactor, CDialog)
-    //{{AFX_MSG_MAP(CCalibrationFactor)
-    ON_BN_CLICKED(IDC_BUTTON_CFUpdate, OnBUTTONCFUpdate)
-    ON_BN_CLICKED(IDC_BUTTON_Zero00, OnBUTTONZero00)
-    ON_BN_CLICKED(IDC_BUTTON_Zero01, OnBUTTONZero01)
-    ON_BN_CLICKED(IDC_BUTTON_Zero02, OnBUTTONZero02)
-    ON_BN_CLICKED(IDC_BUTTON_Zero03, OnBUTTONZero03)
-    ON_BN_CLICKED(IDC_BUTTON_Zero04, OnBUTTONZero04)
-    ON_BN_CLICKED(IDC_BUTTON_Zero05, OnBUTTONZero05)
-    ON_BN_CLICKED(IDC_BUTTON_Zero06, OnBUTTONZero06)
-    ON_BN_CLICKED(IDC_BUTTON_Zero07, OnBUTTONZero07)
-    ON_BN_CLICKED(IDC_BUTTON_Zero08, OnBUTTONZero08)
-    ON_BN_CLICKED(IDC_BUTTON_Zero09, OnBUTTONZero09)
-    ON_BN_CLICKED(IDC_BUTTON_Zero10, OnBUTTONZero10)
-    ON_BN_CLICKED(IDC_BUTTON_Zero11, OnBUTTONZero11)
-    ON_BN_CLICKED(IDC_BUTTON_Zero12, OnBUTTONZero12)
-    ON_BN_CLICKED(IDC_BUTTON_Zero13, OnBUTTONZero13)
-    ON_BN_CLICKED(IDC_BUTTON_Zero14, OnBUTTONZero14)
-    ON_BN_CLICKED(IDC_BUTTON_Zero15, OnBUTTONZero15)
-    ON_BN_CLICKED(IDC_BUTTON_Amp00, OnBUTTONAmp00)
-    ON_BN_CLICKED(IDC_BUTTON_Amp01, OnBUTTONAmp01)
-    ON_BN_CLICKED(IDC_BUTTON_Amp02, OnBUTTONAmp02)
-    ON_BN_CLICKED(IDC_BUTTON_Amp03, OnBUTTONAmp03)
-    ON_BN_CLICKED(IDC_BUTTON_Amp04, OnBUTTONAmp04)
-    ON_BN_CLICKED(IDC_BUTTON_Amp05, OnBUTTONAmp05)
-    ON_BN_CLICKED(IDC_BUTTON_Amp06, OnBUTTONAmp06)
-    ON_BN_CLICKED(IDC_BUTTON_Amp07, OnBUTTONAmp07)
-    ON_BN_CLICKED(IDC_BUTTON_Amp08, OnBUTTONAmp08)
-    ON_BN_CLICKED(IDC_BUTTON_Amp09, OnBUTTONAmp09)
-    ON_BN_CLICKED(IDC_BUTTON_Amp10, OnBUTTONAmp10)
-    ON_BN_CLICKED(IDC_BUTTON_Amp11, OnBUTTONAmp11)
-    ON_BN_CLICKED(IDC_BUTTON_Amp12, OnBUTTONAmp12)
-    ON_BN_CLICKED(IDC_BUTTON_Amp13, OnBUTTONAmp13)
-    ON_BN_CLICKED(IDC_BUTTON_Amp14, OnBUTTONAmp14)
-    ON_BN_CLICKED(IDC_BUTTON_Amp15, OnBUTTONAmp15)
-    ON_BN_CLICKED(IDC_BUTTON_CFLoadFile, OnBUTTONCFLoadFile)
-    ON_BN_CLICKED(IDC_BUTTON_CFSave, OnBUTTONCFSave)
-    ON_BN_CLICKED(IDC_BUTTON_ChannelChange, OnBUTTONChannelChange)
-    //}}AFX_MSG_MAP
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF(CCalibrationFactor, CDialog)
+//{{AFX_MSG_MAP(CCalibrationFactor)
+ON_BN_CLICKED(IDC_BUTTON_CFUpdate, &CCalibrationFactor::Update)
+ON_BN_CLICKED(IDC_BUTTON_Zero00, &CCalibrationFactor::OnBUTTONZero00)
+ON_BN_CLICKED(IDC_BUTTON_Zero01, &CCalibrationFactor::OnBUTTONZero01)
+ON_BN_CLICKED(IDC_BUTTON_Zero02, &CCalibrationFactor::OnBUTTONZero02)
+ON_BN_CLICKED(IDC_BUTTON_Zero03, &CCalibrationFactor::OnBUTTONZero03)
+ON_BN_CLICKED(IDC_BUTTON_Zero04, &CCalibrationFactor::OnBUTTONZero04)
+ON_BN_CLICKED(IDC_BUTTON_Zero05, &CCalibrationFactor::OnBUTTONZero05)
+ON_BN_CLICKED(IDC_BUTTON_Zero06, &CCalibrationFactor::OnBUTTONZero06)
+ON_BN_CLICKED(IDC_BUTTON_Zero07, &CCalibrationFactor::OnBUTTONZero07)
+ON_BN_CLICKED(IDC_BUTTON_Amp00, &CCalibrationFactor::OnBUTTONAmp00)
+ON_BN_CLICKED(IDC_BUTTON_Amp01, &CCalibrationFactor::OnBUTTONAmp01)
+ON_BN_CLICKED(IDC_BUTTON_Amp02, &CCalibrationFactor::OnBUTTONAmp02)
+ON_BN_CLICKED(IDC_BUTTON_Amp03, &CCalibrationFactor::OnBUTTONAmp03)
+ON_BN_CLICKED(IDC_BUTTON_Amp04, &CCalibrationFactor::OnBUTTONAmp04)
+ON_BN_CLICKED(IDC_BUTTON_Amp05, &CCalibrationFactor::OnBUTTONAmp05)
+ON_BN_CLICKED(IDC_BUTTON_Amp06, &CCalibrationFactor::OnBUTTONAmp06)
+ON_BN_CLICKED(IDC_BUTTON_Amp07, &CCalibrationFactor::OnBUTTONAmp07)
+ON_BN_CLICKED(IDC_BUTTON_CFLoadConfig, &CCalibrationFactor::OnBUTTONCFLoadConfig)
+ON_BN_CLICKED(IDC_BUTTON_CFSaveConfig, &CCalibrationFactor::OnBUTTONCFSaveConfig)
+//}}AFX_MSG_MAP
+END_MESSAGE_MAP_IGNORE_UNUSED_LOCAL_TYPEDEF()
 
 /////////////////////////////////////////////////////////////////////////////
 // CCalibrationFactor メッセージ ハンドラ
 
-BOOL CCalibrationFactor::OnInitDialog() 
+BOOL CCalibrationFactor::OnInitDialog()
 {
     CDialog::OnInitDialog();
-    m_Channels = _T("CH0-CH15");
     CF_Load();
 
-    
-    return TRUE;
-    // コントロールにフォーカスを設定しないとき、戻り値は TRUE となります
-                  // 例外: OCX プロパティ ページの戻り値は FALSE となります
+    // Initialize status control
+    SetDlgItemText(IDC_STATIC_STATUS, _T(""));
+
+    // TODO: この位置に初期化の補足処理を追加してください
+
+    return TRUE; // コントロールにフォーカスを設定しないとき、戻り値は TRUE となります
+                 // 例外: OCX プロパティ ページの戻り値は FALSE となります
 }
 
 void CCalibrationFactor::CF_Load()
 {
-    DigitShowContext* ctx = GetContext();
-    pDoc->Cal_Physical();
-    if(m_Channels=="CH0-CH15"){    
-        m_CFA00 = ctx->cal.a[0];
-        m_CFB00 = ctx->cal.b[0];
-        m_CFC00 = ctx->cal.c[0];
-        m_CFP00.Format("%11.5f",ctx->Phyout[0]);
-        m_CFA01 = ctx->cal.a[1];
-        m_CFB01 = ctx->cal.b[1];
-        m_CFC01 = ctx->cal.c[1];
-        m_CFP01.Format("%11.5f",ctx->Phyout[1]);
-        m_CFA02 = ctx->cal.a[2];
-        m_CFB02 = ctx->cal.b[2];
-        m_CFC02 = ctx->cal.c[2];
-        m_CFP02.Format("%11.5f",ctx->Phyout[2]);
-        m_CFA03 = ctx->cal.a[3];
-        m_CFB03 = ctx->cal.b[3];
-        m_CFC03 = ctx->cal.c[3];
-        m_CFP03.Format("%11.5f",ctx->Phyout[3]);
-        m_CFA04 = ctx->cal.a[4];
-        m_CFB04 = ctx->cal.b[4];
-        m_CFC04 = ctx->cal.c[4];
-        m_CFP04.Format("%11.5f",ctx->Phyout[4]);
-        m_CFA05 = ctx->cal.a[5];
-        m_CFB05 = ctx->cal.b[5];
-        m_CFC05 = ctx->cal.c[5];
-        m_CFP05.Format("%11.5f",ctx->Phyout[5]);
-        m_CFA06 = ctx->cal.a[6];
-        m_CFB06 = ctx->cal.b[6];
-        m_CFC06 = ctx->cal.c[6];
-        m_CFP06.Format("%11.5f",ctx->Phyout[6]);
-        m_CFA07 = ctx->cal.a[7];
-        m_CFB07 = ctx->cal.b[7];
-        m_CFC07 = ctx->cal.c[7];
-        m_CFP07.Format("%11.5f",ctx->Phyout[7]);
-        m_CFA08 = ctx->cal.a[8];
-        m_CFB08 = ctx->cal.b[8];
-        m_CFC08 = ctx->cal.c[8];
-        m_CFP08.Format("%11.5f",ctx->Phyout[8]);
-        m_CFA09 = ctx->cal.a[9];
-        m_CFB09 = ctx->cal.b[9];
-        m_CFC09 = ctx->cal.c[9];
-        m_CFP09.Format("%11.5f",ctx->Phyout[9]);
-        m_CFA10 = ctx->cal.a[10];
-        m_CFB10 = ctx->cal.b[10];
-        m_CFC10 = ctx->cal.c[10];
-        m_CFP10.Format("%11.5f",ctx->Phyout[10]);
-        m_CFA11 = ctx->cal.a[11];
-        m_CFB11 = ctx->cal.b[11];
-        m_CFC11 = ctx->cal.c[11];
-        m_CFP11.Format("%11.5f",ctx->Phyout[11]);
-        m_CFA12 = ctx->cal.a[12];
-        m_CFB12 = ctx->cal.b[12];
-        m_CFC12 = ctx->cal.c[12];
-        m_CFP12.Format("%11.5f",ctx->Phyout[12]);
-        m_CFA13 = ctx->cal.a[13];
-        m_CFB13 = ctx->cal.b[13];
-        m_CFC13 = ctx->cal.c[13];
-        m_CFP13.Format("%11.5f",ctx->Phyout[13]);
-        m_CFA14 = ctx->cal.a[14];
-        m_CFB14 = ctx->cal.b[14];
-        m_CFC14 = ctx->cal.c[14];
-        m_CFP14.Format("%11.5f",ctx->Phyout[14]);
-        m_CFA15 = ctx->cal.a[15];
-        m_CFB15 = ctx->cal.b[15];
-        m_CFC15 = ctx->cal.c[15];
-        m_CFP15.Format("%11.5f",ctx->Phyout[15]);
-        m_C00 = _T("CH00, Load Cell");
-        m_C01 = _T("CH01, Displacement");
-        m_C02 = _T("CH02, Cell Pre.");
-        m_C03 = _T("CH03, Effect.Cell Pre. ");
-        m_C04 = _T("CH04, Drained Vol.");
-        m_C05 = _T("CH05, LVDT1");
-        m_C06 = _T("CH06, LVDT2");
-        m_C07 = _T("CH07");
-        m_C08 = _T("CH08");
-        m_C09 = _T("CH09");
-        m_C10 = _T("CH10");
-        m_C11 = _T("CH11");
-        m_C12 = _T("CH12");
-        m_C13 = _T("CH13");
-        m_C14 = _T("CH14");
-        m_C15 = _T("CH15");
-    }
-    if(m_Channels=="CH16-CH31"){    
-        m_CFA00 = ctx->cal.a[16];
-        m_CFB00 = ctx->cal.b[16];
-        m_CFC00 = ctx->cal.c[16];
-        m_CFP00.Format("%11.5f",ctx->Phyout[16]);
-        m_CFA01 = ctx->cal.a[17];
-        m_CFB01 = ctx->cal.b[17];
-        m_CFC01 = ctx->cal.c[17];
-        m_CFP01.Format("%11.5f",ctx->Phyout[17]);
-        m_CFA02 = ctx->cal.a[18];
-        m_CFB02 = ctx->cal.b[18];
-        m_CFC02 = ctx->cal.c[18];
-        m_CFP02.Format("%11.5f",ctx->Phyout[18]);
-        m_CFA03 = ctx->cal.a[19];
-        m_CFB03 = ctx->cal.b[19];
-        m_CFC03 = ctx->cal.c[19];
-        m_CFP03.Format("%11.5f",ctx->Phyout[19]);
-        m_CFA04 = ctx->cal.a[20];
-        m_CFB04 = ctx->cal.b[20];
-        m_CFC04 = ctx->cal.c[20];
-        m_CFP04.Format("%11.5f",ctx->Phyout[20]);
-        m_CFA05 = ctx->cal.a[21];
-        m_CFB05 = ctx->cal.b[21];
-        m_CFC05 = ctx->cal.c[21];
-        m_CFP05.Format("%11.5f",ctx->Phyout[21]);
-        m_CFA06 = ctx->cal.a[22];
-        m_CFB06 = ctx->cal.b[22];
-        m_CFC06 = ctx->cal.c[22];
-        m_CFP06.Format("%11.5f",ctx->Phyout[22]);
-        m_CFA07 = ctx->cal.a[23];
-        m_CFB07 = ctx->cal.b[23];
-        m_CFC07 = ctx->cal.c[23];
-        m_CFP07.Format("%11.5f",ctx->Phyout[23]);
-        m_CFA08 = ctx->cal.a[24];
-        m_CFB08 = ctx->cal.b[24];
-        m_CFC08 = ctx->cal.c[24];
-        m_CFP08.Format("%11.5f",ctx->Phyout[24]);
-        m_CFA09 = ctx->cal.a[25];
-        m_CFB09 = ctx->cal.b[25];
-        m_CFC09 = ctx->cal.c[25];
-        m_CFP09.Format("%11.5f",ctx->Phyout[25]);
-        m_CFA10 = ctx->cal.a[26];
-        m_CFB10 = ctx->cal.b[26];
-        m_CFC10 = ctx->cal.c[26];
-        m_CFP10.Format("%11.5f",ctx->Phyout[26]);
-        m_CFA11 = ctx->cal.a[27];
-        m_CFB11 = ctx->cal.b[27];
-        m_CFC11 = ctx->cal.c[27];
-        m_CFP11.Format("%11.5f",ctx->Phyout[27]);
-        m_CFA12 = ctx->cal.a[28];
-        m_CFB12 = ctx->cal.b[28];
-        m_CFC12 = ctx->cal.c[28];
-        m_CFP12.Format("%11.5f",ctx->Phyout[28]);
-        m_CFA13 = ctx->cal.a[29];
-        m_CFB13 = ctx->cal.b[29];
-        m_CFC13 = ctx->cal.c[29];
-        m_CFP13.Format("%11.5f",ctx->Phyout[29]);
-        m_CFA14 = ctx->cal.a[30];
-        m_CFB14 = ctx->cal.b[30];
-        m_CFC14 = ctx->cal.c[30];
-        m_CFP14.Format("%11.5f",ctx->Phyout[30]);
-        m_CFA15 = ctx->cal.a[31];
-        m_CFB15 = ctx->cal.b[31];
-        m_CFC15 = ctx->cal.c[31];
-        m_CFP15.Format("%11.5f",ctx->Phyout[31]);
-        m_C00 = _T("CH16");
-        m_C01 = _T("CH17");
-        m_C02 = _T("CH18");
-        m_C03 = _T("CH19");
-        m_C04 = _T("CH20");
-        m_C05 = _T("CH21");
-        m_C06 = _T("CH22");
-        m_C07 = _T("CH23");
-        m_C08 = _T("CH24");
-        m_C09 = _T("CH25");
-        m_C10 = _T("CH26");
-        m_C11 = _T("CH27");
-        m_C12 = _T("CH28");
-        m_C13 = _T("CH29");
-        m_C14 = _T("CH30");
-        m_C15 = _T("CH31");
-    }
-    UpdateData(FALSE);
-}
+    calc_physical();
 
-void CCalibrationFactor::OnBUTTONCFUpdate() 
-{
-    DigitShowContext* ctx = GetContext();
-    UpdateData(TRUE);
-    if(m_Channels=="CH0-CH15"){    
-        ctx->cal.a[0] = m_CFA00;
-        ctx->cal.b[0] = m_CFB00;
-        ctx->cal.c[0] = m_CFC00;
-        ctx->cal.a[1] = m_CFA01;
-        ctx->cal.b[1] = m_CFB01;
-        ctx->cal.c[1] = m_CFC01;
-        ctx->cal.a[2] = m_CFA02;
-        ctx->cal.b[2] = m_CFB02;
-        ctx->cal.c[2] = m_CFC02;
-        ctx->cal.a[3] = m_CFA03;
-        ctx->cal.b[3] = m_CFB03;
-        ctx->cal.c[3] = m_CFC03;
-        ctx->cal.a[4] = m_CFA04;
-        ctx->cal.b[4] = m_CFB04;
-        ctx->cal.c[4] = m_CFC04;
-        ctx->cal.a[5] = m_CFA05;
-        ctx->cal.b[5] = m_CFB05;
-        ctx->cal.c[5] = m_CFC05;
-        ctx->cal.a[6] = m_CFA06;
-        ctx->cal.b[6] = m_CFB06;
-        ctx->cal.c[6] = m_CFC06;
-        ctx->cal.a[7] = m_CFA07;
-        ctx->cal.b[7] = m_CFB07;
-        ctx->cal.c[7] = m_CFC07;
-        ctx->cal.a[8] = m_CFA08;
-        ctx->cal.b[8] = m_CFB08;
-        ctx->cal.c[8] = m_CFC08;
-        ctx->cal.a[9] = m_CFA09;
-        ctx->cal.b[9] = m_CFB09;
-        ctx->cal.c[9] = m_CFC09;
-        ctx->cal.a[10] = m_CFA10;
-        ctx->cal.b[10] = m_CFB10;
-        ctx->cal.c[10] = m_CFC10;
-        ctx->cal.a[11] = m_CFA11;
-        ctx->cal.b[11] = m_CFB11;
-        ctx->cal.c[11] = m_CFC11;
-        ctx->cal.a[12] = m_CFA12;
-        ctx->cal.b[12] = m_CFB12;
-        ctx->cal.c[12] = m_CFC12;
-        ctx->cal.a[13] = m_CFA13;
-        ctx->cal.b[13] = m_CFB13;
-        ctx->cal.c[13] = m_CFC13;
-        ctx->cal.a[14] = m_CFA14;
-        ctx->cal.b[14] = m_CFB14;
-        ctx->cal.c[14] = m_CFC14;
-        ctx->cal.a[15] = m_CFA15;
-        ctx->cal.b[15] = m_CFB15;
-        ctx->cal.c[15] = m_CFC15;
-    }
-    if(m_Channels=="CH16-CH31"){    
-        ctx->cal.a[16] = m_CFA00;
-        ctx->cal.b[16] = m_CFB00;
-        ctx->cal.c[16] = m_CFC00;
-        ctx->cal.a[17] = m_CFA01;
-        ctx->cal.b[17] = m_CFB01;
-        ctx->cal.c[17] = m_CFC01;
-        ctx->cal.a[18] = m_CFA02;
-        ctx->cal.b[18] = m_CFB02;
-        ctx->cal.c[18] = m_CFC02;
-        ctx->cal.a[19] = m_CFA03;
-        ctx->cal.b[19] = m_CFB03;
-        ctx->cal.c[19] = m_CFC03;
-        ctx->cal.a[20] = m_CFA04;
-        ctx->cal.b[20] = m_CFB04;
-        ctx->cal.c[20] = m_CFC04;
-        ctx->cal.a[21] = m_CFA05;
-        ctx->cal.b[21] = m_CFB05;
-        ctx->cal.c[21] = m_CFC05;
-        ctx->cal.a[22] = m_CFA06;
-        ctx->cal.b[22] = m_CFB06;
-        ctx->cal.c[22] = m_CFC06;
-        ctx->cal.a[23] = m_CFA07;
-        ctx->cal.b[23] = m_CFB07;
-        ctx->cal.c[23] = m_CFC07;
-        ctx->cal.a[24] = m_CFA08;
-        ctx->cal.b[24] = m_CFB08;
-        ctx->cal.c[24] = m_CFC08;
-        ctx->cal.a[25] = m_CFA09;
-        ctx->cal.b[25] = m_CFB09;
-        ctx->cal.c[25] = m_CFC09;
-        ctx->cal.a[26] = m_CFA10;
-        ctx->cal.b[26] = m_CFB10;
-        ctx->cal.c[26] = m_CFC10;
-        ctx->cal.a[27] = m_CFA11;
-        ctx->cal.b[27] = m_CFB11;
-        ctx->cal.c[27] = m_CFC11;
-        ctx->cal.a[28] = m_CFA12;
-        ctx->cal.b[28] = m_CFB12;
-        ctx->cal.c[28] = m_CFC12;
-        ctx->cal.a[29] = m_CFA13;
-        ctx->cal.b[29] = m_CFB13;
-        ctx->cal.c[29] = m_CFC13;
-        ctx->cal.a[30] = m_CFA14;
-        ctx->cal.b[30] = m_CFB14;
-        ctx->cal.c[30] = m_CFC14;
-        ctx->cal.a[31] = m_CFA15;
-        ctx->cal.b[31] = m_CFB15;
-        ctx->cal.c[31] = m_CFC15;
-    }
-}
+    // NOLINTBEGIN(*-pro-type-vararg)
+    // Load calibration factors for channels 0-7
+    std::ranges::copy(Cal_a | std::views::take(CHANNELS_CAL), m_CFA.begin());
+    std::ranges::copy(Cal_b | std::views::take(CHANNELS_CAL), m_CFB.begin());
+    std::ranges::copy(Cal_c | std::views::take(CHANNELS_CAL), m_CFC.begin());
 
-
-void CCalibrationFactor::OnBUTTONZero00() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[0] = ctx->cal.c[0]-ctx->Phyout[0];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[16] = ctx->cal.c[16]-ctx->Phyout[16];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero01() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[1] = ctx->cal.c[1]-ctx->Phyout[1];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[17] = ctx->cal.c[17]-ctx->Phyout[17];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero02() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[2] = ctx->cal.c[2]-ctx->Phyout[2];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[18] = ctx->cal.c[18]-ctx->Phyout[18];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero03() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[3] = ctx->cal.c[3]-ctx->Phyout[3];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[19] = ctx->cal.c[19]-ctx->Phyout[19];
-    CF_Load();    
-}
-
-void CCalibrationFactor::OnBUTTONZero04() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[4] = ctx->cal.c[4]-ctx->Phyout[4];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[20] = ctx->cal.c[20]-ctx->Phyout[20];
-    CF_Load();    
-}
-
-void CCalibrationFactor::OnBUTTONZero05() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[5] = ctx->cal.c[5]-ctx->Phyout[5];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[21] = ctx->cal.c[21]-ctx->Phyout[21];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero06() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[6] = ctx->cal.c[6]-ctx->Phyout[6];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[22] = ctx->cal.c[22]-ctx->Phyout[22];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero07() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[7] = ctx->cal.c[7]-ctx->Phyout[7];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[23] = ctx->cal.c[23]-ctx->Phyout[23];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero08() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[8] = ctx->cal.c[8]-ctx->Phyout[8];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[24] = ctx->cal.c[24]-ctx->Phyout[24];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero09() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[9] = ctx->cal.c[9]-ctx->Phyout[9];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[25] = ctx->cal.c[25]-ctx->Phyout[25];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero10() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[10] = ctx->cal.c[10]-ctx->Phyout[10];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[26] = ctx->cal.c[26]-ctx->Phyout[26];
-    CF_Load();
-}
-
-void CCalibrationFactor::OnBUTTONZero11() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[11] = ctx->cal.c[11]-ctx->Phyout[11];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[27] = ctx->cal.c[27]-ctx->Phyout[27];
-    CF_Load();    
-}
-
-void CCalibrationFactor::OnBUTTONZero12() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[12] = ctx->cal.c[12]-ctx->Phyout[12];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[28] = ctx->cal.c[28]-ctx->Phyout[28];
-    CF_Load();    
-}
-
-void CCalibrationFactor::OnBUTTONZero13() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[13] = ctx->cal.c[13]-ctx->Phyout[13];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[29] = ctx->cal.c[29]-ctx->Phyout[29];
-    CF_Load();    
-}
-
-void CCalibrationFactor::OnBUTTONZero14() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[14] = ctx->cal.c[14]-ctx->Phyout[14];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[30] = ctx->cal.c[30]-ctx->Phyout[30];
-    CF_Load();    
-}
-
-void CCalibrationFactor::OnBUTTONZero15() 
-{
-    DigitShowContext* ctx = GetContext();
-    OnBUTTONCFUpdate();
-    if(m_Channels=="CH0-CH15")    ctx->cal.c[15] = ctx->cal.c[15]-ctx->Phyout[15];
-    if(m_Channels=="CH16-CH31")    ctx->cal.c[31] = ctx->cal.c[31]-ctx->Phyout[31];
-    CF_Load();
-}
-
-
-
-void CCalibrationFactor::OnBUTTONAmp00() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 0;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 16;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp01() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 1;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 17;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }
-}
-
-void CCalibrationFactor::OnBUTTONAmp02() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 2;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 18;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }
-}
-
-void CCalibrationFactor::OnBUTTONAmp03() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 3;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 19;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp04() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 4;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 20;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp05() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 5;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 21;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp06() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 6;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 22;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp07() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 7;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 23;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }
-}
-
-void CCalibrationFactor::OnBUTTONAmp08() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 8;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 24;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp09() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 9;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 25;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp10() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 10;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 26;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp11() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 11;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 27;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp12() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 12;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 28;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp13() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 13;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 29;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp14() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 14;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 30;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONAmp15() 
-{
-    DigitShowContext* ctx = GetContext();
-    int    nResult;
-    if(m_Channels=="CH0-CH15")    ctx->AmpID = 15;
-    if(m_Channels=="CH16-CH31")    ctx->AmpID = 31;
-    if( ctx->AmpID<=ctx->AdMaxChannels ){
-        CCalibrationAmp CalibrationAmp;
-        nResult = CalibrationAmp.DoModal();
-        if(nResult==IDOK){
-            CF_Load();
-        }
-    }    
-}
-
-void CCalibrationFactor::OnBUTTONCFSave() 
-{
-    DigitShowContext* ctx = GetContext();
-    int        i;
-    CString    pFileName;
-    FILE    *FileCalData;
-    errno_t err; 
-
-    CFileDialog CalSaveFile_dlg( FALSE, NULL, "*.cal",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
-        "Calibration Files(*.cal)|*.cal| All Files(*.*)|*.*| |",NULL);
-
-    if (CalSaveFile_dlg.DoModal()==IDOK)
+    for (auto &&[p, phyout] : std::views::zip(m_CFP, Phyout))
     {
-        pFileName = CalSaveFile_dlg.GetPathName();    
-        if((err = fopen_s(&FileCalData,(LPCSTR)pFileName , _T("w"))) == 0)
-        {
-            fprintf(FileCalData,"64 \n");
-            for(i = 0;i<64;i++){
-                fprintf(FileCalData,"%d    %lf    %lf    %lf\n",i,ctx->cal.a[i],ctx->cal.b[i],ctx->cal.c[i]);
-            }
-            fclose(FileCalData);
-        }
-    }    
+        p.Format(_T("%11.5f"), phyout);
+    }
+
+    // Channel labels for CH0-CH7
+    m_C[0] = _T("CH00, Shear LC");
+    m_C[1] = _T("CH01, Vertical LC");
+    m_C[2] = _T("CH02, H-LVDT");
+    m_C[3] = _T("CH03, V-front-LVDT");
+    m_C[4] = _T("CH04, V-rear-LVDT");
+    m_C[5] = _T("CH05, Front friction");
+    m_C[6] = _T("CH06, Rear friction");
+    m_C[7] = _T("CH07");
+
+    // Load initial specimen data
+    m_InitSpecHeight = variables::SpecimenData.height_mm();
+    m_InitSpecArea = variables::SpecimenData.area_mm2();
+    m_InitSpecWeight = variables::SpecimenData.weight_g();
+    m_InitSpecBoxWeight = variables::SpecimenData.box_weight_g();
+
+    UpdateData(false);
+    // NOLINTEND(*-pro-type-vararg)
 }
 
-void CCalibrationFactor::OnBUTTONCFLoadFile() 
+void CCalibrationFactor::Update()
 {
-    DigitShowContext* ctx = GetContext();
-    int        i,j;
-    CString    pFileName;
-    FILE    *FileCalData;
-    errno_t err; 
+    UpdateData(false);
 
-    CFileDialog CalLoadFile_dlg( TRUE, NULL, "*.cal",  OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
-        "Calibration Files(*.cal)|*.cal| All Files(*.*)|*.*| |",NULL);
+    // Save calibration factors for channels 0-7
+    std::ranges::copy(m_CFA, Cal_a.begin());
+    std::ranges::copy(m_CFB, Cal_b.begin());
+    std::ranges::copy(m_CFC, Cal_c.begin());
 
-    if (CalLoadFile_dlg.DoModal()==IDOK)
+    // Save initial specimen data and reset latest_physical_input specimen
+    auto expected = variables::physical::latest_physical_input.load();
+    while (!variables::physical::latest_physical_input.compare_exchange_weak(expected, [&]() {
+        auto desired = expected;
+        variables::SpecimenData = {m_InitSpecHeight, m_InitSpecArea, m_InitSpecWeight, m_InitSpecBoxWeight};
+        desired.specimen = control::SpecimenSnapshot{variables::SpecimenData};
+        return desired;
+    }()))
     {
-        pFileName = CalLoadFile_dlg.GetPathName();    
-        if((err = fopen_s(&FileCalData,(LPCSTR)pFileName , _T("r"))) == 0)
+    };
+}
+
+void CCalibrationFactor::OnBUTTONZero00()
+{
+    m_CFC[0] -= Phyout[0];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONZero01()
+{
+    m_CFC[1] -= Phyout[1];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONZero02()
+{
+    m_CFC[2] -= Phyout[2];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONZero03()
+{
+    m_CFC[3] -= Phyout[3];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONZero04()
+{
+    m_CFC[4] -= Phyout[4];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONZero05()
+{
+    m_CFC[5] -= Phyout[5];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONZero06()
+{
+    m_CFC[6] -= Phyout[6];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONZero07()
+{
+    m_CFC[7] -= Phyout[7];
+    Update();
+}
+
+void CCalibrationFactor::OnBUTTONAmp00()
+{
+    AmpID = 0;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
         {
-            fscanf_s(FileCalData,_T("%d"),&j);
-            for(i = 0;i<64;i++){
-                fscanf_s(FileCalData,_T("%d%lf%lf%lf"),&j,&ctx->cal.a[i],&ctx->cal.b[i],&ctx->cal.c[i]);
-            }
-            fclose(FileCalData);
             CF_Load();
         }
-    }    
+    }
 }
 
-void CCalibrationFactor::OnBUTTONChannelChange() 
+void CCalibrationFactor::OnBUTTONAmp01()
 {
-    DigitShowContext* ctx = GetContext();
-    if(m_Channels=="CH0-CH15"){
-        m_Channels ="CH16-CH31";
+    AmpID = 1;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
+        {
+            CF_Load();
+        }
     }
-    else if(m_Channels=="CH16-CH31"){
-        m_Channels ="CH0-CH15";
-    }
-    CF_Load();
 }
+
+void CCalibrationFactor::OnBUTTONAmp02()
+{
+    AmpID = 2;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
+        {
+            CF_Load();
+        }
+    }
+}
+
+void CCalibrationFactor::OnBUTTONAmp03()
+{
+    AmpID = 3;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
+        {
+            CF_Load();
+        }
+    }
+}
+
+void CCalibrationFactor::OnBUTTONAmp04()
+{
+    AmpID = 4;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
+        {
+            CF_Load();
+        }
+    }
+}
+
+void CCalibrationFactor::OnBUTTONAmp05()
+{
+    AmpID = 5;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
+        {
+            CF_Load();
+        }
+    }
+}
+
+void CCalibrationFactor::OnBUTTONAmp06()
+{
+    AmpID = 6;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
+        {
+            CF_Load();
+        }
+    }
+}
+
+void CCalibrationFactor::OnBUTTONAmp07()
+{
+    AmpID = 7;
+    if (AmpID <= board::AdMaxCH)
+    {
+        CCalibrationAmp CalibrationAmp;
+        if (CalibrationAmp.DoModal() == IDOK)
+        {
+            CF_Load();
+        }
+    }
+}
+
+void CCalibrationFactor::OnBUTTONCFSaveConfig()
+{
+    spdlog::info("Save calibration to config file button clicked");
+    // Save calibration data to JSON or YAML file
+    CFileDialog CalSaveFile_dlg(
+        FALSE, _T("yml"), _T("*.yml"), OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
+        _T("YAML Files (*.yml;*.yaml)|*.yml;*.yaml|JSON Files (*.json)|*.json|All Files (*.*)|*.*||"), NULL);
+
+    if (CalSaveFile_dlg.DoModal() == IDOK)
+    {
+        const CStringW cspathW = CalSaveFile_dlg.GetPathName();
+        const std::wstring wpath{cspathW};
+        const std::string path_u8{CW2A(cspathW, CP_UTF8)};
+        spdlog::info("Saving calibration data to: {}", path_u8);
+
+        try
+        {
+            ryml::Tree tree;
+            ryml::NodeRef root = tree.rootref();
+            root |= ryml::MAP;
+
+            // Add version information (git commit hash)
+            const auto version = version_info::get_version_string();
+            if (!version.empty())
+            {
+                root["version"] << version;
+                spdlog::debug("Added version info to calibration file: {}", version);
+            }
+
+            ryml::NodeRef channels = root["calibration_data"];
+            channels |= ryml::SEQ;
+
+            // Only save non-zero calibration data
+            for (size_t i = 0; i < CHANNELS_CAL; i++)
+            {
+                if (Cal_a[i] != 0.0 || Cal_b[i] != 0.0 || Cal_c[i] != 0.0)
+                {
+                    ryml::NodeRef ch = channels.append_child();
+                    ch |= ryml::MAP;
+                    ch["channel"] << i;
+                    ch["cal_a"] << Cal_a[i];
+                    ch["cal_b"] << Cal_b[i];
+                    ch["cal_c"] << Cal_c[i];
+                    if (AmpPB[i] != 0.0 || AmpPO[i] != 0.0)
+                    {
+                        ch["amp_pb"] << AmpPB[i];
+                        ch["amp_po"] << AmpPO[i];
+                    }
+                }
+            }
+            spdlog::debug("Saving {} channel calibration factors", channels.num_children());
+
+            // Save initial specimen data
+            ryml::NodeRef specimen = root["initial_specimen"];
+            specimen |= ryml::MAP;
+            specimen["height_mm"] << variables::SpecimenData.height_mm();
+            specimen["area_mm2"] << variables::SpecimenData.area_mm2();
+            specimen["weight_g"] << variables::SpecimenData.weight_g();
+            specimen["box_weight_g"] << variables::SpecimenData.box_weight_g();
+            spdlog::debug("Saving initial specimen data: height={}, area={}, weight={}, box_weight={}",
+                          variables::SpecimenData.height_mm(), variables::SpecimenData.area_mm2(),
+                          variables::SpecimenData.weight_g(), variables::SpecimenData.box_weight_g());
+
+            // Detect format from file extension
+            const auto format = DetectFormat(std::filesystem::path(wpath));
+
+            if (!SaveConfigFile(std::filesystem::path(wpath), tree, format))
+            {
+                spdlog::error("Failed to save calibration config file: {}", path_u8);
+                AfxMessageBox(_T("Failed to save calibration config file."), MB_ICONEXCLAMATION | MB_OK);
+                return;
+            }
+
+            spdlog::info("Calibration data saved successfully");
+            const auto format_str = (format == FileFormat::YAML) ? "YAML" : "JSON";
+            set_status_text_and_fit_dialog(*this, IDC_STATIC_STATUS,
+                                           std::format("Calibration data saved to {} successfully.", format_str));
+        }
+        catch (const std::exception &e)
+        {
+            spdlog::error("Error saving calibration config: {}", e.what());
+            AfxMessageBox(CA2W(std::format("Error saving calibration config: {}", e.what()).c_str(), CP_UTF8),
+                          MB_ICONEXCLAMATION | MB_OK);
+        }
+    }
+    else
+    {
+        spdlog::debug("Calibration save cancelled by user");
+    }
+}
+
+void CCalibrationFactor::OnBUTTONCFLoadConfig()
+{
+    spdlog::info("Load calibration from config file button clicked");
+    // Load calibration data from JSON or YAML file
+    CFileDialog CalLoadFile_dlg(
+        TRUE, nullptr, nullptr, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
+        _T("Config Files (*.json;*.yml;*.yaml)|*.json;*.yml;*.yaml|JSON Files (*.json)|*.json|YAML Files "
+           "(*.yml;*.yaml)|*.yml;*.yaml|All Files (*.*)|*.*||"),
+        nullptr);
+
+    if (CalLoadFile_dlg.DoModal() == IDOK)
+    {
+        const CStringW cspathW = CalLoadFile_dlg.GetPathName();
+        const std::wstring wpath{cspathW};
+        const std::string path_u8{CW2A(cspathW, CP_UTF8)};
+        spdlog::info("Loading calibration data from: {}", path_u8);
+
+        try
+        {
+            const auto tree_result = LoadConfigFile(std::filesystem::path(wpath));
+            if (!tree_result)
+            {
+                const auto &err = tree_result.error();
+                spdlog::error("Failed to load calibration config file {}: {}", path_u8, err.format());
+
+                std::wstring error_msg =
+                    std::format(L"Failed to load calibration config file.\\n\\n{}", to_wstring_utf8(err.format()));
+                AfxMessageBox(error_msg.c_str(), MB_ICONEXCLAMATION | MB_OK);
+                return;
+            }
+
+            const ryml::Tree &tree = *tree_result;
+            ryml::ConstNodeRef root = tree.rootref();
+
+            if (!root.has_child("calibration_data") || !root["calibration_data"].is_seq())
+            {
+                spdlog::error("Invalid calibration config format: missing or invalid calibration_data");
+                AfxMessageBox(_T("Invalid calibration config format.\n"
+                                 "Expected a 'calibration_data' array.\n"
+                                 "This may not be a calibration data file."),
+                              MB_ICONEXCLAMATION | MB_OK);
+                return;
+            }
+
+            spdlog::debug("Initializing calibration factors to zero");
+
+            // Initialize all channels to 0 (default for omitted channels)
+            m_CFA = {};
+            m_CFB = {};
+            m_CFC = {};
+            AmpPB = {};
+            AmpPO = {};
+
+            // Load only the channels present in the file
+            int loaded_channels = 0;
+            std::ostringstream channel_list;
+            ryml::ConstNodeRef channels = root["calibration_data"];
+            for (const auto &ch : channels)
+            {
+                size_t idx = 0;
+                ch["channel"] >> idx;
+                if (idx < 64)
+                {
+                    ch["cal_a"] >> m_CFA[idx];
+                    ch["cal_b"] >> m_CFB[idx];
+                    ch["cal_c"] >> m_CFC[idx];
+                    if (ch.has_child("amp_pb"))
+                    {
+                        ch["amp_pb"] >> AmpPB[idx];
+                    }
+                    if (ch.has_child("amp_po"))
+                    {
+                        ch["amp_po"] >> AmpPO[idx];
+                    }
+                    loaded_channels++;
+                    if (loaded_channels <= 10)
+                    {
+                        channel_list << "CH" << idx << " ";
+                    }
+                    spdlog::trace("Loaded calibration for channel {}: a={}, b={}, c={}", idx, m_CFA[idx], m_CFB[idx],
+                                  m_CFC[idx]);
+                }
+            }
+
+            spdlog::info("Calibration data loaded successfully: {} channels", loaded_channels);
+
+            // Load initial specimen data if present
+            if (root.has_child("initial_specimen") && root["initial_specimen"].is_map())
+            {
+                ryml::ConstNodeRef specimen = root["initial_specimen"];
+                double height_mm = 0.0;
+                double area_mm2 = 0.0;
+                double weight_g = 0.0;
+                double box_weight_g = 0.0;
+                if (specimen.has_child("height_mm"))
+                    specimen["height_mm"] >> height_mm;
+                if (specimen.has_child("area_mm2"))
+                    specimen["area_mm2"] >> area_mm2;
+                if (specimen.has_child("weight_g"))
+                    specimen["weight_g"] >> weight_g;
+                if (specimen.has_child("box_weight_g"))
+                    specimen["box_weight_g"] >> box_weight_g;
+                spdlog::info("Initial specimen data loaded: height={}, area={}, weight={}, box_weight={}", height_mm,
+                             area_mm2, weight_g, box_weight_g);
+
+                m_InitSpecHeight = height_mm;
+                m_InitSpecArea = area_mm2;
+                m_InitSpecWeight = weight_g;
+                m_InitSpecBoxWeight = box_weight_g;
+            }
+            else
+            {
+                spdlog::debug("No initial_specimen section in calibration file");
+            }
+
+            Update();
+
+            // Show appropriate message based on what was loaded
+            if (loaded_channels == 0)
+            {
+                AfxMessageBox(_T("Warning: No calibration data was loaded from the config file.\n"
+                                 "The 'calibration_data' array is empty or contains invalid entries.\n"
+                                 "This may not be a calibration data file."),
+                              MB_ICONWARNING | MB_OK);
+            }
+            else
+            {
+                set_status_text_and_fit_dialog(
+                    *this, IDC_STATIC_STATUS,
+
+                    loaded_channels <= 10
+                        ? std::format("Calibration data loaded successfully.\nLoaded {} channel(s): {}",
+                                      loaded_channels, channel_list.str())
+                        : std::format(
+                              "Calibration data loaded successfully.\nLoaded {} channel(s): {}... (and {} more)",
+                              loaded_channels, channel_list.str(), loaded_channels - 10));
+            }
+        }
+        catch (const std::exception &e)
+        {
+            spdlog::error("Error loading calibration config: {}", e.what());
+            AfxMessageBox(CA2W(std::format("Error loading calibration config: {}", e.what()).c_str(), CP_UTF8),
+                          MB_ICONEXCLAMATION | MB_OK);
+        }
+    }
+}
+
+#pragma warning(pop)
