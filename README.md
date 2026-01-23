@@ -8,6 +8,7 @@
 ## 簡単な説明
 東京大学の地盤研で使用されている、三軸試験機制御ソフトウェアのオープンソース版です。  
 ContecのAD/DAボードで動作させることを前提としています。  
+ModbusRTUのAD/DAは[DigitShowBasicM](https://github.com/mkt-kuno/DigitShowBasicM)まで。  
 このリポジトリのライセンスは **GPLv3** となっているため、注意してください。  
 
 ## 動作環境
