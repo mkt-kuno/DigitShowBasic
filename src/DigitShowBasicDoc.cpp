@@ -687,7 +687,7 @@ void CDigitShowBasicDoc::Control_DA()
                     if(ctx->FlagCyclic==FALSE){
                         ctx->DAVout[ctx->daChannel.MotorCruch] = 5.0f;
                         // Cruch:Up
-                        if( ctx->phys.q<=ControlData[5].sigma[0]) {
+                        if( ctx->phys.q<=ControlData[6].sigma[0]) {
                             ctx->FlagCyclic = TRUE;
                             ControlData[6].time[0] = ControlData[6].time[0]+1;
                         }
