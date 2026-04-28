@@ -1,5 +1,7 @@
-﻿// Microsoft Visual C++ generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
+#pragma code_page(65001)
+
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -17,7 +19,6 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
-#pragma code_page(65001)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -48,8 +49,8 @@ BEGIN
     "LANGUAGE 17, 1\r\n"
     "#pragma code_page(65001)\r\n"
     "#endif //_WIN32\r\n"
-    "#include ""res\\DigitShowBasic.rc2""  // Microsoft Visual C++ 以外のツールで編集されたリソース\r\n"
-    "#include ""l.jpn\\afxres.rc""          // 標準のコンポーネント\r\n"
+    "#include ""res\\DigitShowBasic.rc2""  // Microsoft Visual C++ ä»¥å¤–ã®ãƒ„ãƒ¼ãƒ«ã§ç·¨é›†ã•ã‚ŒãŸãƒªã‚½ãƒ¼ã‚¹\r\n"
+    "#include ""l.jpn\\afxres.rc""          // æ¨™æº–ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ\r\n"
     "#endif\r\n"
     "\0"
 END
@@ -65,7 +66,9 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\DigitShowBasic.ico"
+
 IDR_DIGITSTYPE          ICON                    "res\\DigitShowBasicDoc.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -158,216 +161,152 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
 END
 
-IDD_DIGITSHOWBASIC_FORM DIALOG 0, 0, 579, 455
+IDD_DIGITSHOWBASIC_FORM DIALOGEX 0, 0, 572, 346
 STYLE DS_SETFONT | WS_CHILD
-FONT 9, "ＭＳ Ｐゴシック"
+FONT 9, "MS PGothic", 0, 0, 0x0
 BEGIN
-    GROUPBOX        "Voltage OutPut",IDC_STATIC,15,7,548,121
-    EDITTEXT        IDC_EDIT_Vout01,93,27,56,15,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout02,158,28,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout04,292,28,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout03,225,28,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout06,425,28,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout05,359,28,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout07,491,28,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    GROUPBOX        "Physical Value Output",IDC_STATIC,14,133,548,118
-    GROUPBOX        "Parameter of Physical Value",IDC_STATIC,14,255,547,68
-    EDITTEXT        IDC_EDIT_Vout09,93,53,56,15,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout10,159,53,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout12,293,53,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout11,226,53,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout14,426,53,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout13,360,53,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout15,492,53,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout17,92,79,56,15,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout18,158,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout20,292,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout19,225,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout22,425,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout21,359,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout23,492,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "Load Cell (CH0)",IDC_STATIC,32,20,48,8
-    LTEXT           "Displacement (CH1)",IDC_STATIC,91,20,60,8
-    LTEXT           "Cell Pre.(CH2)",IDC_STATIC,167,20,43,8
-    LTEXT           "Effective Cell Pre.(CH3)",IDC_STATIC,220,20,71,8
-    LTEXT           "Vol. Change(CH4)",IDC_STATIC,298,20,53,8
-    LTEXT           "LDT-V1 (CH5)",IDC_STATIC,367,20,44,8
-    EDITTEXT        IDC_EDIT_Vout08,26,53,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Vout16,26,79,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout24,26,104,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "LDT-V2 (CH6)",IDC_STATIC,432,20,44,8
-    LTEXT           "CH8",IDC_STATIC,46,45,14,8
-    LTEXT           "CH9",IDC_STATIC,111,45,14,8
-    LTEXT           "CH10",IDC_STATIC,180,45,17,8
-    LTEXT           "CH11",IDC_STATIC,248,45,17,8
-    LTEXT           "CH12",IDC_STATIC,314,45,17,8
-    LTEXT           "CH13",IDC_STATIC,380,45,17,8
-    LTEXT           "CH14",IDC_STATIC,445,45,17,8
-    LTEXT           "CH15",IDC_STATIC,510,45,17,8
-    LTEXT           "CH16",IDC_STATIC,46,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH17",IDC_STATIC,109,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH18",IDC_STATIC,180,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH19",IDC_STATIC,247,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH20",IDC_STATIC,313,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH21",IDC_STATIC,379,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH22",IDC_STATIC,446,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH23",IDC_STATIC,509,71,17,8,NOT WS_VISIBLE
-    LTEXT           "CH24",IDC_STATIC,45,96,17,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout01,93,153,56,15,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout02,157,154,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout04,291,154,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout03,224,154,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout05,358,154,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout09,91,179,56,15,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout10,157,179,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout12,291,179,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout11,224,179,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout13,358,179,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout17,92,204,56,15,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout18,158,204,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout20,292,204,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout19,225,204,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout21,359,204,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "Load Cell (N)",IDC_STATIC,36,145,40,8
-    LTEXT           "Displacement (mm)",IDC_STATIC,91,145,58,8
-    LTEXT           "Cell Pre. (kPa)",IDC_STATIC,165,145,43,8
-    LTEXT           "Effective Cell Pre.(kPa)",IDC_STATIC,218,145,70,8
-    LTEXT           "Vol. Change(mm3)",IDC_STATIC,295,145,54,8
-    LTEXT           "CH9",IDC_STATIC,110,171,14,8
-    LTEXT           "CH10",IDC_STATIC,180,171,17,8
-    LTEXT           "CH11",IDC_STATIC,246,171,17,8
-    LTEXT           "CH12",IDC_STATIC,312,171,17,8
-    LTEXT           "CH13",IDC_STATIC,377,171,17,8
-    LTEXT           "CH17",IDC_STATIC,109,196,17,8,NOT WS_VISIBLE
-    LTEXT           "CH18",IDC_STATIC,180,196,17,8,NOT WS_VISIBLE
-    LTEXT           "CH19",IDC_STATIC,247,196,17,8,NOT WS_VISIBLE
-    LTEXT           "CH20",IDC_STATIC,313,196,17,8,NOT WS_VISIBLE
-    LTEXT           "CH21",IDC_STATIC,379,196,17,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout06,425,154,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout07,491,154,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout14,425,179,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout15,491,179,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout22,426,204,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout23,492,204,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "LDT-V1(mm)",IDC_STATIC,368,145,39,8
-    EDITTEXT        IDC_EDIT_Phyout08,25,179,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Phyout16,25,204,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout24,25,230,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "LDT-V2 (mm)",IDC_STATIC,433,145,42,8
-    LTEXT           "CH8",IDC_STATIC,45,171,14,8
-    LTEXT           "CH14",IDC_STATIC,446,171,17,8
-    LTEXT           "CH15",IDC_STATIC,510,171,17,8
-    LTEXT           "CH16",IDC_STATIC,45,196,17,8,NOT WS_VISIBLE
-    LTEXT           "CH22",IDC_STATIC,447,196,17,8,NOT WS_VISIBLE
-    LTEXT           "CH23",IDC_STATIC,511,196,17,8,NOT WS_VISIBLE
-    LTEXT           "CH24",IDC_STATIC,44,222,17,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Para01,92,276,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para09,91,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para02,158,276,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para10,157,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para03,226,276,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para11,226,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para04,293,276,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para12,293,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para05,360,276,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para13,359,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para06,426,276,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para14,425,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para07,494,276,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para15,494,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para08,24,301,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "s(a) kPa",IDC_STATIC,38,267,26,8
-    LTEXT           "s(r) kPa ",IDC_STATIC,109,267,27,8
-    LTEXT           "s'(a) kPa",IDC_STATIC,173,267,27,8
-    LTEXT           "s'(r) kPa",IDC_STATIC,241,267,26,8
-    LTEXT           "Pore Pre. kPa",IDC_STATIC,302,267,40,8
-    LTEXT           "p kPa",IDC_STATIC,379,267,18,8
-    LTEXT           "q kPa",IDC_STATIC,444,267,18,8
-    LTEXT           "p' kPa",IDC_STATIC,515,267,19,8
-    LTEXT           "radial strain %",IDC_STATIC,99,293,42,8
-    LTEXT           "LDT1 strain %",IDC_STATIC,235,293,41,8
-    LTEXT           "LDT2 strain %",IDC_STATIC,302,293,41,8
-    LTEXT           "Av. LDTs strain %",IDC_STATIC,361,293,52,8
-    LTEXT           "s' (kPa)",IDC_STATIC,443,293,23,8
-    LTEXT           "t' (kPa)",IDC_STATIC,512,293,22,8
-    LTEXT           "axial strain %",IDC_STATIC,32,293,39,8
-    EDITTEXT        IDC_EDIT_Ctrl_ID,81,390,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT_NowTime,506,409,56,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT_SeqTime,81,425,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "Control ID",IDC_STATIC,20,393,38,10
-    LTEXT           "Present Time",IDC_STATIC,461,413,40,8
-    LTEXT           "Sequent Time (s)",IDC_STATIC,20,429,51,8
-    PUSHBUTTON      "Start Control",IDC_BUTTON_CtrlOn,460,333,48,14
-    PUSHBUTTON      "Start Saving",IDC_BUTTON_StartSave,460,351,48,14
-    PUSHBUTTON      "Stop Control",IDC_BUTTON_CtrlOff,514,333,48,14
-    PUSHBUTTON      "Stop Saving",IDC_BUTTON_StopSave,514,350,48,14
-    LTEXT           "Sampling Time (ms)",IDC_STATIC,20,410,59,8
-    EDITTEXT        IDC_EDIT_SamplingTime,81,408,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
-    GROUPBOX        "Contents of Control ID.",IDC_STATIC,149,328,307,119
-    PUSHBUTTON      "Set",IDC_BUTTON_SetCtrlID,116,338,24,12
-    PUSHBUTTON      "Set",IDC_BUTTON_SetTimeInterval,116,355,24,12
-    LTEXT           "File Name",IDC_STATIC,461,429,31,8
-    EDITTEXT        IDC_EDIT_FileName,506,427,56,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "ID_0: No Control,",IDC_STATIC,154,341,49,8
-    LTEXT           "ID_1: Pre-Consolidation,",IDC_STATIC,154,354,70,8
-    LTEXT           "ID_2: Consolidation,",IDC_STATIC,154,367,57,8
-    LTEXT           "ID_3: Undrained Monotonic Loading,",IDC_STATIC,154,380,103,8
-    LTEXT           "ID_4: Drained Monotonic Loading,",IDC_STATIC,154,393,96,8
-    LTEXT           "ID_5: Undrained Cyclic Loading,",IDC_STATIC,154,406,92,8
-    LTEXT           "ID_6: Drained Cyclic Loading,",IDC_STATIC,154,420,85,8
-    LTEXT           "ID_7: Linear Effective Stress Path Loading,",IDC_STATIC,154,434,125,8
-    LTEXT           "ID_8:  No Control,",IDC_STATIC,317,341,51,8
-    LTEXT           "ID_9:  No Control,",IDC_STATIC,317,354,51,8
-    LTEXT           "ID_10: No Control,",IDC_STATIC,317,367,52,8
-    LTEXT           "ID_11: No Control,",IDC_STATIC,317,380,52,8
-    LTEXT           "ID_12: No Control,",IDC_STATIC,317,393,52,8
-    LTEXT           "ID_13: No Control,",IDC_STATIC,317,406,52,8
-    LTEXT           "ID_14: No Control,",IDC_STATIC,317,420,52,8
-    LTEXT           "ID_15: Control from a file.",IDC_STATIC,317,434,75,8
-    PUSHBUTTON      "Intercept Saving",IDC_BUTTON_InterceptSave,460,370,102,14
-    EDITTEXT        IDC_EDIT_Phyout25,92,230,56,15,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout26,158,230,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout27,225,230,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout28,292,230,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout29,359,230,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "CH25",IDC_STATIC,109,222,17,8,NOT WS_VISIBLE
-    LTEXT           "CH26",IDC_STATIC,180,222,17,8,NOT WS_VISIBLE
-    LTEXT           "CH27",IDC_STATIC,247,222,17,8,NOT WS_VISIBLE
-    LTEXT           "CH28",IDC_STATIC,313,222,17,8,NOT WS_VISIBLE
-    LTEXT           "CH29",IDC_STATIC,379,222,17,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout30,426,230,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Phyout31,492,230,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "CH30",IDC_STATIC,447,222,17,8,NOT WS_VISIBLE
-    LTEXT           "CH31",IDC_STATIC,511,222,17,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout25,93,104,56,15,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout26,159,104,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout27,226,104,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout28,293,104,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout29,360,104,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout30,426,104,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout31,492,104,56,14,ES_RIGHT | ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "CH25",IDC_STATIC,110,96,17,8,NOT WS_VISIBLE
-    LTEXT           "CH26",IDC_STATIC,181,96,17,8,NOT WS_VISIBLE
-    LTEXT           "CH27",IDC_STATIC,248,96,17,8,NOT WS_VISIBLE
-    LTEXT           "CH28",IDC_STATIC,314,96,17,8,NOT WS_VISIBLE
-    LTEXT           "CH29",IDC_STATIC,380,96,17,8,NOT WS_VISIBLE
-    LTEXT           "CH30",IDC_STATIC,447,96,17,8,NOT WS_VISIBLE
-    LTEXT           "CH31",IDC_STATIC,511,96,17,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_Vout00,27,27,56,15,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "CH7",IDC_STATIC,510,19,14,8
-    EDITTEXT        IDC_EDIT_Phyout00,25,153,56,15,ES_RIGHT | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_Para00,24,275,56,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "volumetric strain %",IDC_STATIC,159,293,56,8
-    PUSHBUTTON      "Start FIFO",IDC_BUTTON_FIFOStart,460,388,35,14
-    PUSHBUTTON      "Stop FIFO",IDC_BUTTON_FIFOStop,494,388,34,14
-    PUSHBUTTON      "Write Data",IDC_BUTTON_WriteData,528,388,34,14
-    LTEXT           "CH7",IDC_STATIC,512,146,14,8
-    GROUPBOX        "Current conditins of sampling and control",IDC_STATIC,14,378,130,64
-    LTEXT           "Control ID",IDC_STATIC,20,342,38,10
-    LTEXT           "Sampling Time",IDC_STATIC,20,359,44,8
-    GROUPBOX        "Settings of sampling and control",IDC_STATIC,15,328,130,46
-    COMBOBOX        IDC_COMBO_Control_ID,81,338,33,88,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    COMBOBOX        IDC_COMBO_SamplingTime,81,355,33,86,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Raw Value (-10 to +10 [V])",IDC_STATIC,15,7,548,67
+    LTEXT           "00:Load Cell",IDC_STATIC,27,20,55,8
+    LTEXT           "01:Displacement",IDC_STATIC,93,20,55,8
+    LTEXT           "02:LDT-V1",IDC_STATIC,159,20,55,8
+    LTEXT           "03:LDT-V2",IDC_STATIC,225,20,55,8
+    LTEXT           "04:Cell Pre",IDC_STATIC,291,20,55,8
+    LTEXT           "05:",IDC_STATIC,357,20,55,8
+    LTEXT           "06:",IDC_STATIC,423,20,55,8
+    LTEXT           "07:",IDC_STATIC,489,20,55,8
+    RTEXT           "",IDC_EDIT_Vout00,27,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout01,93,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout02,159,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout03,225,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout04,291,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout05,357,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout06,423,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout07,489,28,55,14,SS_SUNKEN | NOT WS_GROUP
+    LTEXT           "08:ECellP",IDC_STATIC,27,45,55,8
+    LTEXT           "09:VolChg",IDC_STATIC,93,45,55,8
+    LTEXT           "10:",IDC_STATIC,159,45,55,8
+    LTEXT           "11:",IDC_STATIC,225,45,55,8
+    LTEXT           "12:",IDC_STATIC,291,45,55,8
+    LTEXT           "13:",IDC_STATIC,357,45,55,8
+    LTEXT           "14:",IDC_STATIC,423,45,55,8
+    LTEXT           "15:",IDC_STATIC,489,45,55,8
+    RTEXT           "",IDC_EDIT_Vout08,27,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout09,93,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout10,159,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout11,225,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout12,291,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout13,357,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout14,423,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Vout15,489,53,55,14,SS_SUNKEN | NOT WS_GROUP
+    GROUPBOX        "Physical Value (y=ax^2+bx+c, x=raw, y=phy)",IDC_STATIC,14,77,548,67
+    LTEXT           "00:Load Cell (N)",IDC_STATIC,27,89,55,8
+    LTEXT           "01:Displacement (mm)",IDC_STATIC,93,89,55,8
+    LTEXT           "02:LDT-V1(mm)",IDC_STATIC,159,89,55,8
+    LTEXT           "03:LDT-V2(mm)",IDC_STATIC,225,89,55,8
+    LTEXT           "04:Cell Pre.(kPa)",IDC_STATIC,291,89,55,8
+    LTEXT           "05:",IDC_STATIC,357,89,55,8
+    LTEXT           "06:",IDC_STATIC,423,89,55,8
+    LTEXT           "07:",IDC_STATIC,489,89,55,8
+    RTEXT           "",IDC_EDIT_Phyout00,27,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout01,93,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout02,159,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout03,225,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout04,291,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout05,357,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout06,423,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout07,489,98,55,14,SS_SUNKEN | NOT WS_GROUP
+    LTEXT           "08:ECellP(kPa)",IDC_STATIC,27,115,55,8
+    LTEXT           "09:SP.Vol(mm3)",IDC_STATIC,93,115,55,8
+    LTEXT           "10:",IDC_STATIC,159,115,55,8
+    LTEXT           "11:",IDC_STATIC,225,115,55,8
+    LTEXT           "12:",IDC_STATIC,291,115,55,8
+    LTEXT           "13:",IDC_STATIC,357,115,55,8
+    LTEXT           "14:",IDC_STATIC,423,115,55,8
+    LTEXT           "15:",IDC_STATIC,489,115,55,8
+    RTEXT           "",IDC_EDIT_Phyout08,27,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout09,93,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout10,159,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout11,225,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout12,291,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout13,357,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout14,423,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Phyout15,489,123,55,14,SS_SUNKEN | NOT WS_GROUP
+    GROUPBOX        "Parameter",IDC_STATIC,14,147,547,68
+    LTEXT           "s(a) kPa",IDC_STATIC,27,159,55,8
+    LTEXT           "s(r) kPa ",IDC_STATIC,93,159,55,8
+    LTEXT           "s'(a) kPa",IDC_STATIC,159,159,55,8
+    LTEXT           "s'(r) kPa",IDC_STATIC,225,159,55,8
+    LTEXT           "Pore Pre. kPa",IDC_STATIC,291,159,55,8
+    LTEXT           "p kPa",IDC_STATIC,357,159,55,8
+    LTEXT           "q kPa",IDC_STATIC,423,159,55,8
+    LTEXT           "p' kPa",IDC_STATIC,489,159,55,8
+    RTEXT           "",IDC_EDIT_Para00,27,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para01,93,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para02,159,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para03,225,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para04,291,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para05,357,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para06,423,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para07,489,168,55,14,SS_SUNKEN | NOT WS_GROUP
+    LTEXT           "axial strain %",IDC_STATIC,27,185,55,8
+    LTEXT           "radial strain %",IDC_STATIC,93,185,55,8
+    LTEXT           "volumetric strain %",IDC_STATIC,159,185,55,8
+    LTEXT           "LDT1 strain %",IDC_STATIC,225,185,55,8
+    LTEXT           "LDT2 strain %",IDC_STATIC,291,185,55,8
+    LTEXT           "Av. LDTs strain %",IDC_STATIC,357,185,55,8
+    LTEXT           "s' (kPa)",IDC_STATIC,423,185,55,8
+    LTEXT           "t' (kPa)",IDC_STATIC,489,185,55,8
+    RTEXT           "",IDC_EDIT_Para08,27,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para09,93,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para10,159,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para11,225,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para12,291,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para13,357,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para14,423,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    RTEXT           "",IDC_EDIT_Para15,489,193,55,14,SS_SUNKEN | NOT WS_GROUP
+    GROUPBOX        "Contents of Control ID.",IDC_STATIC,149,220,307,119
+    LTEXT           "ID_00: No Control,",IDC_STATIC,154,233,49,8
+    LTEXT           "ID_01: Pre-Consolidation,",IDC_STATIC,154,246,70,8
+    LTEXT           "ID_02: Consolidation,",IDC_STATIC,154,259,57,8
+    LTEXT           "ID_03: Undrained Monotonic Loading,",IDC_STATIC,154,272,103,8
+    LTEXT           "ID_04: Drained Monotonic Loading,",IDC_STATIC,154,285,96,8
+    LTEXT           "ID_05: Undrained Cyclic Loading,",IDC_STATIC,154,298,92,8
+    LTEXT           "ID_06: Drained Cyclic Loading,",IDC_STATIC,154,312,85,8
+    LTEXT           "ID_07: Linear Effective Stress Path Loading,",IDC_STATIC,154,326,125,8
+    LTEXT           "ID_08: No Control,",IDC_STATIC,317,233,51,8
+    LTEXT           "ID_09: No Control,",IDC_STATIC,317,246,51,8
+    LTEXT           "ID_10: No Control,",IDC_STATIC,317,259,52,8
+    LTEXT           "ID_11: No Control,",IDC_STATIC,317,272,52,8
+    LTEXT           "ID_12: No Control,",IDC_STATIC,317,285,52,8
+    LTEXT           "ID_13: No Control,",IDC_STATIC,317,298,52,8
+    LTEXT           "ID_14: No Control,",IDC_STATIC,317,312,52,8
+    LTEXT           "ID_15: Control from a file.",IDC_STATIC,317,326,75,8
+    GROUPBOX        "Settings of sampling and control",IDC_STATIC,15,220,130,46
+    LTEXT           "Control ID",IDC_STATIC,20,234,38,10
+    COMBOBOX        IDC_COMBO_Control_ID,81,230,33,88,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Set",IDC_BUTTON_SetCtrlID,116,230,24,12
+    LTEXT           "Sampling Time",IDC_STATIC,20,251,44,8
+    COMBOBOX        IDC_COMBO_SamplingTime,81,247,33,86,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Set",IDC_BUTTON_SetTimeInterval,116,247,24,12
+    PUSHBUTTON      "Start Control",IDC_BUTTON_CtrlOn,460,225,48,14
+    PUSHBUTTON      "Stop Control",IDC_BUTTON_CtrlOff,514,225,48,14
+    PUSHBUTTON      "Start Saving",IDC_BUTTON_StartSave,460,243,48,14
+    PUSHBUTTON      "Stop Saving",IDC_BUTTON_StopSave,514,243,48,14
+    PUSHBUTTON      "Intercept Saving",IDC_BUTTON_InterceptSave,460,262,102,14
+    PUSHBUTTON      "Start FIFO",IDC_BUTTON_FIFOStart,460,280,35,14
+    PUSHBUTTON      "Stop FIFO",IDC_BUTTON_FIFOStop,497,280,34,14
+    PUSHBUTTON      "Write Data",IDC_BUTTON_WriteData,533,280,30,14
+    GROUPBOX        "Current conditins of sampling and control",IDC_STATIC,14,270,130,64
+    LTEXT           "Control ID",IDC_STATIC,20,285,38,10
+    EDITTEXT        IDC_EDIT_Ctrl_ID,81,282,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Sampling Time (ms)",IDC_STATIC,20,302,59,8
+    EDITTEXT        IDC_EDIT_SamplingTime,81,300,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Present Time",IDC_STATIC,461,305,40,8
+    EDITTEXT        IDC_EDIT_NowTime,506,301,56,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Sequent Time (s)",IDC_STATIC,20,321,51,8
+    EDITTEXT        IDC_EDIT_SeqTime,81,317,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "File Name",IDC_STATIC,461,321,31,8
+    EDITTEXT        IDC_EDIT_FileName,506,319,56,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
 END
 
 IDD_BoardSettings DIALOG 0, 0, 299, 103
@@ -1152,7 +1091,6 @@ BEGIN
     BEGIN
         LEFTMARGIN, 7
         TOPMARGIN, 7
-        BOTTOMMARGIN, 447
         HORZGUIDE, 58
     END
 
@@ -1297,6 +1235,17 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIGITSHOWBASIC_FORM AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
@@ -1420,8 +1369,8 @@ END
 LANGUAGE 17, 1
 #pragma code_page(65001)
 #endif //_WIN32
-#include "res\DigitShowBasic.rc2"  // Microsoft Visual C++ 以外のツールで編集されたリソース
-#include "l.jpn\afxres.rc"          // 標準のコンポーネント
+#include "res\DigitShowBasic.rc2"  // Microsoft Visual C++ 莉･螟悶・繝・・繝ｫ縺ｧ邱ｨ髮・＆繧後◆繝ｪ繧ｽ繝ｼ繧ｹ
+#include "l.jpn\afxres.rc"          // 讓呎ｺ悶・繧ｳ繝ｳ繝昴・繝阪Φ繝・
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
