@@ -49,7 +49,6 @@ public:
     double  m_CFC04, m_CFC05, m_CFC06, m_CFC07;
     double  m_CFC08, m_CFC09, m_CFC10, m_CFC11;
     double  m_CFC12, m_CFC13, m_CFC14, m_CFC15;
-    CString m_Channels;
     CString m_C00, m_C01, m_C02, m_C03;
     CString m_C04, m_C05, m_C06, m_C07;
     CString m_C08, m_C09, m_C10, m_C11;
@@ -94,7 +93,6 @@ protected:
     afx_msg void OnBUTTONAmp15();
     afx_msg void OnBUTTONCFLoadFile();
     afx_msg void OnBUTTONCFSave();
-    afx_msg void OnBUTTONChannelChange();
 
     DECLARE_MESSAGE_MAP()
 };

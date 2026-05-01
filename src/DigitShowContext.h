@@ -23,6 +23,10 @@
 
 #include <afxwin.h>
 
+#define NUM_PARAM_MAX    16  // Number of calibration parameter sets (cal.a/b/c array size)
+#define AI_MAX_CHANNELS  16  // Maximum number of analog input channels (ai_raw / ai_phy array size)
+#define AO_MAX_CHANNELS   8  // Maximum number of analog output channels (ao_raw array size)
+
 /**
  * Specimen data structure
  */
@@ -68,44 +72,12 @@ struct ControlData {
 };
 
 /**
- * A/D Board configuration
- */
-struct AdBoardConfig {
-    short  Id[2];
-    short  Channels[2];
-    short  Range[2];
-    float  RangeMax[2];
-    float  RangeMin[2];
-    short  Resolution[2];
-    short  InputMethod[2];
-    short  MemoryType[2];
-    float  SamplingClock[2];
-    long   SamplingTimes[2];
-    float  ScanClock[2];
-    long   Data0[262144];
-    long   Data1[262144];
-};
-
-/**
- * D/A Board configuration
- */
-struct DaBoardConfig {
-    short  Id[1];
-    short  Channels[1];
-    short  Range[1];
-    float  RangeMax[1];
-    float  RangeMin[1];
-    short  Resolution[1];
-    long   Data[8];
-};
-
-/**
  * Calibration data
  */
 struct CalibrationData {
-    double a[64];
-    double b[64];
-    double c[64];
+    double a[NUM_PARAM_MAX];
+    double b[NUM_PARAM_MAX];
+    double c[NUM_PARAM_MAX];
     double DA_a[8];
     double DA_b[8];
 };
@@ -183,8 +155,8 @@ struct SamplingSettings {
     int   SavingTime;
     long  TotalSamplingTimes;
     long  CurrentSamplingTimes;
-    float AllocatedMemory;
-    int   AvSmplNum;
+    float AllocatedMemory;   // Estimated memory usage (MB)
+    int   AvSmplNum;         // Number of samples to average per channel
 };
 
 /**
@@ -205,24 +177,19 @@ struct ErrorTolerance {
  */
 struct DigitShowContext {
     // Board configuration
-    int NumAD;
-    int NumDA;
-    AdBoardConfig ad;
-    DaBoardConfig da;
     DaChannelAssign daChannel;
-    int AdMaxChannels;
 
     // Sampling and calibration
     SamplingSettings sampling;
     CalibrationData cal;
 
     // Measurement data
-    float  Vout[64];
-    float  Vtmp;
-    double Phyout[64];
-    double Ptmp;
-    double CalParam[64];
-    float  DAVout[8];
+    float  ai_raw[AI_MAX_CHANNELS];
+    float  ai_raw_temp;
+    double ai_phy[AI_MAX_CHANNELS];
+    double ai_phy_temp;
+    double ai_param[AI_MAX_CHANNELS];
+    float  ao_raw[AO_MAX_CHANNELS];
 
     // Physical values
     PhysicalValues phys;
@@ -247,7 +214,6 @@ struct DigitShowContext {
     // System flags
     bool FlagSetBoard;
     bool FlagSaveData;
-    bool FlagFIFO;
     bool FlagCtrl;
     bool FlagCyclic;
 
@@ -263,9 +229,7 @@ struct DigitShowContext {
 
     // Memory management
     PVOID  pSmplData0;
-    PVOID  pSmplData1;
     HANDLE hHeap0;
-    HANDLE hHeap1;
 
     // File handles
     FILE* FileSaveData0;
@@ -280,6 +244,35 @@ struct DigitShowContext {
 
     // Event handling
     long AdEvent;
+    
+    // CAIO board configuration (CONTEC AIO)
+    int NumAD;
+    int NumDA;
+    int AdMaxChannels;
+    struct AdBoardConfig {
+        short  Id[1];
+        short  Channels[1];
+        short  Range[1];
+        float  RangeMax[1];
+        float  RangeMin[1];
+        short  Resolution[1];
+        short  InputMethod[1];
+        short  MemoryType[1];
+        float  SamplingClock[1];
+        long   SamplingTimes[1];
+        float  ScanClock[1];
+        long   Data0[262144];
+    } ad;
+    struct DaBoardConfig {
+        short  Id[1];
+        short  Channels[1];
+        short  Range[1];
+        float  RangeMax[1];
+        float  RangeMin[1];
+        short  Resolution[1];
+        long   Data[8];
+    } da;
+    bool   FlagFIFO;
 };
 
 /**

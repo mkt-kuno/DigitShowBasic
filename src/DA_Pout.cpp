@@ -1,4 +1,4 @@
-﻿/*
+/*
  * DigitShowBasic - Triaxial Test Machine Control Software
  * Copyright (C) 2025 Makoto KUNO
  *
@@ -55,14 +55,14 @@ CDA_Pout::CDA_Pout(CWnd* pParent)
     m_DAPvalue05 = 0.0;
     m_DAPvalue06 = 0.0;
     m_DAPvalue07 = 0.0;
-    m_DAVout00 = ctx->DAVout[0];
-    m_DAVout01 = ctx->DAVout[1];
-    m_DAVout02 = ctx->DAVout[2];
-    m_DAVout03 = ctx->DAVout[3];
-    m_DAVout04 = ctx->DAVout[4];
-    m_DAVout05 = ctx->DAVout[5];
-    m_DAVout06 = ctx->DAVout[6];
-    m_DAVout07 = ctx->DAVout[7];
+    m_DAVout00 = ctx->ao_raw[0];
+    m_DAVout01 = ctx->ao_raw[1];
+    m_DAVout02 = ctx->ao_raw[2];
+    m_DAVout03 = ctx->ao_raw[3];
+    m_DAVout04 = ctx->ao_raw[4];
+    m_DAVout05 = ctx->ao_raw[5];
+    m_DAVout06 = ctx->ao_raw[6];
+    m_DAVout07 = ctx->ao_raw[7];
 }
 
 void CDA_Pout::DoDataExchange(CDataExchange* pDX)
@@ -118,14 +118,14 @@ void CDA_Pout::OnBUTTONDAOutput()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    ctx->DAVout[0] = m_DAVout00;
-    ctx->DAVout[1] = m_DAVout01;
-    ctx->DAVout[2] = m_DAVout02;
-    ctx->DAVout[3] = m_DAVout03;
-    ctx->DAVout[4] = m_DAVout04;
-    ctx->DAVout[5] = m_DAVout05;
-    ctx->DAVout[6] = m_DAVout06;
-    ctx->DAVout[7] = m_DAVout07;
+    ctx->ao_raw[0] = m_DAVout00;
+    ctx->ao_raw[1] = m_DAVout01;
+    ctx->ao_raw[2] = m_DAVout02;
+    ctx->ao_raw[3] = m_DAVout03;
+    ctx->ao_raw[4] = m_DAVout04;
+    ctx->ao_raw[5] = m_DAVout05;
+    ctx->ao_raw[6] = m_DAVout06;
+    ctx->ao_raw[7] = m_DAVout07;
     pDoc2->DA_OUTPUT();
 }
 

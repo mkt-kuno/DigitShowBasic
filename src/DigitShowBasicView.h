@@ -36,18 +36,10 @@ public:
     CString    m_Vout04, m_Vout05, m_Vout06, m_Vout07;
     CString    m_Vout08, m_Vout09, m_Vout10, m_Vout11;
     CString    m_Vout12, m_Vout13, m_Vout14, m_Vout15;
-    CString    m_Vout16, m_Vout17, m_Vout18, m_Vout19;
-    CString    m_Vout20, m_Vout21, m_Vout22, m_Vout23;
-    CString    m_Vout24, m_Vout25, m_Vout26, m_Vout27;
-    CString    m_Vout28, m_Vout29, m_Vout30, m_Vout31;
     CString    m_Phyout00, m_Phyout01, m_Phyout02, m_Phyout03;
     CString    m_Phyout04, m_Phyout05, m_Phyout06, m_Phyout07;
     CString    m_Phyout08, m_Phyout09, m_Phyout10, m_Phyout11;
     CString    m_Phyout12, m_Phyout13, m_Phyout14, m_Phyout15;
-    CString    m_Phyout16, m_Phyout17, m_Phyout18, m_Phyout19;
-    CString    m_Phyout20, m_Phyout21, m_Phyout22, m_Phyout23;
-    CString    m_Phyout24, m_Phyout25, m_Phyout26, m_Phyout27;
-    CString    m_Phyout28, m_Phyout29, m_Phyout30, m_Phyout31;
     CString    m_Para00, m_Para01, m_Para02, m_Para03;
     CString    m_Para04, m_Para05, m_Para06, m_Para07;
     CString    m_Para08, m_Para09, m_Para10, m_Para11;
