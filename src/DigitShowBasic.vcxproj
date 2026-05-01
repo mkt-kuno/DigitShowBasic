@@ -90,7 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boardsettings.h" />
-    <ClInclude Include="CAIO.H" />
+    <ClInclude Include="Caio.h" />
     <ClInclude Include="CalibrationAmp.h" />
     <ClInclude Include="CalibrationFactor.h" />
     <ClInclude Include="Control_CLoading.h" />

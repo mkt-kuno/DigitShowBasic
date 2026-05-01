@@ -110,7 +110,7 @@
     <ClInclude Include="boardsettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CAIO.H">
+    <ClInclude Include="Caio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CalibrationAmp.h">
