@@ -128,24 +128,6 @@ void CDigitShowBasicDoc::OpenBoard()
                 }
             }
         }
-        if(ctx->NumAD > 1){
-            ctx->Ret = AioInit ( "AIO001" , &ctx->ad.Id[1] );
-            if(ctx->Ret != 0){
-                ctx->Ret2 = AioGetErrorString(ctx->Ret, ctx->ErrorString);
-                 ctx->TextString.Format("AioInit = %d : %s", ctx->Ret, ctx->ErrorString);
-                AfxMessageBox( ctx->TextString, MB_ICONSTOP | MB_OK );
-                return;
-            }
-            else{
-                ctx->Ret = AioResetDevice(ctx->ad.Id[1]);
-                if(ctx->Ret != 0){
-                    ctx->Ret2 = AioGetErrorString(ctx->Ret, ctx->ErrorString);
-                     ctx->TextString.Format("AioResetDevice = %d : %s", ctx->Ret, ctx->ErrorString);
-                    AfxMessageBox( ctx->TextString, MB_ICONSTOP | MB_OK );
-                    return;
-                }
-            }
-        }
         // OPEN D/A BOARDS.
         if(ctx->NumDA > 0){
             ctx->Ret = AioInit("AIO003" , &ctx->da.Id[0] );
@@ -211,7 +193,6 @@ void CDigitShowBasicDoc::CloseBoard()
     // Close A/D and D/A board to end the application 
     if( ctx->FlagSetBoard==TRUE ){
         if(ctx->NumAD > 0)    ctx->Ret = AioExit(ctx->ad.Id[0]);
-        if(ctx->NumAD > 1)    ctx->Ret = AioExit(ctx->ad.Id[1]);
         if(ctx->NumDA > 0)    ctx->Ret = AioExit(ctx->da.Id[0]);
     }
 }
@@ -227,15 +208,6 @@ void CDigitShowBasicDoc::AD_INPUT()
             ctx->ai_raw[k] = 0.0f;
             for(j = 0;j<ctx->sampling.AvSmplNum;j++){
                 ctx->ai_raw[k] = ctx->ai_raw[k]+BinaryToVolt(ctx->ad.RangeMax[0], ctx->ad.RangeMin[0], ctx->ad.Resolution[0], ctx->ad.Data0[ctx->ad.Channels[0]*j+2*i])/float(ctx->sampling.AvSmplNum);
-            }
-            k = k+1;
-        }
-    }
-    if(ctx->NumAD>1){
-        for(i = 0;i<ctx->ad.Channels[1]/2;i++){
-            ctx->ai_raw[k] = 0.0f;
-            for(j = 0;j<ctx->sampling.AvSmplNum;j++){
-                ctx->ai_raw[k] = ctx->ai_raw[k]+BinaryToVolt(ctx->ad.RangeMax[1], ctx->ad.RangeMin[1], ctx->ad.Resolution[1], ctx->ad.Data1[ctx->ad.Channels[1]*j+2*i])/float(ctx->sampling.AvSmplNum);
             }
             k = k+1;
         }
@@ -345,21 +317,21 @@ void CDigitShowBasicDoc::SaveToFile()
     int    i,j,k;
 
     k = 0;
-    fprintf(ctx->FileSaveData0,"%.3lf    ",ctx->SequentTime2);
-    fprintf(ctx->FileSaveData1,"%.3lf    ",ctx->SequentTime2);
+    fprintf(ctx->FileSaveData0,"%.3lf\t",ctx->SequentTime2);
+    fprintf(ctx->FileSaveData1,"%.3lf\t",ctx->SequentTime2);
     for(i = 0;i<ctx->NumAD;i++){
         for(j = 0;j<ctx->ad.Channels[i]/2;j++){
-            fprintf(ctx->FileSaveData0,"%lf    ",ctx->ai_raw[k]);
-            fprintf(ctx->FileSaveData1,"%lf    ",ctx->ai_phy[k]);
+            fprintf(ctx->FileSaveData0,"%lf\t",ctx->ai_raw[k]);
+            fprintf(ctx->FileSaveData1,"%lf\t",ctx->ai_phy[k]);
             k = k+1;
         }
     }
     fprintf(ctx->FileSaveData0,"\n");
     fprintf(ctx->FileSaveData1,"\n");
     // Save Parameter Data
-    fprintf(ctx->FileSaveData2,"%.3lf    ",ctx->SequentTime2);    
+    fprintf(ctx->FileSaveData2,"%.3lf\t",ctx->SequentTime2);    
     for(i = 0;i<AI_MAX_CHANNELS;i++){
-        fprintf(ctx->FileSaveData2,"%lf    ",ctx->ai_param[i]);
+        fprintf(ctx->FileSaveData2,"%lf\t",ctx->ai_param[i]);
     }
     fprintf(ctx->FileSaveData2,"\n");
 }
@@ -370,24 +342,15 @@ void CDigitShowBasicDoc::SaveToFile2()
     int    i,j,k;
     for(i = 0;i<ctx->sampling.CurrentSamplingTimes;i++){
         k = 0;
-        fprintf(ctx->FileSaveData0,"%.3lf    ",ctx->sampling.SavingClock/1000000.0*i);
-        fprintf(ctx->FileSaveData1,"%.3lf    ",ctx->sampling.SavingClock/1000000.0*i);
+        fprintf(ctx->FileSaveData0,"%.3lf\t",ctx->sampling.SavingClock/1000000.0*i);
+        fprintf(ctx->FileSaveData1,"%.3lf\t",ctx->sampling.SavingClock/1000000.0*i);
         if(ctx->NumAD>0){
             for(j = 0;j<ctx->ad.Channels[0]/2;j++){
-                ctx->Vtmp = BinaryToVolt(ctx->ad.RangeMax[0], ctx->ad.RangeMin[0], ctx->ad.Resolution[0], *((PLONG)ctx->pSmplData0+i*ctx->ad.Channels[0]/2+j));
-                ctx->Ptmp = ctx->cal.a[k]*ctx->Vtmp*ctx->Vtmp+ctx->cal.b[k]*ctx->Vtmp+ctx->cal.c[k];
+                ctx->ai_raw_temp = BinaryToVolt(ctx->ad.RangeMax[0], ctx->ad.RangeMin[0], ctx->ad.Resolution[0], *((PLONG)ctx->pSmplData0+i*ctx->ad.Channels[0]/2+j));
+                ctx->ai_phy_temp = ctx->cal.a[k]*ctx->ai_raw_temp*ctx->ai_raw_temp+ctx->cal.b[k]*ctx->ai_raw_temp+ctx->cal.c[k];
                 k = k+1;
-                fprintf(ctx->FileSaveData0,"%lf    ",ctx->Vtmp);
-                fprintf(ctx->FileSaveData1,"%lf    ",ctx->Ptmp);
-            }
-        }
-        if(ctx->NumAD>1){
-            for(j = 0;j<ctx->ad.Channels[1]/2;j++){
-                ctx->Vtmp = BinaryToVolt(ctx->ad.RangeMax[1], ctx->ad.RangeMin[1], ctx->ad.Resolution[1], *((PLONG)ctx->pSmplData1+i*ctx->ad.Channels[1]/2+j));
-                ctx->Ptmp = ctx->cal.a[k]*ctx->Vtmp*ctx->Vtmp+ctx->cal.b[k]*ctx->Vtmp+ctx->cal.c[k];
-                k = k+1;
-                fprintf(ctx->FileSaveData0,"%lf    ",ctx->Vtmp);
-                fprintf(ctx->FileSaveData1,"%lf    ",ctx->Ptmp);
+                fprintf(ctx->FileSaveData0,"%lf\t",ctx->ai_raw_temp);
+                fprintf(ctx->FileSaveData1,"%lf\t",ctx->ai_phy_temp);
             }
         }
         fprintf(ctx->FileSaveData0,"\n");
@@ -403,14 +366,9 @@ void CDigitShowBasicDoc::Allocate_Memory()
             ctx->hHeap0 = GetProcessHeap();
             ctx->pSmplData0 = HeapAlloc(ctx->hHeap0,HEAP_ZERO_MEMORY,unsigned long(ctx->sampling.TotalSamplingTimes*ctx->ad.Channels[0]/2*sizeof(LONG)));
         }
-        if(ctx->NumAD>1){
-            ctx->hHeap1 = GetProcessHeap();
-            ctx->pSmplData1 = HeapAlloc(ctx->hHeap1,HEAP_ZERO_MEMORY,unsigned long(ctx->sampling.TotalSamplingTimes*ctx->ad.Channels[1]/2*sizeof(LONG)));
-        }
     }
     if(ctx->FlagSaveData==FALSE){
         if(ctx->NumAD>0)    HeapFree(ctx->hHeap0,0,ctx->pSmplData0);
-        if(ctx->NumAD>1)    HeapFree(ctx->hHeap1,0,ctx->pSmplData1);
     }
 }
 

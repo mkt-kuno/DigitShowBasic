@@ -229,9 +229,7 @@ struct DigitShowContext {
 
     // Memory management
     PVOID  pSmplData0;
-    PVOID  pSmplData1;
     HANDLE hHeap0;
-    HANDLE hHeap1;
 
     // File handles
     FILE* FileSaveData0;
@@ -252,19 +250,18 @@ struct DigitShowContext {
     int NumDA;
     int AdMaxChannels;
     struct AdBoardConfig {
-        short  Id[2];
-        short  Channels[2];
-        short  Range[2];
-        float  RangeMax[2];
-        float  RangeMin[2];
-        short  Resolution[2];
-        short  InputMethod[2];
-        short  MemoryType[2];
-        float  SamplingClock[2];
-        long   SamplingTimes[2];
-        float  ScanClock[2];
+        short  Id[1];
+        short  Channels[1];
+        short  Range[1];
+        float  RangeMax[1];
+        float  RangeMin[1];
+        short  Resolution[1];
+        short  InputMethod[1];
+        short  MemoryType[1];
+        float  SamplingClock[1];
+        long   SamplingTimes[1];
+        float  ScanClock[1];
         long   Data0[262144];
-        long   Data1[262144];
     } ad;
     struct DaBoardConfig {
         short  Id[1];
@@ -275,8 +272,6 @@ struct DigitShowContext {
         short  Resolution[1];
         long   Data[8];
     } da;
-    float  Vtmp;
-    double Ptmp;
     bool   FlagFIFO;
 };
 

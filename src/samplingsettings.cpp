@@ -128,11 +128,6 @@ void CSamplingSettings::OnOK()
     m_TotalSamplingTimes = ctx->sampling.TotalSamplingTimes;
     UpdateData(FALSE);
 
-    if(ctx->NumAD>1){
-        ctx->ad.SamplingClock[1] = ctx->ad.SamplingClock[0];
-        ctx->ad.SamplingTimes[1] = ctx->ad.SamplingTimes[0];
-    }
-    
     CDialog::OnOK();
 }
 

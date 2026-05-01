@@ -102,16 +102,12 @@ void InitContext(DigitShowContext* ctx)
     ctx->height = 0.0;
     ctx->volume = 0.0;
     ctx->area = 0.0;
-    ctx->Vtmp = 0.0f;
-    ctx->Ptmp = 0.0;
     ctx->ai_raw_temp = 0.0f;
     ctx->ai_phy_temp = 0.0;
 
     // Initialize memory pointers
     ctx->pSmplData0 = nullptr;
-    ctx->pSmplData1 = nullptr;
     ctx->hHeap0 = nullptr;
-    ctx->hHeap1 = nullptr;
 
     // Initialize file handles
     ctx->FileSaveData0 = nullptr;
