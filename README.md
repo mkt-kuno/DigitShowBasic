@@ -22,7 +22,7 @@ Community版でOK, MFCライブラリ必須
 - RAM: 最低4GB 推奨8GB以上  
 他に動かすアプリケーション次第。MS Officeは重い。
 - GPU: 依存なし、iGPU/dGPU/APU いずれも可
-- 液晶: 最低HD 推奨FHD以上  
+- 液晶: 最低XGA 推奨FHD以上  
 縦長画面だと表示が見切れると思います。
 - 記憶媒体: 最低HDD 推奨SSD  
 容量はビルドPCと動作PCが同じなら最低128GB 推奨256GB
