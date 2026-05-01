@@ -75,24 +75,15 @@ BOOL CBoardSettings::OnInitDialog()
 
     if(ctx->NumAD >0 && ctx->ad.InputMethod[0]==0) m_ADMethod0 ="Single Input";
     if(ctx->NumAD >0 && ctx->ad.InputMethod[0]==1) m_ADMethod0 ="Differential Input";
-    if(ctx->NumAD >1 && ctx->ad.InputMethod[1]==0) m_ADMethod1 ="Single Input";
-    if(ctx->NumAD >1 && ctx->ad.InputMethod[1]==1) m_ADMethod1 ="Differential Input";
     if(ctx->NumAD >0 && ctx->ad.Resolution[0]==12) m_ADResolution0 ="12 bit";
     if(ctx->NumAD >0 && ctx->ad.Resolution[0]==16) m_ADResolution0 ="16 bit";
-    if(ctx->NumAD >1 && ctx->ad.Resolution[1]==12) m_ADResolution1 ="12 bit";
-    if(ctx->NumAD >1 && ctx->ad.Resolution[1]==16) m_ADResolution1 ="16 bit";
 
     if(ctx->NumAD >0 && ctx->ad.Range[0]==0) m_ADRange0 ="-10V   +10V";
     if(ctx->NumAD >0 && ctx->ad.Range[0]==1) m_ADRange0 ="-5V   +5V";
     if(ctx->NumAD >0 && ctx->ad.Range[0]==50) m_ADRange0 ="0V   +10V";
     if(ctx->NumAD >0 && ctx->ad.Range[0]==51) m_ADRange0 ="0V   +5V";
-    if(ctx->NumAD >1 && ctx->ad.Range[1]==0) m_ADRange1 ="-10V   +10V";
-    if(ctx->NumAD >1 && ctx->ad.Range[1]==1) m_ADRange1 ="-5V   +5V";
-    if(ctx->NumAD >1 && ctx->ad.Range[1]==50) m_ADRange1 ="0V   +10V";
-    if(ctx->NumAD >1 && ctx->ad.Range[1]==51) m_ADRange1 ="0V   +5V";
 
     if(ctx->NumAD >0) m_ADMaxChannel0.Format("%3d",ctx->ad.Channels[0]/2);
-    if(ctx->NumAD >1) m_ADMaxChannel1.Format("%3d",ctx->ad.Channels[1]/2);
     
     if(ctx->NumDA >0 && ctx->da.Resolution[0]==12) m_DAResolution0 ="12 bit";
     if(ctx->NumDA >0 && ctx->da.Resolution[0]==16) m_DAResolution0 ="16 bit";

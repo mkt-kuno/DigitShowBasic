@@ -435,9 +435,7 @@
 #define IDC_BUTTON_EndDisp              1805
 #define IDC_EDIT_FinalDisp              1806
 #define IDC_EDIT_e_sigma1               1807
-#define IDC_EDIT_ChannelChanger         1807
 #define IDC_EDIT_e_sigma2               1808
-#define IDC_BUTTON_ChannelChange        1808
 #define IDC_STATIC_C00                  1809
 #define IDC_EDIT_sigma_rate             1810
 #define IDC_STATIC_C01                  1810

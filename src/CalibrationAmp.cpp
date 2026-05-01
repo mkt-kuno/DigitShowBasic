@@ -58,7 +58,7 @@ void CCalibrationAmp::OnBUTTONAmpBase()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_AmpVB = ctx->Vout[ctx->AmpID];
+    m_AmpVB = ctx->ai_raw[ctx->AmpID];
     UpdateData(FALSE);
 }
 
@@ -66,7 +66,7 @@ void CCalibrationAmp::OnBUTTONAmpOffset()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_AmpVO = ctx->Vout[ctx->AmpID];
+    m_AmpVO = ctx->ai_raw[ctx->AmpID];
     UpdateData(FALSE);
 }
 

@@ -77,22 +77,6 @@ CDigitShowBasicView::CDigitShowBasicView()
     m_Vout13 = _T("");
     m_Vout14 = _T("");
     m_Vout15 = _T("");
-    m_Vout16 = _T("");
-    m_Vout17 = _T("");
-    m_Vout18 = _T("");
-    m_Vout19 = _T("");
-    m_Vout20 = _T("");
-    m_Vout21 = _T("");
-    m_Vout22 = _T("");
-    m_Vout23 = _T("");
-    m_Vout24 = _T("");
-    m_Vout25 = _T("");
-    m_Vout26 = _T("");
-    m_Vout27 = _T("");
-    m_Vout28 = _T("");
-    m_Vout29 = _T("");
-    m_Vout30 = _T("");
-    m_Vout31 = _T("");
     m_Phyout00 = _T("");
     m_Phyout01 = _T("");
     m_Phyout02 = _T("");
@@ -109,22 +93,6 @@ CDigitShowBasicView::CDigitShowBasicView()
     m_Phyout13 = _T("");
     m_Phyout14 = _T("");
     m_Phyout15 = _T("");
-    m_Phyout16 = _T("");
-    m_Phyout17 = _T("");
-    m_Phyout18 = _T("");
-    m_Phyout19 = _T("");
-    m_Phyout20 = _T("");
-    m_Phyout21 = _T("");
-    m_Phyout22 = _T("");
-    m_Phyout23 = _T("");
-    m_Phyout24 = _T("");
-    m_Phyout25 = _T("");
-    m_Phyout26 = _T("");
-    m_Phyout27 = _T("");
-    m_Phyout28 = _T("");
-    m_Phyout29 = _T("");
-    m_Phyout30 = _T("");
-    m_Phyout31 = _T("");
     m_Para00 = _T("");
     m_Para01 = _T("");
     m_Para02 = _T("");
@@ -180,22 +148,6 @@ void CDigitShowBasicView::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_EDIT_Vout13, m_Vout13);
     DDX_Text(pDX, IDC_EDIT_Vout14, m_Vout14);
     DDX_Text(pDX, IDC_EDIT_Vout15, m_Vout15);
-    DDX_Text(pDX, IDC_EDIT_Vout16, m_Vout16);
-    DDX_Text(pDX, IDC_EDIT_Vout17, m_Vout17);
-    DDX_Text(pDX, IDC_EDIT_Vout18, m_Vout18);
-    DDX_Text(pDX, IDC_EDIT_Vout19, m_Vout19);
-    DDX_Text(pDX, IDC_EDIT_Vout20, m_Vout20);
-    DDX_Text(pDX, IDC_EDIT_Vout21, m_Vout21);
-    DDX_Text(pDX, IDC_EDIT_Vout22, m_Vout22);
-    DDX_Text(pDX, IDC_EDIT_Vout23, m_Vout23);
-    DDX_Text(pDX, IDC_EDIT_Vout24, m_Vout24);
-    DDX_Text(pDX, IDC_EDIT_Vout25, m_Vout25);
-    DDX_Text(pDX, IDC_EDIT_Vout26, m_Vout26);
-    DDX_Text(pDX, IDC_EDIT_Vout27, m_Vout27);
-    DDX_Text(pDX, IDC_EDIT_Vout28, m_Vout28);
-    DDX_Text(pDX, IDC_EDIT_Vout29, m_Vout29);
-    DDX_Text(pDX, IDC_EDIT_Vout30, m_Vout30);
-    DDX_Text(pDX, IDC_EDIT_Vout31, m_Vout31);
     DDX_Text(pDX, IDC_EDIT_Phyout00, m_Phyout00);
     DDX_Text(pDX, IDC_EDIT_Phyout01, m_Phyout01);
     DDX_Text(pDX, IDC_EDIT_Phyout02, m_Phyout02);
@@ -212,22 +164,6 @@ void CDigitShowBasicView::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_EDIT_Phyout13, m_Phyout13);
     DDX_Text(pDX, IDC_EDIT_Phyout14, m_Phyout14);
     DDX_Text(pDX, IDC_EDIT_Phyout15, m_Phyout15);
-    DDX_Text(pDX, IDC_EDIT_Phyout16, m_Phyout16);
-    DDX_Text(pDX, IDC_EDIT_Phyout17, m_Phyout17);
-    DDX_Text(pDX, IDC_EDIT_Phyout18, m_Phyout18);
-    DDX_Text(pDX, IDC_EDIT_Phyout19, m_Phyout19);
-    DDX_Text(pDX, IDC_EDIT_Phyout20, m_Phyout20);
-    DDX_Text(pDX, IDC_EDIT_Phyout21, m_Phyout21);
-    DDX_Text(pDX, IDC_EDIT_Phyout22, m_Phyout22);
-    DDX_Text(pDX, IDC_EDIT_Phyout23, m_Phyout23);
-    DDX_Text(pDX, IDC_EDIT_Phyout24, m_Phyout24);
-    DDX_Text(pDX, IDC_EDIT_Phyout25, m_Phyout25);
-    DDX_Text(pDX, IDC_EDIT_Phyout26, m_Phyout26);
-    DDX_Text(pDX, IDC_EDIT_Phyout27, m_Phyout27);
-    DDX_Text(pDX, IDC_EDIT_Phyout28, m_Phyout28);
-    DDX_Text(pDX, IDC_EDIT_Phyout29, m_Phyout29);
-    DDX_Text(pDX, IDC_EDIT_Phyout30, m_Phyout30);
-    DDX_Text(pDX, IDC_EDIT_Phyout31, m_Phyout31);
     DDX_Text(pDX, IDC_EDIT_Para00, m_Para00);
     DDX_Text(pDX, IDC_EDIT_Para01, m_Para01);
     DDX_Text(pDX, IDC_EDIT_Para02, m_Para02);
@@ -353,24 +289,10 @@ void CDigitShowBasicView::OnInitialUpdate()
             Ret = AioSetAiStopTrigger(ctx->ad.Id[0], 4);
             Ret = AioResetAiMemory(ctx->ad.Id[0]);
         }
-        if(ctx->NumAD>1)    {
-            Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , 1000 );
-            Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-
-            AiScanClocka = 60.0;
-            Ret = AioSetAiScanClock(ctx->ad.Id[1], AiScanClocka);
-
-            ctx->ad.SamplingTimes[1] = long(ctx->timeSettings.Interval1*1000/ctx->ad.SamplingClock[1]);
-            Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-            Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-            Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-            Ret = AioResetAiMemory(ctx->ad.Id[1]);
-        }
         ctx->AdEvent = AIE_DATA_NUM | AIE_OFERR | AIE_SCERR | AIE_ADERR;
         Ret = AioSetAiEvent(ctx->ad.Id[ctx->NumAD-1], m_hWnd, ctx->AdEvent);
         Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
     }
     SetTimer(1,ctx->timeSettings.Interval1,NULL);    
 }
@@ -458,88 +380,56 @@ void CDigitShowBasicView::ShowData()
 {
     DigitShowContext* ctx = GetContext();
 
-    m_Vout00.Format("%11.4f",ctx->Vout[0]);
-    m_Vout01.Format("%11.4f",ctx->Vout[1]);
-    m_Vout02.Format("%11.4f",ctx->Vout[2]);
-    m_Vout03.Format("%11.4f",ctx->Vout[3]);
-    m_Vout04.Format("%11.4f",ctx->Vout[4]);
-    m_Vout05.Format("%11.4f",ctx->Vout[5]);
-    m_Vout06.Format("%11.4f",ctx->Vout[6]);
-    m_Vout07.Format("%11.4f",ctx->Vout[7]);
-    m_Vout08.Format("%11.4f",ctx->Vout[8]);
-    m_Vout09.Format("%11.4f",ctx->Vout[9]);
-    m_Vout10.Format("%11.4f",ctx->Vout[10]);
-    m_Vout11.Format("%11.4f",ctx->Vout[11]);
-    m_Vout12.Format("%11.4f",ctx->Vout[12]);
-    m_Vout13.Format("%11.4f",ctx->Vout[13]);
-    m_Vout14.Format("%11.4f",ctx->Vout[14]);
-    m_Vout15.Format("%11.4f",ctx->Vout[15]);
-    m_Vout16.Format("%11.4f",ctx->Vout[16]);
-    m_Vout17.Format("%11.4f",ctx->Vout[17]);
-    m_Vout18.Format("%11.4f",ctx->Vout[18]);
-    m_Vout19.Format("%11.4f",ctx->Vout[19]);
-    m_Vout20.Format("%11.4f",ctx->Vout[20]);
-    m_Vout21.Format("%11.4f",ctx->Vout[21]);
-    m_Vout22.Format("%11.4f",ctx->Vout[22]);
-    m_Vout23.Format("%11.4f",ctx->Vout[23]);
-    m_Vout24.Format("%11.4f",ctx->Vout[24]);
-    m_Vout25.Format("%11.4f",ctx->Vout[25]);
-    m_Vout26.Format("%11.4f",ctx->Vout[26]);
-    m_Vout27.Format("%11.4f",ctx->Vout[27]);
-    m_Vout28.Format("%11.4f",ctx->Vout[28]);
-    m_Vout29.Format("%11.4f",ctx->Vout[29]);
-    m_Vout30.Format("%11.4f",ctx->Vout[30]);
-    m_Vout31.Format("%11.4f",ctx->Vout[31]);
+    m_Vout00.Format("%11.4f",ctx->ai_raw[0]);
+    m_Vout01.Format("%11.4f",ctx->ai_raw[1]);
+    m_Vout02.Format("%11.4f",ctx->ai_raw[2]);
+    m_Vout03.Format("%11.4f",ctx->ai_raw[3]);
+    m_Vout04.Format("%11.4f",ctx->ai_raw[4]);
+    m_Vout05.Format("%11.4f",ctx->ai_raw[5]);
+    m_Vout06.Format("%11.4f",ctx->ai_raw[6]);
+    m_Vout07.Format("%11.4f",ctx->ai_raw[7]);
+    m_Vout08.Format("%11.4f",ctx->ai_raw[8]);
+    m_Vout09.Format("%11.4f",ctx->ai_raw[9]);
+    m_Vout10.Format("%11.4f",ctx->ai_raw[10]);
+    m_Vout11.Format("%11.4f",ctx->ai_raw[11]);
+    m_Vout12.Format("%11.4f",ctx->ai_raw[12]);
+    m_Vout13.Format("%11.4f",ctx->ai_raw[13]);
+    m_Vout14.Format("%11.4f",ctx->ai_raw[14]);
+    m_Vout15.Format("%11.4f",ctx->ai_raw[15]);
 
-    m_Phyout00.Format("%11.4f",ctx->Phyout[0]);
-    m_Phyout01.Format("%11.4f",ctx->Phyout[1]);
-    m_Phyout02.Format("%11.4f",ctx->Phyout[2]);
-    m_Phyout03.Format("%11.4f",ctx->Phyout[3]);
-    m_Phyout04.Format("%11.4f",ctx->Phyout[4]);
-    m_Phyout05.Format("%11.4f",ctx->Phyout[5]);
-    m_Phyout06.Format("%11.4f",ctx->Phyout[6]);
-    m_Phyout07.Format("%11.4f",ctx->Phyout[7]);
-    m_Phyout08.Format("%11.4f",ctx->Phyout[8]);
-    m_Phyout09.Format("%11.4f",ctx->Phyout[9]);
-    m_Phyout10.Format("%11.4f",ctx->Phyout[10]);
-    m_Phyout11.Format("%11.4f",ctx->Phyout[11]);
-    m_Phyout12.Format("%11.4f",ctx->Phyout[12]);
-    m_Phyout13.Format("%11.4f",ctx->Phyout[13]);
-    m_Phyout14.Format("%11.4f",ctx->Phyout[14]);
-    m_Phyout15.Format("%11.4f",ctx->Phyout[15]);
-    m_Phyout16.Format("%11.4f",ctx->Phyout[16]);
-    m_Phyout17.Format("%11.4f",ctx->Phyout[17]);
-    m_Phyout18.Format("%11.4f",ctx->Phyout[18]);
-    m_Phyout19.Format("%11.4f",ctx->Phyout[19]);
-    m_Phyout20.Format("%11.4f",ctx->Phyout[20]);
-    m_Phyout21.Format("%11.4f",ctx->Phyout[21]);
-    m_Phyout22.Format("%11.4f",ctx->Phyout[22]);
-    m_Phyout23.Format("%11.4f",ctx->Phyout[23]);
-    m_Phyout24.Format("%11.4f",ctx->Phyout[24]);
-    m_Phyout25.Format("%11.4f",ctx->Phyout[25]);
-    m_Phyout26.Format("%11.4f",ctx->Phyout[26]);
-    m_Phyout27.Format("%11.4f",ctx->Phyout[27]);
-    m_Phyout28.Format("%11.4f",ctx->Phyout[28]);
-    m_Phyout29.Format("%11.4f",ctx->Phyout[29]);
-    m_Phyout30.Format("%11.4f",ctx->Phyout[30]);
-    m_Phyout31.Format("%11.4f",ctx->Phyout[31]);
+    m_Phyout00.Format("%11.4f",ctx->ai_phy[0]);
+    m_Phyout01.Format("%11.4f",ctx->ai_phy[1]);
+    m_Phyout02.Format("%11.4f",ctx->ai_phy[2]);
+    m_Phyout03.Format("%11.4f",ctx->ai_phy[3]);
+    m_Phyout04.Format("%11.4f",ctx->ai_phy[4]);
+    m_Phyout05.Format("%11.4f",ctx->ai_phy[5]);
+    m_Phyout06.Format("%11.4f",ctx->ai_phy[6]);
+    m_Phyout07.Format("%11.4f",ctx->ai_phy[7]);
+    m_Phyout08.Format("%11.4f",ctx->ai_phy[8]);
+    m_Phyout09.Format("%11.4f",ctx->ai_phy[9]);
+    m_Phyout10.Format("%11.4f",ctx->ai_phy[10]);
+    m_Phyout11.Format("%11.4f",ctx->ai_phy[11]);
+    m_Phyout12.Format("%11.4f",ctx->ai_phy[12]);
+    m_Phyout13.Format("%11.4f",ctx->ai_phy[13]);
+    m_Phyout14.Format("%11.4f",ctx->ai_phy[14]);
+    m_Phyout15.Format("%11.4f",ctx->ai_phy[15]);
 
-    m_Para00.Format("%11.4f",ctx->CalParam[0]);
-    m_Para01.Format("%11.4f",ctx->CalParam[1]);
-    m_Para02.Format("%11.4f",ctx->CalParam[2]);
-    m_Para03.Format("%11.4f",ctx->CalParam[3]);
-    m_Para04.Format("%11.4f",ctx->CalParam[4]);
-    m_Para05.Format("%11.4f",ctx->CalParam[5]);
-    m_Para06.Format("%11.4f",ctx->CalParam[6]);
-    m_Para07.Format("%11.4f",ctx->CalParam[7]);
-    m_Para08.Format("%11.4f",ctx->CalParam[8]);
-    m_Para09.Format("%11.4f",ctx->CalParam[9]);
-    m_Para10.Format("%11.4f",ctx->CalParam[10]);
-    m_Para11.Format("%11.4f",ctx->CalParam[11]);
-    m_Para12.Format("%11.4f",ctx->CalParam[12]);
-    m_Para13.Format("%11.4f",ctx->CalParam[13]);
-    m_Para14.Format("%11.4f",ctx->CalParam[14]);
-    m_Para15.Format("%11.4f",ctx->CalParam[15]);
+    m_Para00.Format("%11.4f",ctx->ai_param[0]);
+    m_Para01.Format("%11.4f",ctx->ai_param[1]);
+    m_Para02.Format("%11.4f",ctx->ai_param[2]);
+    m_Para03.Format("%11.4f",ctx->ai_param[3]);
+    m_Para04.Format("%11.4f",ctx->ai_param[4]);
+    m_Para05.Format("%11.4f",ctx->ai_param[5]);
+    m_Para06.Format("%11.4f",ctx->ai_param[6]);
+    m_Para07.Format("%11.4f",ctx->ai_param[7]);
+    m_Para08.Format("%11.4f",ctx->ai_param[8]);
+    m_Para09.Format("%11.4f",ctx->ai_param[9]);
+    m_Para10.Format("%11.4f",ctx->ai_param[10]);
+    m_Para11.Format("%11.4f",ctx->ai_param[11]);
+    m_Para12.Format("%11.4f",ctx->ai_param[12]);
+    m_Para13.Format("%11.4f",ctx->ai_param[13]);
+    m_Para14.Format("%11.4f",ctx->ai_param[14]);
+    m_Para15.Format("%11.4f",ctx->ai_param[15]);
     
     m_Ctrl_ID = ctx->ControlID;
     m_NowTime = ctx->SNowTime;
@@ -589,95 +479,92 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 
     if(ctx->FlagFIFO==FALSE){
         CString    pFileName0, pFileName1, pFileName2;
-        CFileDialog SaveFile_dlg( FALSE, NULL, "*.dat",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
-                "Data Files(*.dat)|*.dat| All Files(*.*)|*.*| |",NULL);
+        CFileDialog SaveFile_dlg( FALSE, NULL, "*.tsv",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
+                "TSV Files(*.tsv)|*.tsv| All Files(*.*)|*.*| |",NULL);
         if (SaveFile_dlg.DoModal()==IDOK){
             // File for saving the physical data 
             pFileName1 = SaveFile_dlg.GetPathName();    
             m_FileName =    SaveFile_dlg.GetFileTitle();
             TmpString = SaveFile_dlg.GetFileExt();    
             if(TmpString == "" ){
-                TmpString =".dat";
+                TmpString =".tsv";
                 pFileName1 = pFileName1+TmpString;
                 m_FileName = m_FileName+TmpString;
             }
-            else if(TmpString != "dat"){
+            else if(TmpString != "tsv"){
                 TmpString = _T(".")+TmpString;
-                pFileName1.Replace(TmpString,".dat");
-                m_FileName = m_FileName+_T(".dat");
+                pFileName1.Replace(TmpString,".tsv");
+                m_FileName = m_FileName+_T(".tsv");
             }
             if((err = fopen_s(&ctx->FileSaveData1,(LPCSTR)pFileName1, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData1,"%s    ","Time(s)");
-                fprintf(ctx->FileSaveData1,"%s    ","Load_(N)");
-                fprintf(ctx->FileSaveData1,"%s    ","Disp.(mm)");
-                fprintf(ctx->FileSaveData1,"%s    ","Cell_P.(kPa)");
-                fprintf(ctx->FileSaveData1,"%s    ","ECellP.(kPa)");
-                fprintf(ctx->FileSaveData1,"%s    ","SP.Vol.(mm3)");
-                fprintf(ctx->FileSaveData1,"%s    ","V-LDT1_(mm)");
-                fprintf(ctx->FileSaveData1,"%s    ","V-LDT2_(mm)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH07_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH08_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH09_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH10_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH11_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH12_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH13_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH14_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH15_(V)");
-                fprintf(ctx->FileSaveData1,"\n");
+                fprintf(ctx->FileSaveData1,"%s\t","Time(s)");
+                fprintf(ctx->FileSaveData1,"%s\t","Load_(N)");
+                fprintf(ctx->FileSaveData1,"%s\t","Disp.(mm)");
+                fprintf(ctx->FileSaveData1,"%s\t","Cell_P.(kPa)");
+                fprintf(ctx->FileSaveData1,"%s\t","ECellP.(kPa)");
+                fprintf(ctx->FileSaveData1,"%s\t","SP.Vol.(mm3)");
+                fprintf(ctx->FileSaveData1,"%s\t","V-LDT1_(mm)");
+                fprintf(ctx->FileSaveData1,"%s\t","V-LDT2_(mm)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH07_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH08_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH09_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH10_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH11_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH12_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH13_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH14_(V)");
+                fprintf(ctx->FileSaveData1,"%s\n","CH15_(V)");
             }
 
 
             // File for saving the voltage data
             pFileName0 = pFileName1;
-            pFileName0.Replace(".dat",".vlt");
+            pFileName0.Replace(".tsv","_v.tsv");
             if((err = fopen_s(&ctx->FileSaveData0,(LPCSTR)pFileName0, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData0,"%s    ","Time(s)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH00_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH01_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH02_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH03_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH04_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH05_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH06_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH07_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH08_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH09_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH10_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH11_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH12_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH13_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH14_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH15_(V)");
-                fprintf(ctx->FileSaveData0,"\n");
+                fprintf(ctx->FileSaveData0,"%s\t","Time(s)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH00_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH01_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH02_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH03_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH04_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH05_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH06_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH07_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH08_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH09_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH10_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH11_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH12_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH13_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH14_(V)");
+                fprintf(ctx->FileSaveData0,"%s\n","CH15_(V)");
             }
 
 
             // File for saving the parameter data
             pFileName2 = pFileName1;
-            pFileName2.Replace(".dat",".out");
+            pFileName2.Replace(".tsv","_p.tsv");
             if((err = fopen_s(&ctx->FileSaveData2,(LPCSTR)pFileName2, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData2,"%s    ","Time(s)");
-                fprintf(ctx->FileSaveData2,"%s    ","s(a)_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","s(r)_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","s'(a)(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","s'(r)(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","Pore_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","p____(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","q____(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","p'___(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","e(a)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","e(r)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","e(v)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","eLDT1(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","eLDT2(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","AvLDT(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","(s'a+s'r)/2");
-                fprintf(ctx->FileSaveData2,"%s    ","(s'a-s'r)/2");
-                fprintf(ctx->FileSaveData2,"\n");
+                fprintf(ctx->FileSaveData2,"%s\t","Time(s)");
+                fprintf(ctx->FileSaveData2,"%s\t","s(a)_(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","s(r)_(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","s'(a)(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","s'(r)(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","Pore_(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","p____(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","q____(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","p'___(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","e(a)_(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","e(r)_(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","e(v)_(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","eLDT1(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","eLDT2(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","AvLDT(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","(s'a+s'r)/2");
+                fprintf(ctx->FileSaveData2,"%s\n","(s'a-s'r)/2");
             }
 // Timer starts
             SetTimer(3,ctx->timeSettings.Interval3,NULL);
@@ -711,8 +598,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
         ctx->SpanTime = ctx->NowTime- ctx->StartTime;
         ctx->SequentTime1 = (long)ctx->SpanTime.GetTotalSeconds();
         if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
-        if(ctx->NumAD>2) Ret = AioStopAi(ctx->ad.Id[2]);
         ctx->FlagSaveData = TRUE;
         ctx->sampling.CurrentSamplingTimes = 0;
         pDoc->Allocate_Memory();
@@ -729,9 +614,7 @@ void CDigitShowBasicView::OnBUTTONStartSave()
         myBTN5->EnableWindow(FALSE);
         myBTN6->EnableWindow(FALSE);
         if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioResetAiMemory(ctx->ad.Id[1]);
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
     }
 }
 
@@ -767,11 +650,8 @@ void CDigitShowBasicView::OnBUTTONStopSave()
     if(ctx->FlagSaveData==TRUE && ctx->FlagFIFO==TRUE){
         ctx->FlagSaveData = FALSE;
         if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
         if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioResetAiMemory(ctx->ad.Id[1]);
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);    
         CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
@@ -823,14 +703,6 @@ void CDigitShowBasicView::OnBUTTONFIFOStart()
                 Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[0] , &ctx->ad.SamplingTimes[0] );
                 Ret = AioResetAiMemory(ctx->ad.Id[0]);
             }
-            if(ctx->NumAD>1)    {
-                Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , ctx->ad.SamplingClock[1] );
-                Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-                Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-                Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-                Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-                Ret = AioResetAiMemory(ctx->ad.Id[1]);
-            }
             Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
             ctx->sampling.SavingClock = ctx->ad.SamplingClock[0];
             ctx->FlagFIFO = TRUE;
@@ -838,7 +710,6 @@ void CDigitShowBasicView::OnBUTTONFIFOStart()
             myBTN2->EnableWindow(TRUE);
         }
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
     }
     else{
         AfxMessageBox("Board Setting has not been accomplished yet.", MB_OK | MB_ICONSTOP, 0);    
@@ -853,7 +724,6 @@ void CDigitShowBasicView::OnBUTTONFIFOStop()
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
     CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);    
     if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
     ctx->FlagFIFO = FALSE;
     myBTN1->EnableWindow(TRUE);
     myBTN2->EnableWindow(FALSE);
@@ -866,18 +736,8 @@ void CDigitShowBasicView::OnBUTTONFIFOStop()
         Ret = AioSetAiStopTrigger(ctx->ad.Id[0], 4);
         Ret = AioResetAiMemory(ctx->ad.Id[0]);
     }
-    if(ctx->NumAD>1)    {
-        Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , 1000 );
-        Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-        ctx->ad.SamplingTimes[1] = long(ctx->timeSettings.Interval1*1000/ctx->ad.SamplingClock[1]);
-        Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-        Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-        Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-        Ret = AioResetAiMemory(ctx->ad.Id[1]);
-    }
     Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
     if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
 }
 
 void CDigitShowBasicView::OnBUTTONWriteData() 
@@ -885,76 +745,73 @@ void CDigitShowBasicView::OnBUTTONWriteData()
     DigitShowContext* ctx = GetContext();
     long    Ret;
     if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
 
     CString    pFileName0, pFileName1,TmpString;
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_WriteData);
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
     errno_t err; 
 
-    CFileDialog SaveFile_dlg( FALSE, NULL, "*.dat",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
-    "Data Files(*.dat)|*.dat| All Files(*.*)|*.*| |",NULL);
+    CFileDialog SaveFile_dlg( FALSE, NULL, "*.tsv",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
+    "TSV Files(*.tsv)|*.tsv| All Files(*.*)|*.*| |",NULL);
     if (SaveFile_dlg.DoModal()==IDOK){
         // File for saving the physical data 
         pFileName1 = SaveFile_dlg.GetPathName();    
         m_FileName =    SaveFile_dlg.GetFileTitle();
         TmpString = SaveFile_dlg.GetFileExt();    
         if(TmpString == "" ){
-            TmpString =".dat";
+            TmpString =".tsv";
             pFileName1 = pFileName1+TmpString;
             m_FileName = m_FileName+TmpString;
         }
-        else if(TmpString != "dat"){
+        else if(TmpString != "tsv"){
             TmpString = _T(".")+TmpString;
-            pFileName1.Replace(TmpString,".dat");
-            m_FileName = m_FileName+_T(".dat");
+            pFileName1.Replace(TmpString,".tsv");
+            m_FileName = m_FileName+_T(".tsv");
         }
         if((err = fopen_s(&ctx->FileSaveData1,(LPCSTR)pFileName1 , _T("w"))) == 0)
         {
-            fprintf(ctx->FileSaveData1,"%s    ","Time(s)");
-            fprintf(ctx->FileSaveData1,"%s    ","Load_(N)");
-            fprintf(ctx->FileSaveData1,"%s    ","Disp.(mm)");
-            fprintf(ctx->FileSaveData1,"%s    ","Cell_P.(kPa)");
-            fprintf(ctx->FileSaveData1,"%s    ","E_Cell_P.(kPa)");
-            fprintf(ctx->FileSaveData1,"%s    ","SP.Vol.(cm3)");
-            fprintf(ctx->FileSaveData1,"%s    ","LDT-V1(mm)");
-            fprintf(ctx->FileSaveData1,"%s    ","LDT-V2(mm)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH07_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH08_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH09_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH10_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH11_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH12_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH13_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH14_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH15_(V)");
-            fprintf(ctx->FileSaveData1,"\n");
+            fprintf(ctx->FileSaveData1,"%s\t","Time(s)");
+            fprintf(ctx->FileSaveData1,"%s\t","Load_(N)");
+            fprintf(ctx->FileSaveData1,"%s\t","Disp.(mm)");
+            fprintf(ctx->FileSaveData1,"%s\t","Cell_P.(kPa)");
+            fprintf(ctx->FileSaveData1,"%s\t","E_Cell_P.(kPa)");
+            fprintf(ctx->FileSaveData1,"%s\t","SP.Vol.(cm3)");
+            fprintf(ctx->FileSaveData1,"%s\t","LDT-V1(mm)");
+            fprintf(ctx->FileSaveData1,"%s\t","LDT-V2(mm)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH07_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH08_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH09_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH10_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH11_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH12_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH13_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH14_(V)");
+            fprintf(ctx->FileSaveData1,"%s\n","CH15_(V)");
         }
 
 
         // File for saving the voltage data
         pFileName0 = pFileName1;
-        pFileName0.Replace(".dat",".vlt");
+        pFileName0.Replace(".tsv","_v.tsv");
         if((err = fopen_s(&ctx->FileSaveData0,(LPCSTR)pFileName0 , _T("w"))) == 0)
         {
-            fprintf(ctx->FileSaveData0,"%s    ","Time(s)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH00_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH01_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH02_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH03_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH04_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH05_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH06_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH07_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH08_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH09_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH10_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH11_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH12_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH13_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH14_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH15_(V)");
-            fprintf(ctx->FileSaveData0,"\n");
+            fprintf(ctx->FileSaveData0,"%s\t","Time(s)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH00_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH01_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH02_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH03_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH04_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH05_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH06_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH07_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH08_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH09_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH10_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH11_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH12_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH13_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH14_(V)");
+            fprintf(ctx->FileSaveData0,"%s\n","CH15_(V)");
         }
         pDoc -> SaveToFile2();
         fclose(ctx->FileSaveData0);
@@ -971,25 +828,15 @@ void CDigitShowBasicView::OnBUTTONWriteData()
         Ret = AioSetAiStopTrigger(ctx->ad.Id[0], 4);
         Ret = AioResetAiMemory(ctx->ad.Id[0]);
     }
-    if(ctx->NumAD>1)    {
-        Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , 1000 );
-        Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-        ctx->ad.SamplingTimes[1] = long(ctx->timeSettings.Interval1*1000/ctx->ad.SamplingClock[1]);
-        Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-        Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-        Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-        Ret = AioResetAiMemory(ctx->ad.Id[1]);
-    }
     Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
     if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
 }
 
 LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
 {
     DigitShowContext* ctx = GetContext();
     int        i,j;
-    long    tmp,tmp0,tmp1;
+    long    tmp,tmp0;
     long    Ret,Ret2;
 
     switch(message){
@@ -998,20 +845,8 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
             Ret = AioGetAiSamplingCount ( ctx->ad.Id[0] , &tmp0 );
             tmp = tmp0;
         }
-        if(ctx->NumAD>1)    {
-            Ret = AioGetAiSamplingCount ( ctx->ad.Id[1] , &tmp1 );
-            if(tmp>tmp1) tmp = tmp1;
-        }
         if(ctx->NumAD>0){
             Ret = AioGetAiSamplingData(ctx->ad.Id[0], &tmp, &ctx->ad.Data0[0]);
-            if(Ret != 0){
-                Ret2 = AioGetErrorString(Ret, ctx->ErrorString);
-                ctx->TextString.Format("AioGetAiSamplingData = %d : %s", Ret, ctx->ErrorString);
-                AfxMessageBox(ctx->TextString, MB_ICONSTOP | MB_OK );
-            }
-        }
-        if(ctx->NumAD>1){
-            Ret = AioGetAiSamplingData(ctx->ad.Id[1], &tmp, &ctx->ad.Data1[0]);
             if(Ret != 0){
                 Ret2 = AioGetErrorString(Ret, ctx->ErrorString);
                 ctx->TextString.Format("AioGetAiSamplingData = %d : %s", Ret, ctx->ErrorString);
@@ -1029,11 +864,6 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
                             *((PLONG)ctx->pSmplData0 + ctx->sampling.CurrentSamplingTimes*ctx->ad.Channels[0]/2+j) = ctx->ad.Data0[i*ctx->ad.Channels[0]+2*j];
                         }
                     }
-                    if(ctx->NumAD > 1){
-                        for(j = 0;j<ctx->ad.Channels[1]/2;j++){
-                            *((PLONG)ctx->pSmplData1 + ctx->sampling.CurrentSamplingTimes*ctx->ad.Channels[1]/2+j) = ctx->ad.Data1[i*ctx->ad.Channels[1]+2*j];
-                        }
-                    }
                     ctx->sampling.CurrentSamplingTimes = ctx->sampling.CurrentSamplingTimes+1;
                 }
             }
@@ -1047,10 +877,6 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
             if(ctx->NumAD>0){
                 Ret = AioResetAiMemory(ctx->ad.Id[0]);
                 Ret = AioStartAi(ctx->ad.Id[0]);
-            }
-            if(ctx->NumAD>1){
-                Ret = AioResetAiMemory(ctx->ad.Id[1]);
-                Ret = AioStartAi(ctx->ad.Id[1]);
             }
             AfxMessageBox("FIFO sttoped by the over flow, but restarted automatically.", MB_OK | MB_ICONSTOP, 0);    
         }

@@ -36,7 +36,7 @@ void InitContext(DigitShowContext* ctx)
 {
     if (ctx == nullptr) return;
 
-    // Initialize board counts
+    // Initialize board counts (CAIO)
     ctx->NumAD = 1;
     ctx->NumDA = 0;
     ctx->AdMaxChannels = 0;
@@ -102,14 +102,12 @@ void InitContext(DigitShowContext* ctx)
     ctx->height = 0.0;
     ctx->volume = 0.0;
     ctx->area = 0.0;
-    ctx->Vtmp = 0.0f;
-    ctx->Ptmp = 0.0;
+    ctx->ai_raw_temp = 0.0f;
+    ctx->ai_phy_temp = 0.0;
 
     // Initialize memory pointers
     ctx->pSmplData0 = nullptr;
-    ctx->pSmplData1 = nullptr;
     ctx->hHeap0 = nullptr;
-    ctx->hHeap1 = nullptr;
 
     // Initialize file handles
     ctx->FileSaveData0 = nullptr;
@@ -124,18 +122,22 @@ void InitContext(DigitShowContext* ctx)
     // Note: CString TextString, CTime, CTimeSpan are default-constructed by C++ runtime
 
     // Initialize calibration factors (default: linear y = x)
-    for (int i = 0; i < 64; i++) {
-        ctx->Vout[i] = 0.0f;
-        ctx->Phyout[i] = 0.0;
-        ctx->CalParam[i] = 0.0;
+    for (int i = 0; i < AI_MAX_CHANNELS; i++) {
+        ctx->ai_raw[i] = 0.0f;
+        ctx->ai_phy[i] = 0.0;
+        ctx->ai_param[i] = 0.0;
+    }
+    for (int i = 0; i < NUM_PARAM_MAX; i++) {
         ctx->cal.a[i] = 0.0;
         ctx->cal.b[i] = 1.0;
         ctx->cal.c[i] = 0.0;
     }
 
     // Initialize D/A output
+    for (int i = 0; i < AO_MAX_CHANNELS; i++) {
+        ctx->ao_raw[i] = 0.0f;
+    }
     for (int i = 0; i < 8; i++) {
-        ctx->DAVout[i] = 0.0f;
         ctx->cal.DA_a[i] = 0.0;
         ctx->cal.DA_b[i] = 0.0;
     }
