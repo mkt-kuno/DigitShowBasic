@@ -407,6 +407,7 @@
 #define IDC_EDIT_ADResolution1          1781
 #define IDC_BUTTON_FIFOStop             1781
 #define IDC_EDIT_MemoryType             1781
+#define IDC_EDIT_Channels               1782
 #define IDC_EDIT_ADRange0               1783
 #define IDC_EDIT_AllocatedMemory        1783
 #define IDC_EDIT_ADRange1               1784
