@@ -13,10 +13,10 @@ ModbusRTUのAD/DAは[DigitShowBasicM](https://github.com/mkt-kuno/DigitShowBasic
 
 ## 動作環境
 - Windows 11  
-x64のみ, ARM64不可、ARM64ECはなんとか可能、、、かもしれない
+x64のみ
 - Visual Studio 2022
 Community版でOK, MFCライブラリ必須  
-- CONTEC API-AIO(WDM) Ver.8.90  
+- CONTEC API-AIO(WDM) Ver.9.20 
 適宜、CAIO.H, CAIO.LIBを置き換えて使用するDLLバージョン一致させれば最新版でも可。
 - CPU: x64 Intel/AMD問わず  
 [Passmark性能(マルチスレッド)](https://www.cpubenchmark.net/multithread/) 最低5000 推奨8000以上
