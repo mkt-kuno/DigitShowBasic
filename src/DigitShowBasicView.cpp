@@ -289,24 +289,10 @@ void CDigitShowBasicView::OnInitialUpdate()
             Ret = AioSetAiStopTrigger(ctx->ad.Id[0], 4);
             Ret = AioResetAiMemory(ctx->ad.Id[0]);
         }
-        if(ctx->NumAD>1)    {
-            Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , 1000 );
-            Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-
-            AiScanClocka = 60.0;
-            Ret = AioSetAiScanClock(ctx->ad.Id[1], AiScanClocka);
-
-            ctx->ad.SamplingTimes[1] = long(ctx->timeSettings.Interval1*1000/ctx->ad.SamplingClock[1]);
-            Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-            Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-            Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-            Ret = AioResetAiMemory(ctx->ad.Id[1]);
-        }
         ctx->AdEvent = AIE_DATA_NUM | AIE_OFERR | AIE_SCERR | AIE_ADERR;
         Ret = AioSetAiEvent(ctx->ad.Id[ctx->NumAD-1], m_hWnd, ctx->AdEvent);
         Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
     }
     SetTimer(1,ctx->timeSettings.Interval1,NULL);    
 }
@@ -493,95 +479,92 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 
     if(ctx->FlagFIFO==FALSE){
         CString    pFileName0, pFileName1, pFileName2;
-        CFileDialog SaveFile_dlg( FALSE, NULL, "*.dat",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
-                "Data Files(*.dat)|*.dat| All Files(*.*)|*.*| |",NULL);
+        CFileDialog SaveFile_dlg( FALSE, NULL, "*.tsv",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
+                "TSV Files(*.tsv)|*.tsv| All Files(*.*)|*.*| |",NULL);
         if (SaveFile_dlg.DoModal()==IDOK){
             // File for saving the physical data 
             pFileName1 = SaveFile_dlg.GetPathName();    
             m_FileName =    SaveFile_dlg.GetFileTitle();
             TmpString = SaveFile_dlg.GetFileExt();    
             if(TmpString == "" ){
-                TmpString =".dat";
+                TmpString =".tsv";
                 pFileName1 = pFileName1+TmpString;
                 m_FileName = m_FileName+TmpString;
             }
-            else if(TmpString != "dat"){
+            else if(TmpString != "tsv"){
                 TmpString = _T(".")+TmpString;
-                pFileName1.Replace(TmpString,".dat");
-                m_FileName = m_FileName+_T(".dat");
+                pFileName1.Replace(TmpString,".tsv");
+                m_FileName = m_FileName+_T(".tsv");
             }
             if((err = fopen_s(&ctx->FileSaveData1,(LPCSTR)pFileName1, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData1,"%s    ","Time(s)");
-                fprintf(ctx->FileSaveData1,"%s    ","Load_(N)");
-                fprintf(ctx->FileSaveData1,"%s    ","Disp.(mm)");
-                fprintf(ctx->FileSaveData1,"%s    ","Cell_P.(kPa)");
-                fprintf(ctx->FileSaveData1,"%s    ","ECellP.(kPa)");
-                fprintf(ctx->FileSaveData1,"%s    ","SP.Vol.(mm3)");
-                fprintf(ctx->FileSaveData1,"%s    ","V-LDT1_(mm)");
-                fprintf(ctx->FileSaveData1,"%s    ","V-LDT2_(mm)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH07_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH08_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH09_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH10_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH11_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH12_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH13_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH14_(V)");
-                fprintf(ctx->FileSaveData1,"%s    ","CH15_(V)");
-                fprintf(ctx->FileSaveData1,"\n");
+                fprintf(ctx->FileSaveData1,"%s\t","Time(s)");
+                fprintf(ctx->FileSaveData1,"%s\t","Load_(N)");
+                fprintf(ctx->FileSaveData1,"%s\t","Disp.(mm)");
+                fprintf(ctx->FileSaveData1,"%s\t","Cell_P.(kPa)");
+                fprintf(ctx->FileSaveData1,"%s\t","ECellP.(kPa)");
+                fprintf(ctx->FileSaveData1,"%s\t","SP.Vol.(mm3)");
+                fprintf(ctx->FileSaveData1,"%s\t","V-LDT1_(mm)");
+                fprintf(ctx->FileSaveData1,"%s\t","V-LDT2_(mm)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH07_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH08_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH09_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH10_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH11_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH12_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH13_(V)");
+                fprintf(ctx->FileSaveData1,"%s\t","CH14_(V)");
+                fprintf(ctx->FileSaveData1,"%s\n","CH15_(V)");
             }
 
 
             // File for saving the voltage data
             pFileName0 = pFileName1;
-            pFileName0.Replace(".dat",".vlt");
+            pFileName0.Replace(".tsv","_v.tsv");
             if((err = fopen_s(&ctx->FileSaveData0,(LPCSTR)pFileName0, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData0,"%s    ","Time(s)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH00_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH01_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH02_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH03_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH04_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH05_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH06_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH07_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH08_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH09_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH10_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH11_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH12_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH13_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH14_(V)");
-                fprintf(ctx->FileSaveData0,"%s    ","CH15_(V)");
-                fprintf(ctx->FileSaveData0,"\n");
+                fprintf(ctx->FileSaveData0,"%s\t","Time(s)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH00_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH01_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH02_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH03_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH04_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH05_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH06_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH07_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH08_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH09_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH10_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH11_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH12_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH13_(V)");
+                fprintf(ctx->FileSaveData0,"%s\t","CH14_(V)");
+                fprintf(ctx->FileSaveData0,"%s\n","CH15_(V)");
             }
 
 
             // File for saving the parameter data
             pFileName2 = pFileName1;
-            pFileName2.Replace(".dat",".out");
+            pFileName2.Replace(".tsv","_p.tsv");
             if((err = fopen_s(&ctx->FileSaveData2,(LPCSTR)pFileName2, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData2,"%s    ","Time(s)");
-                fprintf(ctx->FileSaveData2,"%s    ","s(a)_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","s(r)_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","s'(a)(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","s'(r)(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","Pore_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","p____(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","q____(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","p'___(kPa)");
-                fprintf(ctx->FileSaveData2,"%s    ","e(a)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","e(r)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","e(v)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","eLDT1(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","eLDT2(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","AvLDT(%)_");
-                fprintf(ctx->FileSaveData2,"%s    ","(s'a+s'r)/2");
-                fprintf(ctx->FileSaveData2,"%s    ","(s'a-s'r)/2");
-                fprintf(ctx->FileSaveData2,"\n");
+                fprintf(ctx->FileSaveData2,"%s\t","Time(s)");
+                fprintf(ctx->FileSaveData2,"%s\t","s(a)_(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","s(r)_(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","s'(a)(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","s'(r)(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","Pore_(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","p____(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","q____(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","p'___(kPa)");
+                fprintf(ctx->FileSaveData2,"%s\t","e(a)_(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","e(r)_(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","e(v)_(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","eLDT1(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","eLDT2(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","AvLDT(%)_");
+                fprintf(ctx->FileSaveData2,"%s\t","(s'a+s'r)/2");
+                fprintf(ctx->FileSaveData2,"%s\n","(s'a-s'r)/2");
             }
 // Timer starts
             SetTimer(3,ctx->timeSettings.Interval3,NULL);
@@ -615,8 +598,6 @@ void CDigitShowBasicView::OnBUTTONStartSave()
         ctx->SpanTime = ctx->NowTime- ctx->StartTime;
         ctx->SequentTime1 = (long)ctx->SpanTime.GetTotalSeconds();
         if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
-        if(ctx->NumAD>2) Ret = AioStopAi(ctx->ad.Id[2]);
         ctx->FlagSaveData = TRUE;
         ctx->sampling.CurrentSamplingTimes = 0;
         pDoc->Allocate_Memory();
@@ -633,9 +614,7 @@ void CDigitShowBasicView::OnBUTTONStartSave()
         myBTN5->EnableWindow(FALSE);
         myBTN6->EnableWindow(FALSE);
         if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioResetAiMemory(ctx->ad.Id[1]);
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
     }
 }
 
@@ -671,11 +650,8 @@ void CDigitShowBasicView::OnBUTTONStopSave()
     if(ctx->FlagSaveData==TRUE && ctx->FlagFIFO==TRUE){
         ctx->FlagSaveData = FALSE;
         if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
         if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioResetAiMemory(ctx->ad.Id[1]);
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);    
         CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
@@ -727,14 +703,6 @@ void CDigitShowBasicView::OnBUTTONFIFOStart()
                 Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[0] , &ctx->ad.SamplingTimes[0] );
                 Ret = AioResetAiMemory(ctx->ad.Id[0]);
             }
-            if(ctx->NumAD>1)    {
-                Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , ctx->ad.SamplingClock[1] );
-                Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-                Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-                Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-                Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-                Ret = AioResetAiMemory(ctx->ad.Id[1]);
-            }
             Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
             ctx->sampling.SavingClock = ctx->ad.SamplingClock[0];
             ctx->FlagFIFO = TRUE;
@@ -742,7 +710,6 @@ void CDigitShowBasicView::OnBUTTONFIFOStart()
             myBTN2->EnableWindow(TRUE);
         }
         if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
     }
     else{
         AfxMessageBox("Board Setting has not been accomplished yet.", MB_OK | MB_ICONSTOP, 0);    
@@ -757,7 +724,6 @@ void CDigitShowBasicView::OnBUTTONFIFOStop()
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
     CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);    
     if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
     ctx->FlagFIFO = FALSE;
     myBTN1->EnableWindow(TRUE);
     myBTN2->EnableWindow(FALSE);
@@ -770,18 +736,8 @@ void CDigitShowBasicView::OnBUTTONFIFOStop()
         Ret = AioSetAiStopTrigger(ctx->ad.Id[0], 4);
         Ret = AioResetAiMemory(ctx->ad.Id[0]);
     }
-    if(ctx->NumAD>1)    {
-        Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , 1000 );
-        Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-        ctx->ad.SamplingTimes[1] = long(ctx->timeSettings.Interval1*1000/ctx->ad.SamplingClock[1]);
-        Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-        Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-        Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-        Ret = AioResetAiMemory(ctx->ad.Id[1]);
-    }
     Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
     if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
 }
 
 void CDigitShowBasicView::OnBUTTONWriteData() 
@@ -789,76 +745,73 @@ void CDigitShowBasicView::OnBUTTONWriteData()
     DigitShowContext* ctx = GetContext();
     long    Ret;
     if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
 
     CString    pFileName0, pFileName1,TmpString;
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_WriteData);
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
     errno_t err; 
 
-    CFileDialog SaveFile_dlg( FALSE, NULL, "*.dat",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
-    "Data Files(*.dat)|*.dat| All Files(*.*)|*.*| |",NULL);
+    CFileDialog SaveFile_dlg( FALSE, NULL, "*.tsv",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
+    "TSV Files(*.tsv)|*.tsv| All Files(*.*)|*.*| |",NULL);
     if (SaveFile_dlg.DoModal()==IDOK){
         // File for saving the physical data 
         pFileName1 = SaveFile_dlg.GetPathName();    
         m_FileName =    SaveFile_dlg.GetFileTitle();
         TmpString = SaveFile_dlg.GetFileExt();    
         if(TmpString == "" ){
-            TmpString =".dat";
+            TmpString =".tsv";
             pFileName1 = pFileName1+TmpString;
             m_FileName = m_FileName+TmpString;
         }
-        else if(TmpString != "dat"){
+        else if(TmpString != "tsv"){
             TmpString = _T(".")+TmpString;
-            pFileName1.Replace(TmpString,".dat");
-            m_FileName = m_FileName+_T(".dat");
+            pFileName1.Replace(TmpString,".tsv");
+            m_FileName = m_FileName+_T(".tsv");
         }
         if((err = fopen_s(&ctx->FileSaveData1,(LPCSTR)pFileName1 , _T("w"))) == 0)
         {
-            fprintf(ctx->FileSaveData1,"%s    ","Time(s)");
-            fprintf(ctx->FileSaveData1,"%s    ","Load_(N)");
-            fprintf(ctx->FileSaveData1,"%s    ","Disp.(mm)");
-            fprintf(ctx->FileSaveData1,"%s    ","Cell_P.(kPa)");
-            fprintf(ctx->FileSaveData1,"%s    ","E_Cell_P.(kPa)");
-            fprintf(ctx->FileSaveData1,"%s    ","SP.Vol.(cm3)");
-            fprintf(ctx->FileSaveData1,"%s    ","LDT-V1(mm)");
-            fprintf(ctx->FileSaveData1,"%s    ","LDT-V2(mm)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH07_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH08_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH09_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH10_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH11_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH12_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH13_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH14_(V)");
-            fprintf(ctx->FileSaveData1,"%s    ","CH15_(V)");
-            fprintf(ctx->FileSaveData1,"\n");
+            fprintf(ctx->FileSaveData1,"%s\t","Time(s)");
+            fprintf(ctx->FileSaveData1,"%s\t","Load_(N)");
+            fprintf(ctx->FileSaveData1,"%s\t","Disp.(mm)");
+            fprintf(ctx->FileSaveData1,"%s\t","Cell_P.(kPa)");
+            fprintf(ctx->FileSaveData1,"%s\t","E_Cell_P.(kPa)");
+            fprintf(ctx->FileSaveData1,"%s\t","SP.Vol.(cm3)");
+            fprintf(ctx->FileSaveData1,"%s\t","LDT-V1(mm)");
+            fprintf(ctx->FileSaveData1,"%s\t","LDT-V2(mm)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH07_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH08_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH09_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH10_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH11_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH12_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH13_(V)");
+            fprintf(ctx->FileSaveData1,"%s\t","CH14_(V)");
+            fprintf(ctx->FileSaveData1,"%s\n","CH15_(V)");
         }
 
 
         // File for saving the voltage data
         pFileName0 = pFileName1;
-        pFileName0.Replace(".dat",".vlt");
+        pFileName0.Replace(".tsv","_v.tsv");
         if((err = fopen_s(&ctx->FileSaveData0,(LPCSTR)pFileName0 , _T("w"))) == 0)
         {
-            fprintf(ctx->FileSaveData0,"%s    ","Time(s)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH00_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH01_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH02_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH03_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH04_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH05_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH06_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH07_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH08_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH09_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH10_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH11_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH12_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH13_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH14_(V)");
-            fprintf(ctx->FileSaveData0,"%s    ","CH15_(V)");
-            fprintf(ctx->FileSaveData0,"\n");
+            fprintf(ctx->FileSaveData0,"%s\t","Time(s)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH00_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH01_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH02_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH03_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH04_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH05_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH06_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH07_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH08_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH09_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH10_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH11_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH12_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH13_(V)");
+            fprintf(ctx->FileSaveData0,"%s\t","CH14_(V)");
+            fprintf(ctx->FileSaveData0,"%s\n","CH15_(V)");
         }
         pDoc -> SaveToFile2();
         fclose(ctx->FileSaveData0);
@@ -875,25 +828,15 @@ void CDigitShowBasicView::OnBUTTONWriteData()
         Ret = AioSetAiStopTrigger(ctx->ad.Id[0], 4);
         Ret = AioResetAiMemory(ctx->ad.Id[0]);
     }
-    if(ctx->NumAD>1)    {
-        Ret = AioSetAiSamplingClock ( ctx->ad.Id[1] , 1000 );
-        Ret = AioGetAiSamplingClock ( ctx->ad.Id[1] , &ctx->ad.SamplingClock[1] );
-        ctx->ad.SamplingTimes[1] = long(ctx->timeSettings.Interval1*1000/ctx->ad.SamplingClock[1]);
-        Ret = AioSetAiEventSamplingTimes ( ctx->ad.Id[1] , ctx->ad.SamplingTimes[1] );
-        Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[1] , &ctx->ad.SamplingTimes[1] );
-        Ret = AioSetAiStopTrigger(ctx->ad.Id[1], 4);
-        Ret = AioResetAiMemory(ctx->ad.Id[1]);
-    }
     Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[ctx->NumAD-1], ctx->ad.SamplingTimes[ctx->NumAD-1]);
     if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
-    if(ctx->NumAD>1) Ret = AioStartAi(ctx->ad.Id[1]);
 }
 
 LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
 {
     DigitShowContext* ctx = GetContext();
     int        i,j;
-    long    tmp,tmp0,tmp1;
+    long    tmp,tmp0;
     long    Ret,Ret2;
 
     switch(message){
@@ -902,20 +845,8 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
             Ret = AioGetAiSamplingCount ( ctx->ad.Id[0] , &tmp0 );
             tmp = tmp0;
         }
-        if(ctx->NumAD>1)    {
-            Ret = AioGetAiSamplingCount ( ctx->ad.Id[1] , &tmp1 );
-            if(tmp>tmp1) tmp = tmp1;
-        }
         if(ctx->NumAD>0){
             Ret = AioGetAiSamplingData(ctx->ad.Id[0], &tmp, &ctx->ad.Data0[0]);
-            if(Ret != 0){
-                Ret2 = AioGetErrorString(Ret, ctx->ErrorString);
-                ctx->TextString.Format("AioGetAiSamplingData = %d : %s", Ret, ctx->ErrorString);
-                AfxMessageBox(ctx->TextString, MB_ICONSTOP | MB_OK );
-            }
-        }
-        if(ctx->NumAD>1){
-            Ret = AioGetAiSamplingData(ctx->ad.Id[1], &tmp, &ctx->ad.Data1[0]);
             if(Ret != 0){
                 Ret2 = AioGetErrorString(Ret, ctx->ErrorString);
                 ctx->TextString.Format("AioGetAiSamplingData = %d : %s", Ret, ctx->ErrorString);
@@ -933,11 +864,6 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
                             *((PLONG)ctx->pSmplData0 + ctx->sampling.CurrentSamplingTimes*ctx->ad.Channels[0]/2+j) = ctx->ad.Data0[i*ctx->ad.Channels[0]+2*j];
                         }
                     }
-                    if(ctx->NumAD > 1){
-                        for(j = 0;j<ctx->ad.Channels[1]/2;j++){
-                            *((PLONG)ctx->pSmplData1 + ctx->sampling.CurrentSamplingTimes*ctx->ad.Channels[1]/2+j) = ctx->ad.Data1[i*ctx->ad.Channels[1]+2*j];
-                        }
-                    }
                     ctx->sampling.CurrentSamplingTimes = ctx->sampling.CurrentSamplingTimes+1;
                 }
             }
@@ -951,10 +877,6 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
             if(ctx->NumAD>0){
                 Ret = AioResetAiMemory(ctx->ad.Id[0]);
                 Ret = AioStartAi(ctx->ad.Id[0]);
-            }
-            if(ctx->NumAD>1){
-                Ret = AioResetAiMemory(ctx->ad.Id[1]);
-                Ret = AioStartAi(ctx->ad.Id[1]);
             }
             AfxMessageBox("FIFO sttoped by the over flow, but restarted automatically.", MB_OK | MB_ICONSTOP, 0);    
         }

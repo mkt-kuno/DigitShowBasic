@@ -97,7 +97,6 @@ CCalibrationFactor::CCalibrationFactor(CWnd* pParent /*=NULL*/)
     m_CFA15 = 0.0;
     m_CFB15 = 0.0;
     m_CFC15 = 0.0;
-    m_Channels = _T("");
     m_C00 = _T("");
     m_C01 = _T("");
     m_C02 = _T("");
@@ -185,7 +184,6 @@ void CCalibrationFactor::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_EDIT_CFC13, m_CFC13);
     DDX_Text(pDX, IDC_EDIT_CFC14, m_CFC14);
     DDX_Text(pDX, IDC_EDIT_CFC15, m_CFC15);
-    DDX_Text(pDX, IDC_EDIT_Channels, m_Channels);
     DDX_Text(pDX, IDC_STATIC_C00, m_C00);
     DDX_Text(pDX, IDC_STATIC_C01, m_C01);
     DDX_Text(pDX, IDC_STATIC_C02, m_C02);
@@ -243,7 +241,6 @@ BEGIN_MESSAGE_MAP(CCalibrationFactor, CDialog)
     ON_BN_CLICKED(IDC_BUTTON_Amp15, OnBUTTONAmp15)
     ON_BN_CLICKED(IDC_BUTTON_CFLoadFile, OnBUTTONCFLoadFile)
     ON_BN_CLICKED(IDC_BUTTON_CFSave, OnBUTTONCFSave)
-    ON_BN_CLICKED(IDC_BUTTON_ChannelChange, OnBUTTONChannelChange)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -253,7 +250,6 @@ END_MESSAGE_MAP()
 BOOL CCalibrationFactor::OnInitDialog() 
 {
     CDialog::OnInitDialog();
-    m_Channels = _T("CH0-CH15");
     CF_Load();
 
     
@@ -807,9 +803,4 @@ void CCalibrationFactor::OnBUTTONCFLoadFile()
             CF_Load();
         }
     }    
-}
-
-void CCalibrationFactor::OnBUTTONChannelChange() 
-{
-    // CH16-CH31 is no longer supported (NUM_PARAM_MAX = 16)
 }
