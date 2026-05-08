@@ -28,6 +28,12 @@
 #define AI_MAX_CHANNELS  16  // Maximum number of analog input channels (ai_raw / ai_phy array size)
 #define AO_MAX_CHANNELS   8  // Maximum number of analog output channels (ao_raw array size)
 
+// D/A channel index assignments (fixed hardware wiring)
+#define DA_CH_MOTOR         0    // Motor on/off (5V = on)
+#define DA_CH_MOTOR_CLUTCH  1    // Motor clutch (5V = engaged)
+#define DA_CH_MOTOR_SPEED   2    // Motor speed setpoint [V]
+#define DA_CH_EP_CELL       3    // Cell pressure [V]
+
 // ── Digital Filter / Board Constants ──────────────────────
 #define DSP_AD_CHANNELS   16     // Number of AD channels used (hard limit)
 #define DSP_DA_CHANNELS    8     // Number of DA channels used (= AO_MAX_CHANNELS)
@@ -86,34 +92,20 @@ struct ControlData {
  * Physical values
  */
 struct PhysicalValues {
-    double sa;
-    // axial stress
-    double e_sa;
-    // effective axial stress
-    double sr;
-    // radial stress
-    double e_sr;
-    // effective radial stress
-    double p;
-    // mean stress
-    double e_p;
-    // effective mean stress
-    double q;
-    // deviator stress
-    double u;
-    // pore pressure
-    double ea;
-    // axial strain
-    double er;
-    // radial strain
-    double ev;
-    // volumetric strain
-    double eLDT;
-    // LDT average strain
-    double eLDT1;
-    // LDT1 strain
-    double eLDT2;
-    // LDT2 strain
+    double sa;      // axial stress
+    double e_sa;    // effective axial stress
+    double sr;      // radial stress
+    double e_sr;    // effective radial stress
+    double p;       // mean stress
+    double e_p;     // effective mean stress
+    double q;       // deviator stress
+    double u;       // pore pressure
+    double ea;      // axial strain
+    double er;      // radial strain
+    double ev;      // volumetric strain
+    double eLDT;    // LDT average strain
+    double eLDT1;   // LDT1 strain
+    double eLDT2;   // LDT2 strain
 };
 
 /**
@@ -133,12 +125,6 @@ struct TimeSettings {
     unsigned int ControlInterval;   // ms — Timer 2: control feedback
     unsigned int SaveInterval;      // ms — Timer 3: data file write
 };
-
-// D/A channel index assignments (fixed hardware wiring)
-#define DA_CH_MOTOR         0    // Motor on/off (5V = on)
-#define DA_CH_MOTOR_CLUTCH  1    // Motor clutch (5V = engaged)
-#define DA_CH_MOTOR_SPEED   2    // Motor speed setpoint [V]
-#define DA_CH_EP_CELL       3    // Cell pressure [V]
 
 /**
  * Sampling settings
