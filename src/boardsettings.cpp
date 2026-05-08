@@ -73,26 +73,26 @@ BOOL CBoardSettings::OnInitDialog()
     CDialog::OnInitDialog();
     DigitShowContext* ctx = GetContext();
 
-    if(ctx->NumAD >0 && ctx->ad.InputMethod[0]==0) m_ADMethod0 ="Single Input";
-    if(ctx->NumAD >0 && ctx->ad.InputMethod[0]==1) m_ADMethod0 ="Differential Input";
-    if(ctx->NumAD >0 && ctx->ad.Resolution[0]==12) m_ADResolution0 ="12 bit";
-    if(ctx->NumAD >0 && ctx->ad.Resolution[0]==16) m_ADResolution0 ="16 bit";
+    if(ctx->NumAD >0 && ctx->ad.InputMethod==0) m_ADMethod0 ="Single Input";
+    if(ctx->NumAD >0 && ctx->ad.InputMethod==1) m_ADMethod0 ="Differential Input";
+    if(ctx->NumAD >0 && ctx->ad.Resolution==12) m_ADResolution0 ="12 bit";
+    if(ctx->NumAD >0 && ctx->ad.Resolution==16) m_ADResolution0 ="16 bit";
 
-    if(ctx->NumAD >0 && ctx->ad.Range[0]==0) m_ADRange0 ="-10V   +10V";
-    if(ctx->NumAD >0 && ctx->ad.Range[0]==1) m_ADRange0 ="-5V   +5V";
-    if(ctx->NumAD >0 && ctx->ad.Range[0]==50) m_ADRange0 ="0V   +10V";
-    if(ctx->NumAD >0 && ctx->ad.Range[0]==51) m_ADRange0 ="0V   +5V";
+    if(ctx->NumAD >0 && ctx->ad.Range==0) m_ADRange0 ="-10V   +10V";
+    if(ctx->NumAD >0 && ctx->ad.Range==1) m_ADRange0 ="-5V   +5V";
+    if(ctx->NumAD >0 && ctx->ad.Range==50) m_ADRange0 ="0V   +10V";
+    if(ctx->NumAD >0 && ctx->ad.Range==51) m_ADRange0 ="0V   +5V";
 
-    if(ctx->NumAD >0) m_ADMaxChannel0.Format("%3d",ctx->ad.Channels[0]/2);
+    if(ctx->NumAD >0) m_ADMaxChannel0.Format("%3d",ctx->ad.Channels/2);
     
-    if(ctx->NumDA >0 && ctx->da.Resolution[0]==12) m_DAResolution0 ="12 bit";
-    if(ctx->NumDA >0 && ctx->da.Resolution[0]==16) m_DAResolution0 ="16 bit";
+    if(ctx->NumDA >0 && ctx->da.Resolution==12) m_DAResolution0 ="12 bit";
+    if(ctx->NumDA >0 && ctx->da.Resolution==16) m_DAResolution0 ="16 bit";
 
-    if(ctx->NumDA >0 && ctx->da.Range[0]==0) m_DARange0 ="-10V   +10V";
-    if(ctx->NumDA >0 && ctx->da.Range[0]==1) m_DARange0 ="-5V   +5V";
-    if(ctx->NumDA >0 && ctx->da.Range[0]==50) m_DARange0 ="0V   +10V";
-    if(ctx->NumDA >0 && ctx->da.Range[0]==51) m_DARange0 ="0V   +5V";
-    if(ctx->NumDA >0) m_DAMaxChannel0.Format("%3d",ctx->da.Channels[0]);
+    if(ctx->NumDA >0 && ctx->da.Range==0) m_DARange0 ="-10V   +10V";
+    if(ctx->NumDA >0 && ctx->da.Range==1) m_DARange0 ="-5V   +5V";
+    if(ctx->NumDA >0 && ctx->da.Range==50) m_DARange0 ="0V   +10V";
+    if(ctx->NumDA >0 && ctx->da.Range==51) m_DARange0 ="0V   +5V";
+    if(ctx->NumDA >0) m_DAMaxChannel0.Format("%3d",ctx->da.Channels);
     UpdateData(FALSE);    
     return TRUE;
     // コントロールにフォーカスを設定しないとき、戻り値は TRUE となります

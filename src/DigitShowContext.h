@@ -22,6 +22,7 @@
 #pragma once
 
 #include <afxwin.h>
+#include <vector>
 
 #define NUM_PARAM_MAX    16  // Number of calibration parameter sets (cal.a/b/c array size)
 #define AI_MAX_CHANNELS  16  // Maximum number of analog input channels (ai_raw / ai_phy array size)
@@ -82,17 +83,6 @@ struct ControlData {
 };
 
 /**
- * Calibration data
- */
-struct CalibrationData {
-    double a[NUM_PARAM_MAX];
-    double b[NUM_PARAM_MAX];
-    double c[NUM_PARAM_MAX];
-    double DA_a[8];
-    double DA_b[8];
-};
-
-/**
  * Physical values
  */
 struct PhysicalValues {
@@ -139,23 +129,16 @@ struct ControlFileData {
  * Time settings
  */
 struct TimeSettings {
-    unsigned int Interval1;
-    // Time interval (ms) to display output data
-    unsigned int Interval2;
-    // Time interval (ms) to feed back
-    unsigned int Interval3;
-    // Time interval (ms) to save the data
+    unsigned int DisplayInterval;   // ms — Timer 1: AD acquire + display
+    unsigned int ControlInterval;   // ms — Timer 2: control feedback
+    unsigned int SaveInterval;      // ms — Timer 3: data file write
 };
 
-/**
- * D/A Channel assignments
- */
-struct DaChannelAssign {
-    int Motor;
-    int MotorCruch;
-    int MotorSpeed;
-    int EP_Cell;
-};
+// D/A channel index assignments (fixed hardware wiring)
+#define DA_CH_MOTOR         0    // Motor on/off (5V = on)
+#define DA_CH_MOTOR_CLUTCH  1    // Motor clutch (5V = engaged)
+#define DA_CH_MOTOR_SPEED   2    // Motor speed setpoint [V]
+#define DA_CH_EP_CELL       3    // Cell pressure [V]
 
 /**
  * Sampling settings
@@ -165,8 +148,6 @@ struct SamplingSettings {
     int   SavingTime;
     long  TotalSamplingTimes;
     long  CurrentSamplingTimes;
-    float AllocatedMemory;   // Estimated memory usage (MB)
-    // AvSmplNum removed — replaced by DSP_MA1_TAPS × DSP_MA2_TAPS cascade filter
 };
 
 /**
@@ -201,9 +182,6 @@ struct DspFilter {
  * Singleton pattern for global state management
  */
 struct DigitShowContext {
-    // Board configuration
-    DaChannelAssign daChannel;
-
     // Sampling and calibration
     SamplingSettings sampling;
 
@@ -219,6 +197,7 @@ struct DigitShowContext {
             double b[NUM_PARAM_MAX];   // linear coefficient
             double c[NUM_PARAM_MAX];   // offset
         } cal;
+        DspFilter dsp;                 // 20Hz-B MA5×MA6 filter state
     } ai;
 
     // Analog output setpoints [V]
@@ -242,8 +221,7 @@ struct DigitShowContext {
     ControlFileData controlFile;
     ErrorTolerance errTol;
 
-    // Digital filter state (20Hz-B: MA5 × MA6 @ 300 sps)
-    DspFilter dsp;
+    // Digital filter: DspFilter dsp moved into struct ai above
 
     // Control state
     int  ControlID;
@@ -284,29 +262,29 @@ struct DigitShowContext {
     int NumAD;
     int NumDA;
     struct AdBoardConfig {
-        short  Id[1];
-        short  Channels[1];
-        short  Range[1];
-        float  RangeMax[1];
-        float  RangeMin[1];
-        short  Resolution[1];
-        short  InputMethod[1];
-        short  MemoryType[1];
-        float  SamplingClock[1];
-        long   SamplingTimes[1];
-        float  ScanClock[1];
-        long   LastDataCount;        // actual scan count from last AioGetAiSamplingData
+        short  Id;
+        short  Channels;
+        short  Range;
+        float  RangeMax;
+        float  RangeMin;
+        short  Resolution;
+        short  InputMethod;
+        short  MemoryType;
+        float  SamplingClock;
+        long   SamplingTimes;
+        float  ScanClock;
+        long   LastDataCount;           // actual scan count from last AioGetAiSamplingData
         long   Data0[262144];
-        PVOID  pData;                    // heap-allocated FIFO recording buffer
+        std::vector<long> pData;        // FIFO recording buffer
     } ad;
     struct DaBoardConfig {
-        short  Id[1];
-        short  Channels[1];
-        short  Range[1];
-        float  RangeMax[1];
-        float  RangeMin[1];
-        short  Resolution[1];
-        long   Data[8];
+        short  Id;
+        short  Channels;
+        short  Range;
+        float  RangeMax;
+        float  RangeMin;
+        short  Resolution;
+        long   Data[AO_MAX_CHANNELS];
     } da;
     bool   FlagFIFO;
 };
