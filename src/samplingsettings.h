@@ -32,7 +32,6 @@ public:
     long    m_TimeInterval2;
     long    m_TimeInterval3;
     CString m_AllocatedMemory;
-    int     m_AvSmplNum;
     int     m_Channels;
     int     m_EventSamplingTimes;
     CString m_MemoryType;

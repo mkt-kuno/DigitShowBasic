@@ -147,40 +147,53 @@ void CDigitShowBasicDoc::OpenBoard()
                 }
             }
         }
-        // Set Sampling Condition
-        for(i = 0;i<ctx->NumAD;i++){
-            ctx->Ret = AioGetAiInputMethod ( ctx->ad.Id[i] , &ctx->ad.InputMethod[i] );
-            ctx->Ret = AioGetAiResolution ( ctx->ad.Id[i] , &ctx->ad.Resolution[i] );
-            ctx->Ret = AioGetAiMaxChannels ( ctx->ad.Id[i] , &ctx->ad.Channels[i] );
-            ctx->Ret = AioSetAiChannels ( ctx->ad.Id[i] , ctx->ad.Channels[i] );
-            ctx->AdMaxChannels = ctx->AdMaxChannels+ctx->ad.Channels[i]/2;
-            ctx->Ret = AioSetAiRangeAll ( ctx->ad.Id[i], 1 );
-            // (-5V, 5V)
-            ctx->Ret = AioGetAiRange ( ctx->ad.Id[i] , 0 , &ctx->ad.Range[i] );
-            ctx->Ret = GetRangeValue(ctx->ad.Range[i], &ctx->ad.RangeMax[i], &ctx->ad.RangeMin[i]);
-            ctx->Ret = AioGetAiMemoryType ( ctx->ad.Id[i] , &ctx->ad.MemoryType[i] );
-            ctx->Ret = AioGetAiSamplingClock ( ctx->ad.Id[i] , &ctx->ad.SamplingClock[i] );
-            //2020.02.13 M.Kuno ScanClock制御を追加
-            {
-                short maxChannels = 64;
-                ctx->Ret = AioGetAiMaxChannels(ctx->ad.Id[i], &maxChannels);
-                float scanClock = 1000.f / maxChannels;
-                ctx->Ret = AioSetAiScanClock(ctx->ad.Id[i], scanClock);
-                ctx->Ret = AioGetAiScanClock(ctx->ad.Id[i], &ctx->ad.ScanClock[i]);
-            }
-            ctx->Ret = AioGetAiEventSamplingTimes ( ctx->ad.Id[i] , &ctx->ad.SamplingTimes[i] );
+        // ── AD board (single, fixed) ──────────────────────────────
+        ctx->Ret = AioGetAiInputMethod(ctx->ad.Id[0], &ctx->ad.InputMethod[0]);
+        ctx->Ret = AioGetAiResolution (ctx->ad.Id[0], &ctx->ad.Resolution[0]);
+
+        short physicalChannels = 0;
+        ctx->Ret = AioGetAiMaxChannels(ctx->ad.Id[0], &physicalChannels);
+        if (physicalChannels < DSP_AD_CHANNELS) {
+            ctx->TextString.Format(
+                "AD board has only %d channels; %d are required. Aborting.",
+                (int)physicalChannels, DSP_AD_CHANNELS);
+            AfxMessageBox(ctx->TextString, MB_ICONSTOP | MB_OK);
+            AioExit(ctx->ad.Id[0]);
+            if (ctx->NumDA > 0) AioExit(ctx->da.Id[0]);
+            return;
         }
+        ctx->ad.Channels[0] = DSP_AD_CHANNELS;   // clamp to 16
+        ctx->Ret = AioSetAiChannels(ctx->ad.Id[0], ctx->ad.Channels[0]);
+
+        ctx->Ret = AioSetAiRangeAll(ctx->ad.Id[0], 1);   // ±5 V
+        ctx->Ret = AioGetAiRange   (ctx->ad.Id[0], 0, &ctx->ad.Range[0]);
+        ctx->Ret = GetRangeValue   (ctx->ad.Range[0], &ctx->ad.RangeMax[0], &ctx->ad.RangeMin[0]);
+        ctx->Ret = AioGetAiMemoryType(ctx->ad.Id[0], &ctx->ad.MemoryType[0]);
+
+        // ScanClock: floor(208.33) = 208 µs/ch → slightly above 300 sps/ch
+        // Round DOWN (floor) so the board clock period is never too long.
+        const float scanClock_us =
+            floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
+        ctx->Ret = AioSetAiScanClock    (ctx->ad.Id[0], scanClock_us);
+        ctx->Ret = AioGetAiScanClock    (ctx->ad.Id[0], &ctx->ad.ScanClock[0]);
+        ctx->Ret = AioGetAiSamplingClock(ctx->ad.Id[0], &ctx->ad.SamplingClock[0]);
+        ctx->Ret = AioGetAiEventSamplingTimes(ctx->ad.Id[0], &ctx->ad.SamplingTimes[0]);
+
         ctx->sampling.SavingTime = 300;
-        ctx->sampling.TotalSamplingTimes = long(ctx->sampling.SavingTime*1000000/ctx->ad.SamplingClock[0]);
-        ctx->sampling.AllocatedMemory = 4*ctx->AdMaxChannels* ctx->sampling.TotalSamplingTimes/1024.0f/1024.0f;
-        ctx->sampling.AvSmplNum = 20;
-        for(i = 0;i<ctx->NumDA;i++){
-            ctx->Ret = AioGetAoResolution ( ctx->da.Id[i] , &ctx->da.Resolution[i] );
-            ctx->Ret = AioGetAoMaxChannels ( ctx->da.Id[i] , &ctx->da.Channels[i] );
-            ctx->Ret = AioSetAoRangeAll ( ctx->da.Id[i] , 50 );
-            // 0 - 10V
-            ctx->Ret = AioGetAoRange ( ctx->da.Id[i] , 0 , &ctx->da.Range[i] );
-            ctx->Ret = GetRangeValue(ctx->da.Range[i], &ctx->da.RangeMax[i], &ctx->da.RangeMin[i]);
+        ctx->sampling.TotalSamplingTimes =
+            long(ctx->sampling.SavingTime * 1000000L / ctx->ad.SamplingClock[0]);
+        ctx->sampling.AllocatedMemory =
+            4.0f * DSP_AD_CHANNELS * ctx->sampling.TotalSamplingTimes / 1024.0f / 1024.0f;
+
+        // ── DA board (single, fixed) ──────────────────────────────
+        if (ctx->NumDA > 0) {
+            ctx->Ret = AioGetAoResolution (ctx->da.Id[0], &ctx->da.Resolution[0]);
+            short daPhys = 0;
+            ctx->Ret = AioGetAoMaxChannels(ctx->da.Id[0], &daPhys);
+            ctx->da.Channels[0] = (daPhys > DSP_DA_CHANNELS) ? DSP_DA_CHANNELS : daPhys;
+            ctx->Ret = AioSetAoRangeAll(ctx->da.Id[0], 50);   // 0–10 V
+            ctx->Ret = AioGetAoRange   (ctx->da.Id[0], 0, &ctx->da.Range[0]);
+            ctx->Ret = GetRangeValue   (ctx->da.Range[0], &ctx->da.RangeMax[0], &ctx->da.RangeMin[0]);
         }
         ctx->FlagSetBoard = TRUE;
     }
@@ -197,19 +210,48 @@ void CDigitShowBasicDoc::CloseBoard()
     }
 }
 
-//--- Input from A/D Board ---
+//--- Input from A/D Board (20Hz-B: cascaded MA5 × MA6 @ 300 sps) ---
 void CDigitShowBasicDoc::AD_INPUT()
 {
     DigitShowContext* ctx = GetContext();
-    int    i,j,k;
-    k = 0;
-    if(ctx->NumAD>0){
-        for(i = 0;i<ctx->ad.Channels[0]/2;i++){
-            ctx->ai_raw[k] = 0.0f;
-            for(j = 0;j<ctx->sampling.AvSmplNum;j++){
-                ctx->ai_raw[k] = ctx->ai_raw[k]+BinaryToVolt(ctx->ad.RangeMax[0], ctx->ad.RangeMin[0], ctx->ad.Resolution[0], ctx->ad.Data0[ctx->ad.Channels[0]*j+2*i])/float(ctx->sampling.AvSmplNum);
-            }
-            k = k+1;
+    if (ctx->NumAD <= 0) return;
+
+    const int   N1   = DSP_MA1_TAPS;          // 5
+    const int   N2   = DSP_MA2_TAPS;          // 6
+    const float inv1 = 1.0f / float(N1);
+    const float inv2 = 1.0f / float(N2);
+    const int   nCh  = ctx->ad.Channels[0];   // always DSP_AD_CHANNELS = 16
+
+    const long nScans = ctx->ad.LastDataCount;
+    if (nScans <= 0) return;
+
+    DspFilter& d = ctx->dsp;
+
+    for (long scan = 0; scan < nScans; scan++) {
+        for (int ch = 0; ch < nCh; ch++) {
+            // Raw ADC value — 16-ch layout: Data0[scan * nCh + ch]
+            float raw = BinaryToVolt(
+                ctx->ad.RangeMax[0], ctx->ad.RangeMin[0],
+                ctx->ad.Resolution[0],
+                ctx->ad.Data0[nCh * scan + ch]);
+
+            // Stage 1: MA(5) — 60 Hz notch
+            int   i1   = d.ma1_idx[ch];
+            float old1 = d.ma1_buf[ch][i1];
+            d.ma1_sum[ch] += raw - old1;
+            d.ma1_buf[ch][i1] = raw;
+            d.ma1_idx[ch] = (i1 + 1 >= N1) ? 0 : i1 + 1;
+            float out1 = float(d.ma1_sum[ch] * inv1);
+
+            // Stage 2: MA(6) — 50 Hz notch
+            int   i2   = d.ma2_idx[ch];
+            float old2 = d.ma2_buf[ch][i2];
+            d.ma2_sum[ch] += out1 - old2;
+            d.ma2_buf[ch][i2] = out1;
+            d.ma2_idx[ch] = (i2 + 1 >= N2) ? 0 : i2 + 1;
+
+            // Output: latest filtered value for this channel
+            ctx->ai_raw[ch] = float(d.ma2_sum[ch] * inv2);
         }
     }
 }
@@ -218,17 +260,17 @@ void CDigitShowBasicDoc::AD_INPUT()
 void CDigitShowBasicDoc::DA_OUTPUT()
 {
     DigitShowContext* ctx = GetContext();
-    int    i,j,k;
-    k = 0;
-    for(i = 0;i<ctx->NumDA;i++){
-        for(j = 0;j<ctx->da.Channels[i];j++){
-            if(ctx->ao_raw[k]<0.0f)    ctx->ao_raw[k] = 0.0f;
-            if(ctx->ao_raw[k]>9.9999f) ctx->ao_raw[k] = 9.9999f;
-            ctx->da.Data[j] = VoltToBinary(ctx->da.RangeMax[i], ctx->da.RangeMin[i], ctx->da.Resolution[i], ctx->ao_raw[k]);
-            k = k+1;
-        }
-        ctx->Ret = AioMultiAo(ctx->da.Id[i], ctx->da.Channels[i], &ctx->da.Data[0]);
+    if (ctx->NumDA <= 0) return;
+
+    const int nCh = ctx->da.Channels[0];   // clamped to DSP_DA_CHANNELS = 8
+    for (int j = 0; j < nCh; j++) {
+        if (ctx->ao_raw[j] < 0.0f)     ctx->ao_raw[j] = 0.0f;
+        if (ctx->ao_raw[j] > 9.9999f)  ctx->ao_raw[j] = 9.9999f;
+        ctx->da.Data[j] = VoltToBinary(
+            ctx->da.RangeMax[0], ctx->da.RangeMin[0],
+            ctx->da.Resolution[0], ctx->ao_raw[j]);
     }
+    ctx->Ret = AioMultiAo(ctx->da.Id[0], nCh, &ctx->da.Data[0]);
 }
 
 //--- Calcuration of Physical Value ---
@@ -313,62 +355,62 @@ void CDigitShowBasicDoc::Cal_Param()
 void CDigitShowBasicDoc::SaveToFile()
 {
     DigitShowContext* ctx = GetContext();
-    // Save Voltage and Physical Data
-    int    i,j,k;
+    fprintf(ctx->FileSaveData0, "%.3lf\t", ctx->SequentTime2);
+    fprintf(ctx->FileSaveData1, "%.3lf\t", ctx->SequentTime2);
 
-    k = 0;
-    fprintf(ctx->FileSaveData0,"%.3lf\t",ctx->SequentTime2);
-    fprintf(ctx->FileSaveData1,"%.3lf\t",ctx->SequentTime2);
-    for(i = 0;i<ctx->NumAD;i++){
-        for(j = 0;j<ctx->ad.Channels[i]/2;j++){
-            fprintf(ctx->FileSaveData0,"%lf\t",ctx->ai_raw[k]);
-            fprintf(ctx->FileSaveData1,"%lf\t",ctx->ai_phy[k]);
-            k = k+1;
-        }
+    // Single AD board, all DSP_AD_CHANNELS channels
+    for (int j = 0; j < ctx->ad.Channels[0]; j++) {
+        fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai_raw[j]);
+        fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai_phy[j]);
     }
-    fprintf(ctx->FileSaveData0,"\n");
-    fprintf(ctx->FileSaveData1,"\n");
-    // Save Parameter Data
-    fprintf(ctx->FileSaveData2,"%.3lf\t",ctx->SequentTime2);    
-    for(i = 0;i<AI_MAX_CHANNELS;i++){
-        fprintf(ctx->FileSaveData2,"%lf\t",ctx->ai_param[i]);
+    fprintf(ctx->FileSaveData0, "\n");
+    fprintf(ctx->FileSaveData1, "\n");
+
+    fprintf(ctx->FileSaveData2, "%.3lf\t", ctx->SequentTime2);
+    for (int i = 0; i < AI_MAX_CHANNELS; i++) {
+        fprintf(ctx->FileSaveData2, "%lf\t", ctx->ai_param[i]);
     }
-    fprintf(ctx->FileSaveData2,"\n");
+    fprintf(ctx->FileSaveData2, "\n");
 }
 
 void CDigitShowBasicDoc::SaveToFile2()
 {
     DigitShowContext* ctx = GetContext();
-    int    i,j,k;
-    for(i = 0;i<ctx->sampling.CurrentSamplingTimes;i++){
-        k = 0;
-        fprintf(ctx->FileSaveData0,"%.3lf\t",ctx->sampling.SavingClock/1000000.0*i);
-        fprintf(ctx->FileSaveData1,"%.3lf\t",ctx->sampling.SavingClock/1000000.0*i);
-        if(ctx->NumAD>0){
-            for(j = 0;j<ctx->ad.Channels[0]/2;j++){
-                ctx->ai_raw_temp = BinaryToVolt(ctx->ad.RangeMax[0], ctx->ad.RangeMin[0], ctx->ad.Resolution[0], *((PLONG)ctx->pSmplData0+i*ctx->ad.Channels[0]/2+j));
-                ctx->ai_phy_temp = ctx->cal.a[k]*ctx->ai_raw_temp*ctx->ai_raw_temp+ctx->cal.b[k]*ctx->ai_raw_temp+ctx->cal.c[k];
-                k = k+1;
-                fprintf(ctx->FileSaveData0,"%lf\t",ctx->ai_raw_temp);
-                fprintf(ctx->FileSaveData1,"%lf\t",ctx->ai_phy_temp);
-            }
+    const int nCh = ctx->ad.Channels[0];   // 16
+
+    for (long i = 0; i < ctx->sampling.CurrentSamplingTimes; i++) {
+        fprintf(ctx->FileSaveData0, "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
+        fprintf(ctx->FileSaveData1, "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
+        int k = 0;
+        for (int j = 0; j < nCh; j++) {
+            ctx->ai_raw_temp = BinaryToVolt(
+                ctx->ad.RangeMax[0], ctx->ad.RangeMin[0],
+                ctx->ad.Resolution[0],
+                *((PLONG)ctx->ad.pData + i * nCh + j));   // stride = nCh (no /2)
+            ctx->ai_phy_temp = ctx->cal.a[k] * ctx->ai_raw_temp * ctx->ai_raw_temp
+                             + ctx->cal.b[k] * ctx->ai_raw_temp
+                             + ctx->cal.c[k];
+            k++;
+            fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai_raw_temp);
+            fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai_phy_temp);
         }
-        fprintf(ctx->FileSaveData0,"\n");
-        fprintf(ctx->FileSaveData1,"\n");
+        fprintf(ctx->FileSaveData0, "\n");
+        fprintf(ctx->FileSaveData1, "\n");
     }
 }
 
 void CDigitShowBasicDoc::Allocate_Memory()
 {
     DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSaveData==TRUE){
-        if(ctx->NumAD>0){
-            ctx->hHeap0 = GetProcessHeap();
-            ctx->pSmplData0 = HeapAlloc(ctx->hHeap0,HEAP_ZERO_MEMORY,unsigned long(ctx->sampling.TotalSamplingTimes*ctx->ad.Channels[0]/2*sizeof(LONG)));
-        }
+    if (ctx->FlagSaveData == TRUE) {
+        ctx->ad.pData = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+            (size_t)ctx->sampling.TotalSamplingTimes
+            * ctx->ad.Channels[0]   // 16, no /2
+            * sizeof(LONG));
     }
-    if(ctx->FlagSaveData==FALSE){
-        if(ctx->NumAD>0)    HeapFree(ctx->hHeap0,0,ctx->pSmplData0);
+    if (ctx->FlagSaveData == FALSE) {
+        HeapFree(GetProcessHeap(), 0, ctx->ad.pData);
+        ctx->ad.pData = nullptr;
     }
 }
 

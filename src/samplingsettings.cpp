@@ -34,7 +34,6 @@ CSamplingSettings::CSamplingSettings(CWnd* pParent)
     m_TimeInterval2 = 0;
     m_TimeInterval3 = 0;
     m_AllocatedMemory = _T("");
-    m_AvSmplNum = 0;
     m_Channels = 0;
     m_EventSamplingTimes = 0;
     m_MemoryType = _T("");
@@ -50,7 +49,6 @@ void CSamplingSettings::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_EDIT_TimeInterval2, m_TimeInterval2);
     DDX_Text(pDX, IDC_EDIT_TimeInterval3, m_TimeInterval3);
     DDX_Text(pDX, IDC_EDIT_AllocatedMemory, m_AllocatedMemory);
-    DDX_Text(pDX, IDC_EDIT_AvSmplNum, m_AvSmplNum);
     DDX_Text(pDX, IDC_EDIT_Channels, m_Channels);
     DDX_Text(pDX, IDC_EDIT_EventSamplingTimes, m_EventSamplingTimes);
     DDX_Text(pDX, IDC_EDIT_MemoryType, m_MemoryType);
@@ -79,9 +77,8 @@ BOOL CSamplingSettings::OnInitDialog()
     m_TimeInterval2 = ctx->timeSettings.Interval2;
     m_TimeInterval3 = ctx->timeSettings.Interval3;
     m_AllocatedMemory.Format("%.1f", ctx->sampling.AllocatedMemory);
-    m_Channels = ctx->AdMaxChannels;
+    m_Channels = DSP_AD_CHANNELS;
     m_EventSamplingTimes = ctx->ad.SamplingTimes[0];
-    m_AvSmplNum = ctx->sampling.AvSmplNum;
     if(ctx->ad.MemoryType[0]==0) m_MemoryType = _T("FIFO");
     if(ctx->ad.MemoryType[0]==1) m_MemoryType = _T("RING");
     m_SamplingClock = ctx->ad.SamplingClock[0]/1000.0f;
@@ -105,7 +102,7 @@ void CSamplingSettings::OnBUTTONCheck()
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
     m_TotalSamplingTimes = long(m_SavingTime*1000/m_SamplingClock);
-    m_AllocatedMemory.Format("%.1f",4*ctx->AdMaxChannels*m_TotalSamplingTimes/1024.0f/1024.0f);
+    m_AllocatedMemory.Format("%.1f",4*DSP_AD_CHANNELS*m_TotalSamplingTimes/1024.0f/1024.0f);
     m_EventSamplingTimes = long(ctx->timeSettings.Interval1/m_SamplingClock);
     UpdateData(FALSE);
 
@@ -123,7 +120,7 @@ void CSamplingSettings::OnOK()
     ctx->sampling.SavingTime = m_SavingTime;
     ctx->ad.SamplingTimes[0] = m_EventSamplingTimes;
     ctx->sampling.TotalSamplingTimes = long(ctx->sampling.SavingTime*1000000/ctx->ad.SamplingClock[0]);
-    ctx->sampling.AllocatedMemory = 4*ctx->AdMaxChannels*m_TotalSamplingTimes/1024.0f/1024.0f;
+    ctx->sampling.AllocatedMemory = 4*DSP_AD_CHANNELS*m_TotalSamplingTimes/1024.0f/1024.0f;
     m_AllocatedMemory.Format("%.1f", ctx->sampling.AllocatedMemory);
     m_TotalSamplingTimes = ctx->sampling.TotalSamplingTimes;
     UpdateData(FALSE);

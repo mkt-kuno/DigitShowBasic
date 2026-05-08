@@ -27,6 +27,16 @@
 #define AI_MAX_CHANNELS  16  // Maximum number of analog input channels (ai_raw / ai_phy array size)
 #define AO_MAX_CHANNELS   8  // Maximum number of analog output channels (ao_raw array size)
 
+// ── Digital Filter / Board Constants ──────────────────────
+#define DSP_AD_CHANNELS   16     // Number of AD channels used (hard limit)
+#define DSP_DA_CHANNELS    8     // Number of DA channels used (= AO_MAX_CHANNELS)
+#define DSP_FS_HZ        300     // AD sampling rate [sps/ch]
+#define DSP_MA1_TAPS       5     // Stage-1 MA taps  → notch at Fs/5 = 60 Hz
+#define DSP_MA2_TAPS       6     // Stage-2 MA taps  → notch at Fs/6 = 50 Hz
+// Group delay = (MA1_TAPS-1 + MA2_TAPS-1) / (2*Fs) = 15 ms
+// -3dB ~ 18 Hz
+// ScanClock = 1e6 / (DSP_FS_HZ * DSP_AD_CHANNELS) = 208.33 µs/ch
+
 /**
  * Specimen data structure
  */
@@ -156,7 +166,7 @@ struct SamplingSettings {
     long  TotalSamplingTimes;
     long  CurrentSamplingTimes;
     float AllocatedMemory;   // Estimated memory usage (MB)
-    int   AvSmplNum;         // Number of samples to average per channel
+    // AvSmplNum removed — replaced by DSP_MA1_TAPS × DSP_MA2_TAPS cascade filter
 };
 
 /**
@@ -169,6 +179,21 @@ struct ErrorTolerance {
     // Extension stress tolerance (kPa)
     double StressA;
     // General stress tolerance (kPa)
+};
+
+/**
+ * Cascaded sliding-window MA filter state (20Hz-B design)
+ * Stage 1: MA(DSP_MA1_TAPS) — 60 Hz notch
+ * Stage 2: MA(DSP_MA2_TAPS) — 50 Hz notch
+ */
+struct DspFilter {
+    float  ma1_buf[AI_MAX_CHANNELS][DSP_MA1_TAPS];
+    double ma1_sum[AI_MAX_CHANNELS];
+    int    ma1_idx[AI_MAX_CHANNELS];
+
+    float  ma2_buf[AI_MAX_CHANNELS][DSP_MA2_TAPS];
+    double ma2_sum[AI_MAX_CHANNELS];
+    int    ma2_idx[AI_MAX_CHANNELS];
 };
 
 /**
@@ -203,6 +228,9 @@ struct DigitShowContext {
     ControlFileData controlFile;
     ErrorTolerance errTol;
 
+    // Digital filter state (20Hz-B: MA5 × MA6 @ 300 sps)
+    DspFilter dsp;
+
     // Control state
     int  ControlID;
     int  NumCyclic;
@@ -227,10 +255,6 @@ struct DigitShowContext {
     double SequentTime2;
     double CtrlStepTime;
 
-    // Memory management
-    PVOID  pSmplData0;
-    HANDLE hHeap0;
-
     // File handles
     FILE* FileSaveData0;
     FILE* FileSaveData1;
@@ -242,13 +266,9 @@ struct DigitShowContext {
     char    ErrorString[256];
     CString TextString;
 
-    // Event handling
-    long AdEvent;
-    
     // CAIO board configuration (CONTEC AIO)
     int NumAD;
     int NumDA;
-    int AdMaxChannels;
     struct AdBoardConfig {
         short  Id[1];
         short  Channels[1];
@@ -261,7 +281,9 @@ struct DigitShowContext {
         float  SamplingClock[1];
         long   SamplingTimes[1];
         float  ScanClock[1];
+        long   LastDataCount;        // actual scan count from last AioGetAiSamplingData
         long   Data0[262144];
+        PVOID  pData;                    // heap-allocated FIFO recording buffer
     } ad;
     struct DaBoardConfig {
         short  Id[1];
