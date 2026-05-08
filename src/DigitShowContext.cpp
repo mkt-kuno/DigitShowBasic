@@ -40,29 +40,22 @@ void InitContext(DigitShowContext* ctx)
     ctx->NumAD = 1;
     ctx->NumDA = 0;
 
-    // Initialize A/D board config
-    memset(&ctx->ad, 0, sizeof(ctx->ad));
+    // Initialize A/D board config (zero all POD fields; pData vector default-inits empty)
+    ctx->ad = {};
     
     // Initialize D/A board config
     memset(&ctx->da, 0, sizeof(ctx->da));
-    
-    // Initialize D/A channel assignments
-    ctx->daChannel.Motor = 0;
-    ctx->daChannel.MotorCruch = 1;
-    ctx->daChannel.MotorSpeed = 2;
-    ctx->daChannel.EP_Cell = 3;
 
     // Initialize sampling settings
     ctx->sampling.SavingClock = 0.0f;
     ctx->sampling.SavingTime = 300;
     ctx->sampling.TotalSamplingTimes = 0;
     ctx->sampling.CurrentSamplingTimes = 0;
-    ctx->sampling.AllocatedMemory = 0.0f;
 
     ctx->ad.LastDataCount = 0;
 
     // Initialize digital filter state (20Hz-B: MA5 × MA6 @ 300 sps)
-    memset(&ctx->dsp, 0, sizeof(ctx->dsp));
+    memset(&ctx->ai.dsp, 0, sizeof(ctx->ai.dsp));
 
     // Initialize flags
     ctx->FlagSetBoard = false;
@@ -83,9 +76,9 @@ void InitContext(DigitShowContext* ctx)
     ctx->CtrlStepTime = 0.0;
 
     // Initialize time intervals (ms)
-    ctx->timeSettings.Interval1 = 50;
-    ctx->timeSettings.Interval2 = 500;
-    ctx->timeSettings.Interval3 = 1000;
+    ctx->timeSettings.DisplayInterval = 50;
+    ctx->timeSettings.ControlInterval = 500;
+    ctx->timeSettings.SaveInterval = 1000;
 
     // Initialize physical values
     ctx->phys.sa = 0.0;
@@ -107,9 +100,6 @@ void InitContext(DigitShowContext* ctx)
     ctx->area = 0.0;
     ctx->ai.raw_temp = 0.0f;
     ctx->ai.phy_temp = 0.0;
-
-    // Initialize ad.pData
-    ctx->ad.pData = nullptr;
 
     // Initialize file handles
     ctx->FileSaveData0 = nullptr;
@@ -203,17 +193,11 @@ void InitContext(DigitShowContext* ctx)
     ctx->errTol.StressExt = -0.5;
     ctx->errTol.StressA = 0.1;
 
-    // D/A channel assignments
-    ctx->daChannel.Motor = 0;
-    ctx->daChannel.MotorCruch = 1;
-    ctx->daChannel.MotorSpeed = 2;
-    ctx->daChannel.EP_Cell = 3;
-
     // D/A calibration for motor speed (V/rpm)
-    ctx->ao.cal.a[ctx->daChannel.MotorSpeed] = 0.003378059;
-    ctx->ao.cal.b[ctx->daChannel.MotorSpeed] = 0.0;
+    ctx->ao.cal.a[DA_CH_MOTOR_SPEED] = 0.003378059;
+    ctx->ao.cal.b[DA_CH_MOTOR_SPEED] = 0.0;
 
     // D/A calibration for cell pressure (V/kPa)
-    ctx->ao.cal.a[ctx->daChannel.EP_Cell] = 0.003401361;
-    ctx->ao.cal.b[ctx->daChannel.EP_Cell] = 0.0;
+    ctx->ao.cal.a[DA_CH_EP_CELL] = 0.003401361;
+    ctx->ao.cal.b[DA_CH_EP_CELL] = 0.0;
 }

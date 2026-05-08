@@ -112,7 +112,7 @@ CDigitShowBasicView::CDigitShowBasicView()
     m_Ctrl_ID = 0;
     m_NowTime = _T("");
     m_SeqTime = 0;
-    m_SamplingTime = ctx->timeSettings.Interval3;
+    m_SamplingTime = ctx->timeSettings.SaveInterval;
     m_FileName = _T("");
     //}}AFX_DATA_INIT
 
@@ -279,28 +279,28 @@ void CDigitShowBasicView::OnInitialUpdate()
             // floor() rounds toward shorter period to avoid board init failure
             const float scanClock_us =
                 floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
-            Ret = AioSetAiSamplingClock(ctx->ad.Id[0], scanClock_us * DSP_AD_CHANNELS);
-            Ret = AioGetAiSamplingClock(ctx->ad.Id[0], &ctx->ad.SamplingClock[0]);
-            Ret = AioSetAiScanClock    (ctx->ad.Id[0], scanClock_us);
-            Ret = AioGetAiScanClock    (ctx->ad.Id[0], &ctx->ad.ScanClock[0]);
+            Ret = AioSetAiSamplingClock(ctx->ad.Id, scanClock_us * DSP_AD_CHANNELS);
+            Ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
+            Ret = AioSetAiScanClock    (ctx->ad.Id, scanClock_us);
+            Ret = AioGetAiScanClock    (ctx->ad.Id, &ctx->ad.ScanClock);
 
             // EventSamplingTimes: scans accumulated per Interval1 ms
-            ctx->ad.SamplingTimes[0] =
-                long(ctx->timeSettings.Interval1 * 1000.0f
+            ctx->ad.SamplingTimes =
+                long(ctx->timeSettings.DisplayInterval * 1000.0f
                      / (scanClock_us * DSP_AD_CHANNELS));
-            if (ctx->ad.SamplingTimes[0] < 1) ctx->ad.SamplingTimes[0] = 1;
+            if (ctx->ad.SamplingTimes < 1) ctx->ad.SamplingTimes = 1;
 
-            Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[0], ctx->ad.SamplingTimes[0]);
-            Ret = AioGetAiEventSamplingTimes(ctx->ad.Id[0], &ctx->ad.SamplingTimes[0]);
-            Ret = AioSetAiStopTrigger(ctx->ad.Id[0], 4);
-            Ret = AioResetAiMemory   (ctx->ad.Id[0]);
+            Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
+            Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
+            Ret = AioSetAiStopTrigger(ctx->ad.Id, 4);
+            Ret = AioResetAiMemory   (ctx->ad.Id);
         }
         const long adEvent = AIE_DATA_NUM | AIE_OFERR | AIE_SCERR | AIE_ADERR;
-        Ret = AioSetAiEvent(ctx->ad.Id[0], m_hWnd, adEvent);
-        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[0], ctx->ad.SamplingTimes[0]);
-        if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id[0]);
+        Ret = AioSetAiEvent(ctx->ad.Id, m_hWnd, adEvent);
+        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
+        if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id);
     }
-    SetTimer(1,ctx->timeSettings.Interval1,NULL);    
+    SetTimer(1,ctx->timeSettings.DisplayInterval,NULL);    
 }
 
 HBRUSH CDigitShowBasicView::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
@@ -440,8 +440,8 @@ void CDigitShowBasicView::ShowData()
     m_Ctrl_ID = ctx->ControlID;
     m_NowTime = ctx->SNowTime;
     m_SeqTime = ctx->SequentTime1;
-    m_SamplingTime = ctx->timeSettings.Interval3;
-    if(ctx->FlagFIFO) m_SamplingTime = long(ctx->ad.SamplingClock[0]/1.0E+03);
+    m_SamplingTime = ctx->timeSettings.SaveInterval;
+    if(ctx->FlagFIFO) m_SamplingTime = long(ctx->ad.SamplingClock/1.0E+03);
     UpdateData(FALSE);
 }
 
@@ -451,7 +451,7 @@ void CDigitShowBasicView::OnBUTTONCtrlOn()
 
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
     if(ctx->FlagSetBoard){
-        SetTimer(2,ctx->timeSettings.Interval2,NULL);
+        SetTimer(2,ctx->timeSettings.ControlInterval,NULL);
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_CtrlOn);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_CtrlOff);
         myBTN1->EnableWindow(FALSE);    
@@ -573,7 +573,7 @@ void CDigitShowBasicView::OnBUTTONStartSave()
                 fprintf(ctx->FileSaveData2,"%s\n","(s'a-s'r)/2");
             }
 // Timer starts
-            SetTimer(3,ctx->timeSettings.Interval3,NULL);
+            SetTimer(3,ctx->timeSettings.SaveInterval,NULL);
             ctx->NowTime = ctx->NowTime.GetCurrentTime();
             ctx->StartTime = ctx->NowTime;
             ctx->SpanTime = ctx->NowTime- ctx->StartTime;
@@ -603,7 +603,7 @@ void CDigitShowBasicView::OnBUTTONStartSave()
         ctx->StartTime = ctx->NowTime;
         ctx->SpanTime = ctx->NowTime- ctx->StartTime;
         ctx->SequentTime1 = (long)ctx->SpanTime.GetTotalSeconds();
-        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
+        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
         ctx->FlagSaveData = TRUE;
         ctx->sampling.CurrentSamplingTimes = 0;
         pDoc->Allocate_Memory();
@@ -619,8 +619,8 @@ void CDigitShowBasicView::OnBUTTONStartSave()
         myBTN4->EnableWindow(FALSE);
         myBTN5->EnableWindow(FALSE);
         myBTN6->EnableWindow(FALSE);
-        if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id[0]);
-        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
+        if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id);
+        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id);
     }
 }
 
@@ -655,9 +655,9 @@ void CDigitShowBasicView::OnBUTTONStopSave()
     }
     if(ctx->FlagSaveData==TRUE && ctx->FlagFIFO==TRUE){
         ctx->FlagSaveData = FALSE;
-        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id[0]);
-        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
+        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
+        if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id);
+        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id);
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);    
         CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
@@ -696,26 +696,25 @@ void CDigitShowBasicView::OnBUTTONFIFOStart()
     CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);    
 
     if(ctx->FlagSetBoard==TRUE){
-        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
-        if(ctx->NumAD>1) Ret = AioStopAi(ctx->ad.Id[1]);
+        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
         CSamplingSettings SamplingSettings;
         nResult = SamplingSettings.DoModal();
         if(nResult==IDOK){
             if (ctx->NumAD > 0) {
-                Ret = AioSetAiSamplingClock     (ctx->ad.Id[0], ctx->ad.SamplingClock[0]);
-                Ret = AioGetAiSamplingClock     (ctx->ad.Id[0], &ctx->ad.SamplingClock[0]);
-                Ret = AioSetAiStopTrigger       (ctx->ad.Id[0], 4);
-                Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[0], ctx->ad.SamplingTimes[0]);
-                Ret = AioGetAiEventSamplingTimes(ctx->ad.Id[0], &ctx->ad.SamplingTimes[0]);
-                Ret = AioResetAiMemory          (ctx->ad.Id[0]);
+                Ret = AioSetAiSamplingClock     (ctx->ad.Id, ctx->ad.SamplingClock);
+                Ret = AioGetAiSamplingClock     (ctx->ad.Id, &ctx->ad.SamplingClock);
+                Ret = AioSetAiStopTrigger       (ctx->ad.Id, 4);
+                Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
+                Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
+                Ret = AioResetAiMemory          (ctx->ad.Id);
                 // single board only
             }
-            ctx->sampling.SavingClock = ctx->ad.SamplingClock[0];
+            ctx->sampling.SavingClock = ctx->ad.SamplingClock;
             ctx->FlagFIFO = TRUE;
             myBTN1->EnableWindow(FALSE);
             myBTN2->EnableWindow(TRUE);
         }
-        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id[0]);
+        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id);
     }
     else{
         AfxMessageBox("Board Setting has not been accomplished yet.", MB_OK | MB_ICONSTOP, 0);    
@@ -729,34 +728,34 @@ void CDigitShowBasicView::OnBUTTONFIFOStop()
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
     CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);    
-    if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
+    if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
     ctx->FlagFIFO = FALSE;
     myBTN1->EnableWindow(TRUE);
     myBTN2->EnableWindow(FALSE);
     if (ctx->NumAD > 0) {
         const float scanClock_us =
             floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
-        Ret = AioSetAiSamplingClock(ctx->ad.Id[0], scanClock_us * DSP_AD_CHANNELS);
-        Ret = AioGetAiSamplingClock(ctx->ad.Id[0], &ctx->ad.SamplingClock[0]);
-        Ret = AioSetAiScanClock    (ctx->ad.Id[0], scanClock_us);
-        ctx->ad.SamplingTimes[0] =
-            long(ctx->timeSettings.Interval1 * 1000.0f
+        Ret = AioSetAiSamplingClock(ctx->ad.Id, scanClock_us * DSP_AD_CHANNELS);
+        Ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
+        Ret = AioSetAiScanClock    (ctx->ad.Id, scanClock_us);
+        ctx->ad.SamplingTimes =
+            long(ctx->timeSettings.DisplayInterval * 1000.0f
                  / (scanClock_us * DSP_AD_CHANNELS));
-        if (ctx->ad.SamplingTimes[0] < 1) ctx->ad.SamplingTimes[0] = 1;
-        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[0], ctx->ad.SamplingTimes[0]);
-        Ret = AioGetAiEventSamplingTimes(ctx->ad.Id[0], &ctx->ad.SamplingTimes[0]);
-        Ret = AioSetAiStopTrigger       (ctx->ad.Id[0], 4);
-        Ret = AioResetAiMemory          (ctx->ad.Id[0]);
+        if (ctx->ad.SamplingTimes < 1) ctx->ad.SamplingTimes = 1;
+        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
+        Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
+        Ret = AioSetAiStopTrigger       (ctx->ad.Id, 4);
+        Ret = AioResetAiMemory          (ctx->ad.Id);
     }
     // single board only — no Id[ctx->NumAD-1] reference
-    if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id[0]);
+    if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id);
 }
 
 void CDigitShowBasicView::OnBUTTONWriteData() 
 {
     DigitShowContext* ctx = GetContext();
     long    Ret;
-    if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id[0]);
+    if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
 
     CString    pFileName0, pFileName1,TmpString;
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_WriteData);
@@ -834,20 +833,20 @@ void CDigitShowBasicView::OnBUTTONWriteData()
     if (ctx->NumAD > 0) {
         const float scanClock_us =
             floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
-        Ret = AioSetAiSamplingClock(ctx->ad.Id[0], scanClock_us * DSP_AD_CHANNELS);
-        Ret = AioGetAiSamplingClock(ctx->ad.Id[0], &ctx->ad.SamplingClock[0]);
-        Ret = AioSetAiScanClock    (ctx->ad.Id[0], scanClock_us);
-        ctx->ad.SamplingTimes[0] =
-            long(ctx->timeSettings.Interval1 * 1000.0f
+        Ret = AioSetAiSamplingClock(ctx->ad.Id, scanClock_us * DSP_AD_CHANNELS);
+        Ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
+        Ret = AioSetAiScanClock    (ctx->ad.Id, scanClock_us);
+        ctx->ad.SamplingTimes =
+            long(ctx->timeSettings.DisplayInterval * 1000.0f
                  / (scanClock_us * DSP_AD_CHANNELS));
-        if (ctx->ad.SamplingTimes[0] < 1) ctx->ad.SamplingTimes[0] = 1;
-        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id[0], ctx->ad.SamplingTimes[0]);
-        Ret = AioGetAiEventSamplingTimes(ctx->ad.Id[0], &ctx->ad.SamplingTimes[0]);
-        Ret = AioSetAiStopTrigger       (ctx->ad.Id[0], 4);
-        Ret = AioResetAiMemory          (ctx->ad.Id[0]);
+        if (ctx->ad.SamplingTimes < 1) ctx->ad.SamplingTimes = 1;
+        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
+        Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
+        Ret = AioSetAiStopTrigger       (ctx->ad.Id, 4);
+        Ret = AioResetAiMemory          (ctx->ad.Id);
     }
     // single board only — no Id[ctx->NumAD-1] reference
-    if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id[0]);
+    if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id);
 }
 
 LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
@@ -860,10 +859,10 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
     case AIOM_AIE_DATA_NUM:
     {
         long tmp = 0;
-        Ret = AioGetAiSamplingCount(ctx->ad.Id[0], &tmp);
+        Ret = AioGetAiSamplingCount(ctx->ad.Id, &tmp);
         if (tmp <= 0) return TRUE;
 
-        Ret = AioGetAiSamplingData(ctx->ad.Id[0], &tmp, &ctx->ad.Data0[0]);
+        Ret = AioGetAiSamplingData(ctx->ad.Id, &tmp, &ctx->ad.Data0[0]);
         if (Ret != 0) {
             Ret2 = AioGetErrorString(Ret, ctx->ErrorString);
             ctx->TextString.Format("AioGetAiSamplingData = %d : %s", Ret, ctx->ErrorString);
@@ -874,15 +873,14 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
 
         // FIFO recording
         if (ctx->FlagSaveData == TRUE && ctx->FlagFIFO == TRUE) {
-            const int nCh = ctx->ad.Channels[0];   // 16
+            const int nCh = ctx->ad.Channels;   // 16
             for (long si = 0; si < tmp; si++) {
                 if (ctx->sampling.CurrentSamplingTimes >= ctx->sampling.TotalSamplingTimes) {
                     OnBUTTONStopSave();
                     break;
                 }
                 for (j = 0; j < nCh; j++) {    // 16ch, no /2, no *2
-                    *((PLONG)ctx->ad.pData
-                      + ctx->sampling.CurrentSamplingTimes * nCh + j)
+                    ctx->ad.pData[ctx->sampling.CurrentSamplingTimes * nCh + j]
                         = ctx->ad.Data0[si * nCh + j];
                 }
                 ctx->sampling.CurrentSamplingTimes++;
@@ -896,8 +894,8 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
         }
         else{
             if(ctx->NumAD>0){
-                Ret = AioResetAiMemory(ctx->ad.Id[0]);
-                Ret = AioStartAi(ctx->ad.Id[0]);
+                Ret = AioResetAiMemory(ctx->ad.Id);
+                Ret = AioStartAi(ctx->ad.Id);
             }
             AfxMessageBox("FIFO sttoped by the over flow, but restarted automatically.", MB_OK | MB_ICONSTOP, 0);    
         }
@@ -931,23 +929,23 @@ void CDigitShowBasicView::OnBUTTONSetTimeInterval()
     CString        tmp;
     CComboBox* m_Combo1 = (CComboBox*)GetDlgItem(IDC_COMBO_SamplingTime);
     m_Combo1->GetWindowText(tmp);
-    if(tmp=="0.2 s")    ctx->timeSettings.Interval3 = 200;
-    if(tmp=="0.5 s")    ctx->timeSettings.Interval3 = 500;
-    if(tmp=="1.0 s")    ctx->timeSettings.Interval3 = 1000;
-    if(tmp=="2.0 s")    ctx->timeSettings.Interval3 = 2000;
-    if(tmp=="3.0 s")    ctx->timeSettings.Interval3 = 3000;
-    if(tmp=="5.0 s")    ctx->timeSettings.Interval3 = 5000;
-    if(tmp=="10.0 s")    ctx->timeSettings.Interval3 = 10000;
-    if(tmp=="20.0 s")    ctx->timeSettings.Interval3 = 20000;
-    if(tmp=="30.0 s")    ctx->timeSettings.Interval3 = 30000;
-    if(tmp=="1.0 min")    ctx->timeSettings.Interval3 = 60000;
-    if(tmp=="2.0 min")    ctx->timeSettings.Interval3 = 120000;
-    if(tmp=="3.0 min")    ctx->timeSettings.Interval3 = 180000;
-    if(tmp=="5.0 min")    ctx->timeSettings.Interval3 = 300000;
-    if(tmp=="10.0 min")    ctx->timeSettings.Interval3 = 600000;
+    if(tmp=="0.2 s")    ctx->timeSettings.SaveInterval = 200;
+    if(tmp=="0.5 s")    ctx->timeSettings.SaveInterval = 500;
+    if(tmp=="1.0 s")    ctx->timeSettings.SaveInterval = 1000;
+    if(tmp=="2.0 s")    ctx->timeSettings.SaveInterval = 2000;
+    if(tmp=="3.0 s")    ctx->timeSettings.SaveInterval = 3000;
+    if(tmp=="5.0 s")    ctx->timeSettings.SaveInterval = 5000;
+    if(tmp=="10.0 s")    ctx->timeSettings.SaveInterval = 10000;
+    if(tmp=="20.0 s")    ctx->timeSettings.SaveInterval = 20000;
+    if(tmp=="30.0 s")    ctx->timeSettings.SaveInterval = 30000;
+    if(tmp=="1.0 min")    ctx->timeSettings.SaveInterval = 60000;
+    if(tmp=="2.0 min")    ctx->timeSettings.SaveInterval = 120000;
+    if(tmp=="3.0 min")    ctx->timeSettings.SaveInterval = 180000;
+    if(tmp=="5.0 min")    ctx->timeSettings.SaveInterval = 300000;
+    if(tmp=="10.0 min")    ctx->timeSettings.SaveInterval = 600000;
     if(ctx->FlagSaveData){
         KillTimer(3);
-        SetTimer(3,ctx->timeSettings.Interval3,NULL);
+        SetTimer(3,ctx->timeSettings.SaveInterval,NULL);
     }    
 }
 
