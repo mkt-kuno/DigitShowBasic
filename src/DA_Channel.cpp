@@ -1,4 +1,4 @@
-﻿/*
+/*
  * DigitShowBasic - Triaxial Test Machine Control Software
  * Copyright (C) 2025 Makoto KUNO
  *
@@ -31,22 +31,22 @@ CDA_Channel::CDA_Channel(CWnd* pParent)
     : CDialog(CDA_Channel::IDD, pParent)
 {
     DigitShowContext* ctx = GetContext();
-    m_DA_Cala00 = ctx->cal.DA_a[0];
-    m_DA_Cala01 = ctx->cal.DA_a[1];
-    m_DA_Cala02 = ctx->cal.DA_a[2];
-    m_DA_Cala03 = ctx->cal.DA_a[3];
-    m_DA_Cala04 = ctx->cal.DA_a[4];
-    m_DA_Cala05 = ctx->cal.DA_a[5];
-    m_DA_Cala06 = ctx->cal.DA_a[6];
-    m_DA_Cala07 = ctx->cal.DA_a[7];
-    m_DA_Calb00 = ctx->cal.DA_b[0];
-    m_DA_Calb01 = ctx->cal.DA_b[1];
-    m_DA_Calb02 = ctx->cal.DA_b[2];
-    m_DA_Calb03 = ctx->cal.DA_b[3];
-    m_DA_Calb04 = ctx->cal.DA_b[4];
-    m_DA_Calb05 = ctx->cal.DA_b[5];
-    m_DA_Calb06 = ctx->cal.DA_b[6];
-    m_DA_Calb07 = ctx->cal.DA_b[7];
+    m_DA_Cala00 = ctx->ao.cal.a[0];
+    m_DA_Cala01 = ctx->ao.cal.a[1];
+    m_DA_Cala02 = ctx->ao.cal.a[2];
+    m_DA_Cala03 = ctx->ao.cal.a[3];
+    m_DA_Cala04 = ctx->ao.cal.a[4];
+    m_DA_Cala05 = ctx->ao.cal.a[5];
+    m_DA_Cala06 = ctx->ao.cal.a[6];
+    m_DA_Cala07 = ctx->ao.cal.a[7];
+    m_DA_Calb00 = ctx->ao.cal.b[0];
+    m_DA_Calb01 = ctx->ao.cal.b[1];
+    m_DA_Calb02 = ctx->ao.cal.b[2];
+    m_DA_Calb03 = ctx->ao.cal.b[3];
+    m_DA_Calb04 = ctx->ao.cal.b[4];
+    m_DA_Calb05 = ctx->ao.cal.b[5];
+    m_DA_Calb06 = ctx->ao.cal.b[6];
+    m_DA_Calb07 = ctx->ao.cal.b[7];
 }
 
 void CDA_Channel::DoDataExchange(CDataExchange* pDX)
@@ -77,21 +77,21 @@ void CDA_Channel::OnOK()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    ctx->cal.DA_a[0] = m_DA_Cala00;
-    ctx->cal.DA_a[1] = m_DA_Cala01;
-    ctx->cal.DA_a[2] = m_DA_Cala02;
-    ctx->cal.DA_a[3] = m_DA_Cala03;
-    ctx->cal.DA_a[4] = m_DA_Cala04;
-    ctx->cal.DA_a[5] = m_DA_Cala05;
-    ctx->cal.DA_a[6] = m_DA_Cala06;
-    ctx->cal.DA_a[7] = m_DA_Cala07;
-    ctx->cal.DA_b[0] = m_DA_Calb00;
-    ctx->cal.DA_b[1] = m_DA_Calb01;
-    ctx->cal.DA_b[2] = m_DA_Calb02;
-    ctx->cal.DA_b[3] = m_DA_Calb03;
-    ctx->cal.DA_b[4] = m_DA_Calb04;
-    ctx->cal.DA_b[5] = m_DA_Calb05;
-    ctx->cal.DA_b[6] = m_DA_Calb06;
-    ctx->cal.DA_b[7] = m_DA_Calb07;
+    ctx->ao.cal.a[0] = m_DA_Cala00;
+    ctx->ao.cal.a[1] = m_DA_Cala01;
+    ctx->ao.cal.a[2] = m_DA_Cala02;
+    ctx->ao.cal.a[3] = m_DA_Cala03;
+    ctx->ao.cal.a[4] = m_DA_Cala04;
+    ctx->ao.cal.a[5] = m_DA_Cala05;
+    ctx->ao.cal.a[6] = m_DA_Cala06;
+    ctx->ao.cal.a[7] = m_DA_Cala07;
+    ctx->ao.cal.b[0] = m_DA_Calb00;
+    ctx->ao.cal.b[1] = m_DA_Calb01;
+    ctx->ao.cal.b[2] = m_DA_Calb02;
+    ctx->ao.cal.b[3] = m_DA_Calb03;
+    ctx->ao.cal.b[4] = m_DA_Calb04;
+    ctx->ao.cal.b[5] = m_DA_Calb05;
+    ctx->ao.cal.b[6] = m_DA_Calb06;
+    ctx->ao.cal.b[7] = m_DA_Calb07;
     CDialog::OnOK();
 }
