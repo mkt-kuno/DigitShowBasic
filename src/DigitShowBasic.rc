@@ -962,8 +962,6 @@ BEGIN
     EDITTEXT        IDC_EDIT_TimeInterval3,118,56,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
     GROUPBOX        "Sampling Settings of Timers",IDC_STATIC,7,7,213,66
     GROUPBOX        "Sampling Conditions with FIFO Memory",IDC_STATIC,7,79,213,157
-    LTEXT           "Number of data to average (n)",IDC_STATIC,15,149,90,8
-    EDITTEXT        IDC_EDIT_AvSmplNum,118,146,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
 END
 
 IDD_Control_PreConsolidation DIALOG 0, 0, 155, 71

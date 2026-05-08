@@ -39,7 +39,6 @@ void InitContext(DigitShowContext* ctx)
     // Initialize board counts (CAIO)
     ctx->NumAD = 1;
     ctx->NumDA = 0;
-    ctx->AdMaxChannels = 0;
 
     // Initialize A/D board config
     memset(&ctx->ad, 0, sizeof(ctx->ad));
@@ -59,7 +58,11 @@ void InitContext(DigitShowContext* ctx)
     ctx->sampling.TotalSamplingTimes = 0;
     ctx->sampling.CurrentSamplingTimes = 0;
     ctx->sampling.AllocatedMemory = 0.0f;
-    ctx->sampling.AvSmplNum = 20;
+
+    ctx->ad.LastDataCount = 0;
+
+    // Initialize digital filter state (20Hz-B: MA5 × MA6 @ 300 sps)
+    memset(&ctx->dsp, 0, sizeof(ctx->dsp));
 
     // Initialize flags
     ctx->FlagSetBoard = false;
@@ -105,9 +108,8 @@ void InitContext(DigitShowContext* ctx)
     ctx->ai_raw_temp = 0.0f;
     ctx->ai_phy_temp = 0.0;
 
-    // Initialize memory pointers
-    ctx->pSmplData0 = nullptr;
-    ctx->hHeap0 = nullptr;
+    // Initialize ad.pData
+    ctx->ad.pData = nullptr;
 
     // Initialize file handles
     ctx->FileSaveData0 = nullptr;
@@ -117,7 +119,6 @@ void InitContext(DigitShowContext* ctx)
     // Initialize error handling
     ctx->Ret = 0;
     ctx->Ret2 = 0;
-    ctx->AdEvent = 0;
     memset(ctx->ErrorString, 0, sizeof(ctx->ErrorString));
     // Note: CString TextString, CTime, CTimeSpan are default-constructed by C++ runtime
 
