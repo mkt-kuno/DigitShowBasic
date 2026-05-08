@@ -105,8 +105,8 @@ void InitContext(DigitShowContext* ctx)
     ctx->height = 0.0;
     ctx->volume = 0.0;
     ctx->area = 0.0;
-    ctx->ai_raw_temp = 0.0f;
-    ctx->ai_phy_temp = 0.0;
+    ctx->ai.raw_temp = 0.0f;
+    ctx->ai.phy_temp = 0.0;
 
     // Initialize ad.pData
     ctx->ad.pData = nullptr;
@@ -124,23 +124,23 @@ void InitContext(DigitShowContext* ctx)
 
     // Initialize calibration factors (default: linear y = x)
     for (int i = 0; i < AI_MAX_CHANNELS; i++) {
-        ctx->ai_raw[i] = 0.0f;
-        ctx->ai_phy[i] = 0.0;
-        ctx->ai_param[i] = 0.0;
+        ctx->ai.raw[i] = 0.0f;
+        ctx->ai.phy[i] = 0.0;
+        ctx->ai.param[i] = 0.0;
     }
     for (int i = 0; i < NUM_PARAM_MAX; i++) {
-        ctx->cal.a[i] = 0.0;
-        ctx->cal.b[i] = 1.0;
-        ctx->cal.c[i] = 0.0;
+        ctx->ai.cal.a[i] = 0.0;
+        ctx->ai.cal.b[i] = 1.0;
+        ctx->ai.cal.c[i] = 0.0;
     }
 
     // Initialize D/A output
     for (int i = 0; i < AO_MAX_CHANNELS; i++) {
-        ctx->ao_raw[i] = 0.0f;
+        ctx->ao.raw[i] = 0.0f;
     }
-    for (int i = 0; i < 8; i++) {
-        ctx->cal.DA_a[i] = 0.0;
-        ctx->cal.DA_b[i] = 0.0;
+    for (int i = 0; i < AO_MAX_CHANNELS; i++) {
+        ctx->ao.cal.a[i] = 0.0;
+        ctx->ao.cal.b[i] = 0.0;
     }
 
     // Initialize specimen data
@@ -210,10 +210,10 @@ void InitContext(DigitShowContext* ctx)
     ctx->daChannel.EP_Cell = 3;
 
     // D/A calibration for motor speed (V/rpm)
-    ctx->cal.DA_a[ctx->daChannel.MotorSpeed] = 0.003378059;
-    ctx->cal.DA_b[ctx->daChannel.MotorSpeed] = 0.0;
+    ctx->ao.cal.a[ctx->daChannel.MotorSpeed] = 0.003378059;
+    ctx->ao.cal.b[ctx->daChannel.MotorSpeed] = 0.0;
 
     // D/A calibration for cell pressure (V/kPa)
-    ctx->cal.DA_a[ctx->daChannel.EP_Cell] = 0.003401361;
-    ctx->cal.DA_b[ctx->daChannel.EP_Cell] = 0.0;
+    ctx->ao.cal.a[ctx->daChannel.EP_Cell] = 0.003401361;
+    ctx->ao.cal.b[ctx->daChannel.EP_Cell] = 0.0;
 }

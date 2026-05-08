@@ -251,7 +251,7 @@ void CDigitShowBasicDoc::AD_INPUT()
             d.ma2_idx[ch] = (i2 + 1 >= N2) ? 0 : i2 + 1;
 
             // Output: latest filtered value for this channel
-            ctx->ai_raw[ch] = float(d.ma2_sum[ch] * inv2);
+            ctx->ai.raw[ch] = float(d.ma2_sum[ch] * inv2);
         }
     }
 }
@@ -264,11 +264,11 @@ void CDigitShowBasicDoc::DA_OUTPUT()
 
     const int nCh = ctx->da.Channels[0];   // clamped to DSP_DA_CHANNELS = 8
     for (int j = 0; j < nCh; j++) {
-        if (ctx->ao_raw[j] < 0.0f)     ctx->ao_raw[j] = 0.0f;
-        if (ctx->ao_raw[j] > 9.9999f)  ctx->ao_raw[j] = 9.9999f;
+        if (ctx->ao.raw[j] < 0.0f)     ctx->ao.raw[j] = 0.0f;
+        if (ctx->ao.raw[j] > 9.9999f)  ctx->ao.raw[j] = 9.9999f;
         ctx->da.Data[j] = VoltToBinary(
             ctx->da.RangeMax[0], ctx->da.RangeMin[0],
-            ctx->da.Resolution[0], ctx->ao_raw[j]);
+            ctx->da.Resolution[0], ctx->ao.raw[j]);
     }
     ctx->Ret = AioMultiAo(ctx->da.Id[0], nCh, &ctx->da.Data[0]);
 }
@@ -278,9 +278,9 @@ void CDigitShowBasicDoc::Cal_Physical()
 {
     DigitShowContext* ctx = GetContext();
     for(int i = 0;i<AI_MAX_CHANNELS;i++){
-        ctx->ai_phy[i] = ctx->cal.a[i] * ctx->ai_raw[i] * ctx->ai_raw[i]
-                       + ctx->cal.b[i] * ctx->ai_raw[i]
-                       + ctx->cal.c[i];
+        ctx->ai.phy[i] = ctx->ai.cal.a[i] * ctx->ai.raw[i] * ctx->ai.raw[i]
+                       + ctx->ai.cal.b[i] * ctx->ai.raw[i]
+                       + ctx->ai.cal.c[i];
     }
 }
 
@@ -290,9 +290,9 @@ void CDigitShowBasicDoc::Cal_Param()
     DigitShowContext* ctx = GetContext();
     auto SpecimenData = &ctx->specimen;
     //    Specimen Data in drain and undrain condition
-    ctx->height = SpecimenData->Height[0]-ctx->ai_phy[1];
+    ctx->height = SpecimenData->Height[0]-ctx->ai.phy[1];
     // Current height
-    ctx->volume = SpecimenData->Volume[0]- ctx->ai_phy[9];
+    ctx->volume = SpecimenData->Volume[0]- ctx->ai.phy[9];
     // Current volume in drain condition
     ctx->area = ctx->volume/ ctx->height;
     // Current area
@@ -302,30 +302,30 @@ void CDigitShowBasicDoc::Cal_Param()
     // True Volumetric Strain in drain condition (%)
     ctx->phys.er = (ctx->phys.ev- ctx->phys.ea)/2.0;
     // True Radial strain (%)
-    if(SpecimenData->VLDT1[0]>0.0 && ctx->ai_phy[2]>0.0) {
-        ctx->phys.eLDT1 = -log(ctx->ai_phy[2]/SpecimenData->VLDT1[0])*100.0;
+    if(SpecimenData->VLDT1[0]>0.0 && ctx->ai.phy[2]>0.0) {
+        ctx->phys.eLDT1 = -log(ctx->ai.phy[2]/SpecimenData->VLDT1[0])*100.0;
         // True LDT Strain (%)
     }
     else{
         ctx->phys.eLDT1 = 0.0;
     }
-    if(SpecimenData->VLDT2[0]>0.0 && ctx->ai_phy[3]>0.0) {
-        ctx->phys.eLDT2 = -log(ctx->ai_phy[3]/SpecimenData->VLDT2[0])*100.0;
+    if(SpecimenData->VLDT2[0]>0.0 && ctx->ai.phy[3]>0.0) {
+        ctx->phys.eLDT2 = -log(ctx->ai.phy[3]/SpecimenData->VLDT2[0])*100.0;
         // True LDT Strain (%)
     }
     else{
         ctx->phys.eLDT2 = 0.0;
     }
     ctx->phys.eLDT = (ctx->phys.eLDT1+ ctx->phys.eLDT2)/2.0;
-    ctx->phys.q = ctx->ai_phy[0]/ctx->area*1000.0;
+    ctx->phys.q = ctx->ai.phy[0]/ctx->area*1000.0;
     // Deviator Stress (kPa)
-    ctx->phys.sr = ctx->ai_phy[4];
+    ctx->phys.sr = ctx->ai.phy[4];
     // Cell(Radial) Stress (kPa)
     ctx->phys.sa = ctx->phys.q+ ctx->phys.sr;
     // Axial Stress (kPa)
     ctx->phys.p = (ctx->phys.sa+2.0* ctx->phys.sr)/3.0;
     // Mean Principal Stress (kPa)
-    ctx->phys.e_sr = ctx->ai_phy[8];
+    ctx->phys.e_sr = ctx->ai.phy[8];
     // Cell Effective Stress (kPa)
     ctx->phys.e_sa = ctx->phys.q+ ctx->phys.e_sr;
     // Axial Effective Stress (kPa)
@@ -334,22 +334,22 @@ void CDigitShowBasicDoc::Cal_Param()
     ctx->phys.e_p = (ctx->phys.e_sa+2.0* ctx->phys.e_sr)/3.0;
     // Mean Effective Stress (kPa)
     //---The Value to display---
-    ctx->ai_param[0] = ctx->phys.sa;
-    ctx->ai_param[1] = ctx->phys.sr;
-    ctx->ai_param[2] = ctx->phys.e_sa;
-    ctx->ai_param[3] = ctx->phys.e_sr;
-    ctx->ai_param[4] = ctx->phys.u;
-    ctx->ai_param[5] = ctx->phys.p;
-    ctx->ai_param[6] = ctx->phys.q;
-    ctx->ai_param[7] = ctx->phys.e_p;
-    ctx->ai_param[8] = ctx->phys.ea;
-    ctx->ai_param[9] = ctx->phys.er;
-    ctx->ai_param[10] = ctx->phys.ev;
-    ctx->ai_param[11] = ctx->phys.eLDT1;
-    ctx->ai_param[12] = ctx->phys.eLDT2;
-    ctx->ai_param[13] = ctx->phys.eLDT;
-    ctx->ai_param[14] = (ctx->phys.e_sa+ ctx->phys.e_sr)/2.0;
-    ctx->ai_param[15] = (ctx->phys.e_sa- ctx->phys.e_sr)/2.0;
+    ctx->ai.param[0] = ctx->phys.sa;
+    ctx->ai.param[1] = ctx->phys.sr;
+    ctx->ai.param[2] = ctx->phys.e_sa;
+    ctx->ai.param[3] = ctx->phys.e_sr;
+    ctx->ai.param[4] = ctx->phys.u;
+    ctx->ai.param[5] = ctx->phys.p;
+    ctx->ai.param[6] = ctx->phys.q;
+    ctx->ai.param[7] = ctx->phys.e_p;
+    ctx->ai.param[8] = ctx->phys.ea;
+    ctx->ai.param[9] = ctx->phys.er;
+    ctx->ai.param[10] = ctx->phys.ev;
+    ctx->ai.param[11] = ctx->phys.eLDT1;
+    ctx->ai.param[12] = ctx->phys.eLDT2;
+    ctx->ai.param[13] = ctx->phys.eLDT;
+    ctx->ai.param[14] = (ctx->phys.e_sa+ ctx->phys.e_sr)/2.0;
+    ctx->ai.param[15] = (ctx->phys.e_sa- ctx->phys.e_sr)/2.0;
 }
 
 void CDigitShowBasicDoc::SaveToFile()
@@ -360,15 +360,15 @@ void CDigitShowBasicDoc::SaveToFile()
 
     // Single AD board, all DSP_AD_CHANNELS channels
     for (int j = 0; j < ctx->ad.Channels[0]; j++) {
-        fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai_raw[j]);
-        fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai_phy[j]);
+        fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai.raw[j]);
+        fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai.phy[j]);
     }
     fprintf(ctx->FileSaveData0, "\n");
     fprintf(ctx->FileSaveData1, "\n");
 
     fprintf(ctx->FileSaveData2, "%.3lf\t", ctx->SequentTime2);
     for (int i = 0; i < AI_MAX_CHANNELS; i++) {
-        fprintf(ctx->FileSaveData2, "%lf\t", ctx->ai_param[i]);
+        fprintf(ctx->FileSaveData2, "%lf\t", ctx->ai.param[i]);
     }
     fprintf(ctx->FileSaveData2, "\n");
 }
@@ -383,16 +383,16 @@ void CDigitShowBasicDoc::SaveToFile2()
         fprintf(ctx->FileSaveData1, "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
         int k = 0;
         for (int j = 0; j < nCh; j++) {
-            ctx->ai_raw_temp = BinaryToVolt(
+            ctx->ai.raw_temp = BinaryToVolt(
                 ctx->ad.RangeMax[0], ctx->ad.RangeMin[0],
                 ctx->ad.Resolution[0],
                 *((PLONG)ctx->ad.pData + i * nCh + j));   // stride = nCh (no /2)
-            ctx->ai_phy_temp = ctx->cal.a[k] * ctx->ai_raw_temp * ctx->ai_raw_temp
-                             + ctx->cal.b[k] * ctx->ai_raw_temp
-                             + ctx->cal.c[k];
+            ctx->ai.phy_temp = ctx->ai.cal.a[k] * ctx->ai.raw_temp * ctx->ai.raw_temp
+                             + ctx->ai.cal.b[k] * ctx->ai.raw_temp
+                             + ctx->ai.cal.c[k];
             k++;
-            fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai_raw_temp);
-            fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai_phy_temp);
+            fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai.raw_temp);
+            fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai.phy_temp);
         }
         fprintf(ctx->FileSaveData0, "\n");
         fprintf(ctx->FileSaveData1, "\n");
@@ -431,30 +431,30 @@ void CDigitShowBasicDoc::Control_DA()
         //---Before Consolidation: Keep the specimen isotropic condition by Motor Control.--- 
         // ControlData[1].q: Reference Error Stress (kPa).
         // ControlData[1].MotorSpeed: The Maximum Motor Speed (rpm).
-            ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
             // Motor: On
             if(ctx->phys.q > ctx->errTol.StressCom ){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                 // Cruch: Up
                 if( ctx->phys.q > ControlData[1].q ){
-                    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[1].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+                    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[1].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
                 }
                 if( ctx->phys.q <= ControlData[1].q ){
-                    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*(ctx->phys.q/ControlData[1].q)*ControlData[1].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+                    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*(ctx->phys.q/ControlData[1].q)*ControlData[1].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
                 }
             }
             else if( ctx->phys.q < ctx->errTol.StressExt ){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                 // Cruch: Down
                 if( ctx->phys.q < -ControlData[1].q ){
-                    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[1].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+                    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[1].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
                 }
                 if( ctx->phys.q >= -ControlData[1].q ){
-                    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*(-ctx->phys.q/ControlData[1].q)*ControlData[1].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+                    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*(-ctx->phys.q/ControlData[1].q)*ControlData[1].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
                 }
             }
             else {
-                    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                     // RPM->0
             }
             DA_OUTPUT();
@@ -467,25 +467,25 @@ void CDigitShowBasicDoc::Control_DA()
         // ControlData[2].K0:            K0 value,
         // ControlData[2].sigmaRate[2]:    Increase Rate of Cell Pressure 
         // ControlData[2].MotorSpeed:    Motor Speed
-            ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
             // Motor: On
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[2].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[2].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
             if( ctx->phys.e_sr < ControlData[2].e_sigma[0]*ControlData[2].K0-ctx->errTol.StressA){
-                ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]+float(ctx->cal.DA_a[ctx->daChannel.EP_Cell]*ControlData[2].sigmaRate[2]/60.0*ctx->timeSettings.Interval2/1000.0);
+                ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]+float(ctx->ao.cal.a[ctx->daChannel.EP_Cell]*ControlData[2].sigmaRate[2]/60.0*ctx->timeSettings.Interval2/1000.0);
             }    
             if( ctx->phys.e_sr > ControlData[2].e_sigma[0]*ControlData[2].K0+ctx->errTol.StressA){
-                ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]-float(ctx->cal.DA_a[ctx->daChannel.EP_Cell]*ControlData[2].sigmaRate[2]/60.0*ctx->timeSettings.Interval2/1000.0);
+                ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]-float(ctx->ao.cal.a[ctx->daChannel.EP_Cell]*ControlData[2].sigmaRate[2]/60.0*ctx->timeSettings.Interval2/1000.0);
             }    
             if( ctx->phys.e_sa < ctx->phys.e_sr/ControlData[2].K0+ctx->errTol.StressExt ){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                 // Cruch: Down
             }            
             else if( ctx->phys.e_sa > ctx->phys.e_sr/ControlData[2].K0+ctx->errTol.StressCom ){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                 // Cruch: Up
             }
             else {
-                ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                 // RPM->0
             }
             DA_OUTPUT();
@@ -498,32 +498,32 @@ void CDigitShowBasicDoc::Control_DA()
         // ControlData[3].MotorCruch:    Compression:1 /Extension:0                        
         // ControlData[3].flag[0]:        Monotonic_Loading:0 /Creep:1
         // ControlData[3].sigma[0];        Limiter
-            ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
             // Motor: On
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[3].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[3].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
             if(ControlData[3].flag[0]==FALSE){        // Monotonic Loading
                 if(ControlData[3].MotorCruch == 0 ){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch: Down
                     if( ctx->phys.q >= ControlData[3].q) ControlData[3].flag[0] = TRUE;
                 }
                 if(ControlData[3].MotorCruch == 1 )    {
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch: Up
                     if( ctx->phys.q <= ControlData[3].q) ControlData[3].flag[0] = TRUE;
                 }
             }
             if(ControlData[3].flag[0]==TRUE){        // Creep
                 if(ControlData[3].MotorCruch == 0 ){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch: Down
-                    if( ctx->phys.q>=ControlData[3].q+ctx->errTol.StressExt)    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                    if( ctx->phys.q>=ControlData[3].q+ctx->errTol.StressExt)    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                     // RPM->0
                 }
                 if(ControlData[3].MotorCruch == 1 ){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch: Up
-                    if( ctx->phys.q<=ControlData[3].q+ctx->errTol.StressCom)    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                    if( ctx->phys.q<=ControlData[3].q+ctx->errTol.StressCom)    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                     // RPM->0
                 }
             }
@@ -537,32 +537,32 @@ void CDigitShowBasicDoc::Control_DA()
         // ControlData[4].MotorCruch:    Cruch Loading:1 /Unloading:0                        
         // ControlData[4].flag:            Loading:0 /Creep:1
         // ControlData[4].sigma[0];        Limiter
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[4].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
-            ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[4].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
+            ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
             // Motor:On
             if(ControlData[4].flag[0]==FALSE){        // Monotonic Loading
                 if(ControlData[4].MotorCruch == 0 ){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
                     if( ctx->phys.q >= ControlData[4].q) ControlData[4].flag[0] = TRUE;
                 }
                 if(ControlData[4].MotorCruch == 1 )    {
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
                     if( ctx->phys.q <= ControlData[4].q) ControlData[4].flag[0] = TRUE;
                 }
             }
             if(ControlData[4].flag[0]==TRUE){        // Creep
                 if(ControlData[4].MotorCruch == 0 ){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
-                    if( ctx->phys.q>=ControlData[4].q+ctx->errTol.StressExt)    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                    if( ctx->phys.q>=ControlData[4].q+ctx->errTol.StressExt)    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                     // RPM->0
                 }
                 if(ControlData[4].MotorCruch == 1 ){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
-                    if( ctx->phys.q<=ControlData[4].q+ctx->errTol.StressCom)    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                    if( ctx->phys.q<=ControlData[4].q+ctx->errTol.StressCom)    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                     // RPM->0
                 }
             }
@@ -572,12 +572,12 @@ void CDigitShowBasicDoc::Control_DA()
     case 5:
         { 
             // Cyclic Loading
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[5].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
-            ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[5].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
+            ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
             // Motor:On
             if(ControlData[5].flag[0]==FALSE){            // Cyclic in compression test
                 if(ControlData[5].time[0]<ControlData[5].time[1]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
                     if( ctx->phys.q>=ControlData[5].sigma[1]) {
                         ControlData[5].time[0] = ControlData[5].time[1];
@@ -586,12 +586,12 @@ void CDigitShowBasicDoc::Control_DA()
                 }
                 if(ControlData[5].time[1]<=ControlData[5].time[0] || ControlData[5].time[0]<=ControlData[5].time[2]){
                     if(ctx->FlagCyclic==FALSE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                         // Cruch:Up
                         if( ctx->phys.q<=ControlData[5].sigma[0]) ctx->FlagCyclic = TRUE;
                     }
                     if(ctx->FlagCyclic==TRUE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                         // Cruch:Down
                         if( ctx->phys.q>=ControlData[5].sigma[1]) {
                             ctx->FlagCyclic = FALSE;
@@ -600,13 +600,13 @@ void CDigitShowBasicDoc::Control_DA()
                     }
                 }
                 if(ControlData[5].time[0]>ControlData[5].time[2]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
                 }
             }
             if(ControlData[5].flag[0]==TRUE){
                 if(ControlData[5].time[0]<ControlData[5].time[1]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
                     if( ctx->phys.q<=ControlData[5].sigma[0]) {
                         ControlData[5].time[0] = ControlData[5].time[1];
@@ -615,12 +615,12 @@ void CDigitShowBasicDoc::Control_DA()
                 }
                 if(ControlData[5].time[1]<=ControlData[5].time[0] || ControlData[5].time[0]<=ControlData[5].time[2]){
                     if(ctx->FlagCyclic==TRUE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                         // Cruch:Down
                         if( ctx->phys.q>=ControlData[5].sigma[1]) ctx->FlagCyclic = FALSE;
                     }
                     if(ctx->FlagCyclic==FALSE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                         // Cruch:Up
                         if( ctx->phys.q<=ControlData[5].sigma[0]) {
                             ctx->FlagCyclic = TRUE;
@@ -629,7 +629,7 @@ void CDigitShowBasicDoc::Control_DA()
                     }
                 }
                 if(ControlData[5].time[0]>ControlData[5].time[2]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
                 }
             }
@@ -639,11 +639,11 @@ void CDigitShowBasicDoc::Control_DA()
     case 6:
         { 
             // Drain Cyclic Loading
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[6].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
-            ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[6].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
+            ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
             if(ControlData[6].flag[0]==FALSE){
                 if(ControlData[6].time[0]<ControlData[6].time[1]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
                     if( ctx->phys.q>=ControlData[6].sigma[1]) {
                         ControlData[6].time[0] = ControlData[6].time[1];
@@ -652,12 +652,12 @@ void CDigitShowBasicDoc::Control_DA()
                 }
                 if(ControlData[6].time[1]<=ControlData[6].time[0] || ControlData[6].time[0]<=ControlData[6].time[2]){
                     if(ctx->FlagCyclic==FALSE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                         // Cruch:Up
                         if( ctx->phys.q<=ControlData[6].sigma[0]) ctx->FlagCyclic = TRUE;
                     }
                     if(ctx->FlagCyclic==TRUE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                         // Cruch:Down
                         if( ctx->phys.q>=ControlData[6].sigma[1]) {
                             ctx->FlagCyclic = FALSE;
@@ -666,13 +666,13 @@ void CDigitShowBasicDoc::Control_DA()
                     }
                 }
                 if(ControlData[6].time[0]>ControlData[6].time[2]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
                 }
             }
             if(ControlData[6].flag[0]==TRUE){
                 if(ControlData[6].time[0]<ControlData[6].time[1]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
                     if( ctx->phys.q<=ControlData[6].sigma[0]) {
                         ControlData[6].time[0] = ControlData[6].time[1];
@@ -681,12 +681,12 @@ void CDigitShowBasicDoc::Control_DA()
                 }
                 if(ControlData[6].time[1]<=ControlData[6].time[0] || ControlData[6].time[0]<=ControlData[6].time[2]){
                     if(ctx->FlagCyclic==TRUE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                         // Cruch:Down
                         if( ctx->phys.q>=ControlData[6].sigma[1]) ctx->FlagCyclic = FALSE;
                     }
                     if(ctx->FlagCyclic==FALSE){
-                        ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                        ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                         // Cruch:Up
                         if( ctx->phys.q<=ControlData[6].sigma[0]) {
                             ctx->FlagCyclic = TRUE;
@@ -695,7 +695,7 @@ void CDigitShowBasicDoc::Control_DA()
                     }
                 }
                 if(ControlData[6].time[0]>ControlData[6].time[2]){ 
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
                 }
             }
@@ -704,53 +704,53 @@ void CDigitShowBasicDoc::Control_DA()
         break;
     case 7:
         { 
-            ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ControlData[7].MotorSpeed+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+            ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ControlData[7].MotorSpeed+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
             if(ControlData[7].sigma[1] == ControlData[7].e_sigma[1]){
-                ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->cal.DA_a[ctx->daChannel.EP_Cell]*(ControlData[7].e_sigma[1]- ctx->phys.e_sr));
-                if( ctx->phys.e_sa > ControlData[7].e_sigma[0]+ctx->errTol.StressCom)        ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->ao.cal.a[ctx->daChannel.EP_Cell]*(ControlData[7].e_sigma[1]- ctx->phys.e_sr));
+                if( ctx->phys.e_sa > ControlData[7].e_sigma[0]+ctx->errTol.StressCom)        ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                 // Cruch:Up
-                else if( ctx->phys.e_sa < ControlData[7].e_sigma[0]+ctx->errTol.StressExt)    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                else if( ctx->phys.e_sa < ControlData[7].e_sigma[0]+ctx->errTol.StressExt)    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                 // Cruch:Down
-                else ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                else ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
             }
             if(ControlData[7].sigma[1] < ControlData[7].e_sigma[1]){
                 if( ctx->phys.e_sr >= ControlData[7].e_sigma[1]) {
-                    ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]-float(0.2*ctx->cal.DA_a[ctx->daChannel.EP_Cell]*(ctx->phys.e_sr-ControlData[7].e_sigma[1]));
+                    ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]-float(0.2*ctx->ao.cal.a[ctx->daChannel.EP_Cell]*(ctx->phys.e_sr-ControlData[7].e_sigma[1]));
                 }
                 if( ctx->phys.e_sr < ControlData[7].e_sigma[1]) {
-                    ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]+float(ctx->cal.DA_a[ctx->daChannel.EP_Cell]*fabs(ControlData[7].sigmaRate[0])/60.0*ctx->timeSettings.Interval2/1000.0);
+                    ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]+float(ctx->ao.cal.a[ctx->daChannel.EP_Cell]*fabs(ControlData[7].sigmaRate[0])/60.0*ctx->timeSettings.Interval2/1000.0);
                 }
                 if( ctx->phys.e_sa > (ControlData[7].e_sigma[0]-ControlData[7].sigma[0])/(ControlData[7].e_sigma[1]-ControlData[7].sigma[1])*(ctx->phys.e_sr-ControlData[7].sigma[1])+ControlData[7].sigma[0]+ctx->errTol.StressCom){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
                 }
                 else if( ctx->phys.e_sa < (ControlData[7].e_sigma[0]-ControlData[7].sigma[0])/(ControlData[7].e_sigma[1]-ControlData[7].sigma[1])*(ctx->phys.e_sr-ControlData[7].sigma[1])+ControlData[7].sigma[0]+ctx->errTol.StressExt){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
                 }
                 else {
-                    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                     // RPM -> 0
                 }
             }
             if(ControlData[7].sigma[1] > ControlData[7].e_sigma[1]){
                 if( ctx->phys.e_sr > ControlData[7].e_sigma[1]) {
-                    ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]-float(ctx->cal.DA_a[ctx->daChannel.EP_Cell]*fabs(ControlData[7].sigmaRate[0])/60.0*ctx->timeSettings.Interval2/1000.0);
+                    ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]-float(ctx->ao.cal.a[ctx->daChannel.EP_Cell]*fabs(ControlData[7].sigmaRate[0])/60.0*ctx->timeSettings.Interval2/1000.0);
                 }
                 if( ctx->phys.e_sr <= ControlData[7].e_sigma[1]) {
-                    ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->cal.DA_a[ctx->daChannel.EP_Cell]*(ControlData[7].e_sigma[1]- ctx->phys.e_sr));
+                    ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->ao.cal.a[ctx->daChannel.EP_Cell]*(ControlData[7].e_sigma[1]- ctx->phys.e_sr));
                 }
                 if( ctx->phys.e_sa > (ControlData[7].e_sigma[0]-ControlData[7].sigma[0])/(ControlData[7].e_sigma[1]-ControlData[7].sigma[1])*(ctx->phys.e_sr-ControlData[7].sigma[1])+ControlData[7].sigma[0]+ctx->errTol.StressCom){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                     // Cruch:Up
                 }
                 else if( ctx->phys.e_sa < (ControlData[7].e_sigma[0]-ControlData[7].sigma[0])/(ControlData[7].e_sigma[1]-ControlData[7].sigma[1])*(ctx->phys.e_sr-ControlData[7].sigma[1])+ControlData[7].sigma[0]+ctx->errTol.StressExt){
-                    ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                     // Cruch:Down
                 }
                 else {
-                    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
                     // RPM -> 0
                 }
             }
@@ -796,7 +796,7 @@ void CDigitShowBasicDoc::Control_DA()
         { 
             if( ctx->controlFile.CurrentNum >=0 && ctx->controlFile.CurrentNum < 128 ){
                 if( ctx->controlFile.Num[ctx->controlFile.CurrentNum]==0 ){
-                    ctx->ao_raw[ctx->daChannel.Motor] = 0.0f;
+                    ctx->ao.raw[ctx->daChannel.Motor] = 0.0f;
                 }
                 if( ctx->controlFile.Num[ctx->controlFile.CurrentNum]==1 )    MLoading_Stress();
                 if( ctx->controlFile.Num[ctx->controlFile.CurrentNum]==2 )    MLoading_Strain();
@@ -819,7 +819,7 @@ void CDigitShowBasicDoc::Start_Control()
 void CDigitShowBasicDoc::Stop_Control()
 {
     DigitShowContext* ctx = GetContext();
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
     //Motor Speed->0
     DA_OUTPUT();
 }
@@ -828,13 +828,13 @@ void CDigitShowBasicDoc::MLoading_Stress()
 {
     DigitShowContext* ctx = GetContext();
     ctx->TotalStepTime = ctx->TotalStepTime+ctx->CtrlStepTime/60.0;
-    ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+    ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
     // Motor: On
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
     // Motor_Speed
     if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==0.0){
         if( ctx->phys.q <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
             // Cruch:Down
         }
         else {
@@ -844,7 +844,7 @@ void CDigitShowBasicDoc::MLoading_Stress()
     }
     else if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==1.0){
         if( ctx->phys.q >= ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
             // Cruch:Up
         }
         else {
@@ -858,13 +858,13 @@ void CDigitShowBasicDoc::MLoading_Strain()
 {
     DigitShowContext* ctx = GetContext();
     ctx->TotalStepTime = ctx->TotalStepTime+ctx->CtrlStepTime/60.0;
-    ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+    ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
     // Motor: On
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
     // Motor_Speed
     if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==0.0){
         if(ctx->phys.ea <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
             // Cruch:Down
         }
         else {
@@ -874,7 +874,7 @@ void CDigitShowBasicDoc::MLoading_Strain()
     }
     else if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==1.0){
         if(ctx->phys.ea >= ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
             // Cruch:Up
         }
         else {
@@ -888,9 +888,9 @@ void CDigitShowBasicDoc::CLoading_Stress()
 {
     DigitShowContext* ctx = GetContext();
     ctx->TotalStepTime = ctx->TotalStepTime+ctx->CtrlStepTime/60.0;
-    ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+    ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
     // Motor: On
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
     // Motor_Speed
     if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==0.0){
         if(ctx->NumCyclic==0){
@@ -899,12 +899,12 @@ void CDigitShowBasicDoc::CLoading_Stress()
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
             if(ctx->FlagCyclic==FALSE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                 // Cruch:Up
                 if( ctx->phys.q<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) ctx->FlagCyclic = TRUE;
             }
             if(ctx->FlagCyclic==TRUE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                 // Cruch:Down
                 if( ctx->phys.q>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) {
                     ctx->FlagCyclic = FALSE;
@@ -925,7 +925,7 @@ void CDigitShowBasicDoc::CLoading_Stress()
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
             if(ctx->FlagCyclic==FALSE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                 // Cruch:Up
                 if( ctx->phys.q<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
                     ctx->FlagCyclic = TRUE;
@@ -933,7 +933,7 @@ void CDigitShowBasicDoc::CLoading_Stress()
                 }
             }
             if(ctx->FlagCyclic==TRUE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                 // Cruch:Down
                 if( ctx->phys.q>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) ctx->FlagCyclic = FALSE;
             }
@@ -950,8 +950,8 @@ void CDigitShowBasicDoc::CLoading_Strain()
 {
     DigitShowContext* ctx = GetContext();
     ctx->TotalStepTime = ctx->TotalStepTime+ctx->CtrlStepTime/60.0;
-    ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+    ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
     // Motor_Speed
     if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==0.0){
         if(ctx->NumCyclic==0){
@@ -960,12 +960,12 @@ void CDigitShowBasicDoc::CLoading_Strain()
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
             if(ctx->FlagCyclic==FALSE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                 // Cruch:Up
                 if(ctx->phys.ea<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) ctx->FlagCyclic = TRUE;
             }
             if(ctx->FlagCyclic==TRUE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                 // Cruch:Down
                 if(ctx->phys.ea>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) {
                     ctx->FlagCyclic = FALSE;
@@ -986,7 +986,7 @@ void CDigitShowBasicDoc::CLoading_Strain()
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
             if(ctx->FlagCyclic==FALSE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
                 // Cruch:Up
                 if(ctx->phys.ea<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
                     ctx->FlagCyclic = TRUE;
@@ -994,7 +994,7 @@ void CDigitShowBasicDoc::CLoading_Strain()
                 }
             }
             if(ctx->FlagCyclic==TRUE){
-                ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+                ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
                 // Cruch:Down
                 if(ctx->phys.ea>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) ctx->FlagCyclic = FALSE;
             }
@@ -1011,19 +1011,19 @@ void CDigitShowBasicDoc::Creep()
 {
     DigitShowContext* ctx = GetContext();
     ctx->TotalStepTime = ctx->TotalStepTime+ctx->CtrlStepTime/60.0;
-    ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+    ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
     // Motor:On
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
     if( ctx->phys.q>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->errTol.StressCom)    {
-        ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+        ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
         // Cruch:Up
     }
     else if( ctx->phys.q<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->errTol.StressExt)    {
-        ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+        ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
         // Cruch:Down
     }        
     else {
-        ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+        ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
         // RPM->0
     }
     if(ctx->TotalStepTime>= ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
@@ -1036,16 +1036,16 @@ void CDigitShowBasicDoc::LinearEffectiveStressPath()
 {
     DigitShowContext* ctx = GetContext();
     ctx->TotalStepTime = ctx->TotalStepTime+ctx->CtrlStepTime/60.0;
-    ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+    ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
     if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]==ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]){
-        ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->cal.DA_a[ctx->daChannel.EP_Cell]*(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]- ctx->phys.e_sr));
+        ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->ao.cal.a[ctx->daChannel.EP_Cell]*(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]- ctx->phys.e_sr));
         if( ctx->phys.e_sa > ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]+ctx->errTol.StressCom){
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
             // Cruch:Up
         }
         else if( ctx->phys.e_sa < ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]+ctx->errTol.StressExt){
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
             // Cruch:Down
         }
         else {
@@ -1055,21 +1055,21 @@ void CDigitShowBasicDoc::LinearEffectiveStressPath()
     }
     else if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][1] < ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]){
         if( ctx->phys.e_sr >= ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]-ctx->errTol.StressA) {
-            ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]-float(0.2*ctx->cal.DA_a[ctx->daChannel.EP_Cell]*(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]));
+            ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]-float(0.2*ctx->ao.cal.a[ctx->daChannel.EP_Cell]*(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]));
         }
         if( ctx->phys.e_sr < ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]-ctx->errTol.StressA) {
-            ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]+float(ctx->cal.DA_a[ctx->daChannel.EP_Cell]*fabs(ctx->controlFile.Para[ctx->controlFile.CurrentNum][5])/60.0*ctx->timeSettings.Interval2/1000.0);
+            ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]+float(ctx->ao.cal.a[ctx->daChannel.EP_Cell]*fabs(ctx->controlFile.Para[ctx->controlFile.CurrentNum][5])/60.0*ctx->timeSettings.Interval2/1000.0);
         }
         if( ctx->phys.e_sa > (ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][0])/(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])*(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])+ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->errTol.StressCom){
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
             // Cruch:Up
         }
         else if( ctx->phys.e_sa < (ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][0])/(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])*(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])+ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->errTol.StressExt){
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
             // Cruch:Down
         }
         else {
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
             // RPM -> 0
             if(fabs(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) <= ctx->errTol.StressA) {
                 ctx->controlFile.CurrentNum = ctx->controlFile.CurrentNum+1;
@@ -1079,21 +1079,21 @@ void CDigitShowBasicDoc::LinearEffectiveStressPath()
     }
     else if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][1] > ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]){
         if( ctx->phys.e_sr > ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]+ctx->errTol.StressA) {
-            ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]-float(ctx->cal.DA_a[ctx->daChannel.EP_Cell]*fabs(ctx->controlFile.Para[ctx->controlFile.CurrentNum][5])/60.0*ctx->timeSettings.Interval2/1000.0);
+            ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]-float(ctx->ao.cal.a[ctx->daChannel.EP_Cell]*fabs(ctx->controlFile.Para[ctx->controlFile.CurrentNum][5])/60.0*ctx->timeSettings.Interval2/1000.0);
         }
         if( ctx->phys.e_sr <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]+ctx->errTol.StressA) {
-            ctx->ao_raw[ctx->daChannel.EP_Cell] = ctx->ao_raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->cal.DA_a[ctx->daChannel.EP_Cell]*(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]- ctx->phys.e_sr));
+            ctx->ao.raw[ctx->daChannel.EP_Cell] = ctx->ao.raw[ctx->daChannel.EP_Cell]+float(0.2*ctx->ao.cal.a[ctx->daChannel.EP_Cell]*(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]- ctx->phys.e_sr));
         }
         if( ctx->phys.e_sa > (ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][0])/(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])*(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])+ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->errTol.StressCom){
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 5.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 5.0f;
             // Cruch:Up
         }
         else if( ctx->phys.e_sa < (ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][0])/(ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])*(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][1])+ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->errTol.StressExt){
-            ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+            ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
             // Cruch:Down
         }
         else {
-            ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+            ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
             // RPM -> 0
             if(fabs(ctx->phys.e_sr-ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) <= ctx->errTol.StressA){
                 ctx->controlFile.CurrentNum = ctx->controlFile.CurrentNum+1;
@@ -1107,15 +1107,15 @@ void CDigitShowBasicDoc::Creep2()
 {
     DigitShowContext* ctx = GetContext();
     ctx->TotalStepTime = ctx->TotalStepTime+ctx->CtrlStepTime/60.0;
-    ctx->ao_raw[ctx->daChannel.Motor] = 5.0f;
+    ctx->ao.raw[ctx->daChannel.Motor] = 5.0f;
     // Motor:On
-    ctx->ao_raw[ctx->daChannel.MotorSpeed] = float(ctx->cal.DA_a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->cal.DA_b[ctx->daChannel.MotorSpeed]);
+    ctx->ao.raw[ctx->daChannel.MotorSpeed] = float(ctx->ao.cal.a[ctx->daChannel.MotorSpeed]*ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]+ctx->ao.cal.b[ctx->daChannel.MotorSpeed]);
     if( ctx->phys.q <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][1]+ctx->errTol.StressExt)    {
-        ctx->ao_raw[ctx->daChannel.MotorCruch] = 0.0f;
+        ctx->ao.raw[ctx->daChannel.MotorCruch] = 0.0f;
         // Cruch:Down
     }        
     else {
-        ctx->ao_raw[ctx->daChannel.MotorSpeed] = 0.0f;
+        ctx->ao.raw[ctx->daChannel.MotorSpeed] = 0.0f;
         // RPM->0
     }
     if(ctx->TotalStepTime >= ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {

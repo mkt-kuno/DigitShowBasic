@@ -206,15 +206,29 @@ struct DigitShowContext {
 
     // Sampling and calibration
     SamplingSettings sampling;
-    CalibrationData cal;
 
-    // Measurement data
-    float  ai_raw[AI_MAX_CHANNELS];
-    float  ai_raw_temp;
-    double ai_phy[AI_MAX_CHANNELS];
-    double ai_phy_temp;
-    double ai_param[AI_MAX_CHANNELS];
-    float  ao_raw[AO_MAX_CHANNELS];
+    // Analog input measurement data (post-filter)
+    struct {
+        float  raw[AI_MAX_CHANNELS];   // filtered ADC voltages [V]
+        float  raw_temp;               // scratch for FIFO save conversion
+        double phy[AI_MAX_CHANNELS];   // calibrated physical values
+        double phy_temp;               // scratch for FIFO save conversion
+        double param[AI_MAX_CHANNELS]; // derived stress/strain params
+        struct {
+            double a[NUM_PARAM_MAX];   // quadratic coefficient
+            double b[NUM_PARAM_MAX];   // linear coefficient
+            double c[NUM_PARAM_MAX];   // offset
+        } cal;
+    } ai;
+
+    // Analog output setpoints [V]
+    struct {
+        float  raw[AO_MAX_CHANNELS];
+        struct {
+            double a[AO_MAX_CHANNELS]; // DA gain
+            double b[AO_MAX_CHANNELS]; // DA offset
+        } cal;
+    } ao;
 
     // Physical values
     PhysicalValues phys;
