@@ -97,12 +97,6 @@ void InitContext(DigitShowContext* ctx)
     ctx->fpPhysical = nullptr;
     ctx->fpParam    = nullptr;
 
-    // Initialize error handling
-    ctx->Ret = 0;
-    ctx->Ret2 = 0;
-    memset(ctx->ErrorString, 0, sizeof(ctx->ErrorString));
-    // Note: CString TextString, CTime, CTimeSpan are default-constructed by C++ runtime
-
     // Initialize calibration factors (default: linear y = x)
     for (int i = 0; i < AI_MAX_CHANNELS; i++) {
         ctx->ai.raw[i] = 0.0f;
