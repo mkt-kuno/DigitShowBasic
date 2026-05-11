@@ -40,17 +40,11 @@ void InitContext(DigitShowContext* ctx)
     ctx->NumAD = 1;
     ctx->NumDA = 0;
 
-    // Initialize A/D board config (zero all POD fields; pData vector default-inits empty)
+    // Initialize A/D board config (zero all POD fields)
     ctx->ad = {};
     
     // Initialize D/A board config
     memset(&ctx->da, 0, sizeof(ctx->da));
-
-    // Initialize sampling settings
-    ctx->sampling.SavingClock = 0.0f;
-    ctx->sampling.SavingTime = 300;
-    ctx->sampling.TotalSamplingTimes = 0;
-    ctx->sampling.CurrentSamplingTimes = 0;
 
     ctx->ad.LastDataCount = 0;
 
@@ -60,7 +54,6 @@ void InitContext(DigitShowContext* ctx)
     // Initialize flags
     ctx->FlagSetBoard = false;
     ctx->FlagSaveData = false;
-    ctx->FlagFIFO = false;
     ctx->FlagCyclic = false;
     ctx->FlagCtrl = false;
 
@@ -98,8 +91,6 @@ void InitContext(DigitShowContext* ctx)
     ctx->height = 0.0;
     ctx->volume = 0.0;
     ctx->area = 0.0;
-    ctx->ai.raw_temp = 0.0f;
-    ctx->ai.phy_temp = 0.0;
 
     // Initialize file handles
     ctx->fpVoltage  = nullptr;

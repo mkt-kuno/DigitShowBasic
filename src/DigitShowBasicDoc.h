@@ -35,8 +35,6 @@ public:
 
 public:
     void Creep2();
-    void SaveToFile2();
-    void Allocate_Memory();
     void LinearEffectiveStressPath();
     void Stop_Control();
     void Start_Control();

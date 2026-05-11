@@ -19,7 +19,6 @@
 #define IDD_Control_Sensitivity         143
 #define IDD_Control_Cloading            144
 #define IDD_Control_File                145
-#define IDD_SamplingSettings            146
 #define IDD_Control_PreConsolidation    147
 #define IDD_TransAdjustment             148
 #define IDD_Control_LinearStressPathLoading 149
@@ -403,21 +402,12 @@
 #define IDC_EDIT_ADMethod1              1777
 #define IDC_BUTTON_Check                1779
 #define IDC_EDIT_ADResolution0          1780
-#define IDC_BUTTON_FIFOStart            1780
 #define IDC_EDIT_ADResolution1          1781
-#define IDC_BUTTON_FIFOStop             1781
-#define IDC_EDIT_MemoryType             1781
 #define IDC_EDIT_Channels               1782
 #define IDC_EDIT_ADRange0               1783
-#define IDC_EDIT_AllocatedMemory        1783
 #define IDC_EDIT_ADRange1               1784
-#define IDC_EDIT_SamplingClock          1784
-#define IDC_EDIT_SavingTime             1785
 #define IDC_EDIT_ADMaxChannel0          1786
-#define IDC_EDIT_EventSamplingTimes     1786
 #define IDC_EDIT_ADMaxChannel1          1787
-#define IDC_EDIT_TotalSamplingTimes     1788
-#define IDC_BUTTON_WriteData            1791
 #define IDC_COMBO_Control_ID            1792
 #define IDC_COMBO_SamplingTime          1793
 #define IDC_EDIT_TimeInterval1          1794
@@ -472,7 +462,6 @@
 #define ID_Control_Sensitivity          32792
 #define ID_Control_CLoading             32793
 #define ID_Control_File                 32794
-#define ID_SamplingSettings             32795
 #define ID_Control_PreConsolidation     32796
 #define ID_TransAdjustment              32797
 #define ID_Control_LinearStressPath     32798

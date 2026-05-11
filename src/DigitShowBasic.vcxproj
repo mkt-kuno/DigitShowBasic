@@ -68,7 +68,6 @@
     <ClCompile Include="DigitShowBasicDoc.cpp" />
     <ClCompile Include="DigitShowBasicView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="SamplingSettings.cpp" />
     <ClCompile Include="Specimen.cpp" />
     <ClCompile Include="TransAdjustment.cpp" />
   </ItemGroup>
@@ -111,7 +110,6 @@
     <ClInclude Include="DigitShowBasicView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="samplingsettings.h" />
     <ClInclude Include="Specimen.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="TransAdjustment.h" />
