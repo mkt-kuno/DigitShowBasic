@@ -102,9 +102,9 @@ void InitContext(DigitShowContext* ctx)
     ctx->ai.phy_temp = 0.0;
 
     // Initialize file handles
-    ctx->FileSaveData0 = nullptr;
-    ctx->FileSaveData1 = nullptr;
-    ctx->FileSaveData2 = nullptr;
+    ctx->fpVoltage  = nullptr;
+    ctx->fpPhysical = nullptr;
+    ctx->fpParam    = nullptr;
 
     // Initialize error handling
     ctx->Ret = 0;
