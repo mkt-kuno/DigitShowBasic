@@ -284,6 +284,9 @@ void CDigitShowBasicView::OnInitialUpdate()
 
             Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
             Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
+            // Resize sample buffer to match the confirmed SamplingTimes
+            ctx->ad.Data0.resize(
+                static_cast<size_t>(ctx->ad.SamplingTimes) * DSP_AD_CHANNELS);
             Ret = AioSetAiStopTrigger(ctx->ad.Id, 4);
             Ret = AioResetAiMemory   (ctx->ad.Id);
         }
@@ -637,7 +640,7 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
         Ret = AioGetAiSamplingCount(ctx->ad.Id, &tmp);
         if (tmp <= 0) return TRUE;
 
-        Ret = AioGetAiSamplingData(ctx->ad.Id, &tmp, &ctx->ad.Data0[0]);
+        Ret = AioGetAiSamplingData(ctx->ad.Id, &tmp, ctx->ad.Data0.data());
         if (Ret != 0) {
             Ret2 = AioGetErrorString(Ret, errStr);
             msgStr.Format("AioGetAiSamplingData = %d : %s", Ret, errStr);

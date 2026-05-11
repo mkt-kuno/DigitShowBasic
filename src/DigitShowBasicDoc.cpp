@@ -182,6 +182,10 @@ void CDigitShowBasicDoc::OpenBoard()
         ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
         ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
 
+        // Allocate sample buffer exactly once, sized for one event burst
+        ctx->ad.Data0.resize(
+            static_cast<size_t>(ctx->ad.SamplingTimes) * DSP_AD_CHANNELS);
+
         // ── DA board (single, fixed) ──────────────────────────────
         if (ctx->NumDA > 0) {
             ret = AioGetAoResolution (ctx->da.Id, &ctx->da.Resolution);
