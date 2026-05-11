@@ -52,10 +52,10 @@ void InitContext(DigitShowContext* ctx)
     memset(&ctx->ai.dsp, 0, sizeof(ctx->ai.dsp));
 
     // Initialize flags
-    ctx->FlagSetBoard = false;
-    ctx->FlagSaveData = false;
-    ctx->FlagCyclic = false;
-    ctx->FlagCtrl = false;
+    ctx->flags.SetBoard  = false;
+    ctx->flags.SaveData  = false;
+    ctx->flags.Cyclic    = false;
+    ctx->flags.Ctrl      = false;
 
     // Initialize control state
     ctx->ControlID = 0;

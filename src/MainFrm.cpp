@@ -130,7 +130,7 @@ void CMainFrame::OnBoardSettings()
 void CMainFrame::OnCalibrationFactor() 
 {
     DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
+    if(ctx->flags.SetBoard==FALSE){
         AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
     }
     CCalibrationFactor CalibrationFactor;
@@ -160,7 +160,7 @@ void CMainFrame::OnDAChannel()
 void CMainFrame::OnDAVout() 
 {
     DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
+    if(ctx->flags.SetBoard==FALSE){
         AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
     }
     CDA_Vout DA_Vout;
@@ -170,7 +170,7 @@ void CMainFrame::OnDAVout()
 void CMainFrame::OnDAPout() 
 {
     DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
+    if(ctx->flags.SetBoard==FALSE){
         AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
     }
     CDA_Pout DA_Pout;

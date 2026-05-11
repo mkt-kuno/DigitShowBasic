@@ -104,7 +104,7 @@ void CDigitShowBasicDoc::OpenBoard()
     DigitShowContext* ctx = GetContext();
     int    i;
     
-    if(ctx->FlagSetBoard){
+    if(ctx->flags.SetBoard){
         AfxMessageBox("Initialization has been already accomplished", MB_ICONSTOP | MB_OK );
         return;
     }
@@ -189,7 +189,7 @@ void CDigitShowBasicDoc::OpenBoard()
             ctx->Ret = AioGetAoRange   (ctx->da.Id, 0, &ctx->da.Range);
             ctx->Ret = GetRangeValue   (ctx->da.Range, &ctx->da.RangeMax, &ctx->da.RangeMin);
         }
-        ctx->FlagSetBoard = TRUE;
+        ctx->flags.SetBoard = TRUE;
     }
     return;
 }
@@ -198,7 +198,7 @@ void CDigitShowBasicDoc::CloseBoard()
 {
     DigitShowContext* ctx = GetContext();
     // Close A/D and D/A board to end the application 
-    if( ctx->FlagSetBoard==TRUE ){
+    if( ctx->flags.SetBoard==TRUE ){
         if(ctx->NumAD > 0)    ctx->Ret = AioExit(ctx->ad.Id);
         if(ctx->NumDA > 0)    ctx->Ret = AioExit(ctx->da.Id);
     }
@@ -534,20 +534,20 @@ void CDigitShowBasicDoc::Control_DA()
                     // Cruch:Down
                     if( ctx->phys.q>=ControlData[5].sigma[1]) {
                         ControlData[5].time[0] = ControlData[5].time[1];
-                        ctx->FlagCyclic = FALSE;
+                        ctx->flags.Cyclic = FALSE;
                     }
                 }
                 if(ControlData[5].time[1]<=ControlData[5].time[0] || ControlData[5].time[0]<=ControlData[5].time[2]){
-                    if(ctx->FlagCyclic==FALSE){
+                    if(ctx->flags.Cyclic==FALSE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                         // Cruch:Up
-                        if( ctx->phys.q<=ControlData[5].sigma[0]) ctx->FlagCyclic = TRUE;
+                        if( ctx->phys.q<=ControlData[5].sigma[0]) ctx->flags.Cyclic = TRUE;
                     }
-                    if(ctx->FlagCyclic==TRUE){
+                    if(ctx->flags.Cyclic==TRUE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                         // Cruch:Down
                         if( ctx->phys.q>=ControlData[5].sigma[1]) {
-                            ctx->FlagCyclic = FALSE;
+                            ctx->flags.Cyclic = FALSE;
                             ControlData[5].time[0] = ControlData[5].time[0]+1;
                         }
                     }
@@ -563,20 +563,20 @@ void CDigitShowBasicDoc::Control_DA()
                     // Cruch:Up
                     if( ctx->phys.q<=ControlData[5].sigma[0]) {
                         ControlData[5].time[0] = ControlData[5].time[1];
-                        ctx->FlagCyclic = TRUE;
+                        ctx->flags.Cyclic = TRUE;
                     }
                 }
                 if(ControlData[5].time[1]<=ControlData[5].time[0] || ControlData[5].time[0]<=ControlData[5].time[2]){
-                    if(ctx->FlagCyclic==TRUE){
+                    if(ctx->flags.Cyclic==TRUE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                         // Cruch:Down
-                        if( ctx->phys.q>=ControlData[5].sigma[1]) ctx->FlagCyclic = FALSE;
+                        if( ctx->phys.q>=ControlData[5].sigma[1]) ctx->flags.Cyclic = FALSE;
                     }
-                    if(ctx->FlagCyclic==FALSE){
+                    if(ctx->flags.Cyclic==FALSE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                         // Cruch:Up
                         if( ctx->phys.q<=ControlData[5].sigma[0]) {
-                            ctx->FlagCyclic = TRUE;
+                            ctx->flags.Cyclic = TRUE;
                             ControlData[5].time[0] = ControlData[5].time[0]+1;
                         }
                     }
@@ -600,20 +600,20 @@ void CDigitShowBasicDoc::Control_DA()
                     // Cruch:Down
                     if( ctx->phys.q>=ControlData[6].sigma[1]) {
                         ControlData[6].time[0] = ControlData[6].time[1];
-                        ctx->FlagCyclic = FALSE;
+                        ctx->flags.Cyclic = FALSE;
                     }
                 }
                 if(ControlData[6].time[1]<=ControlData[6].time[0] || ControlData[6].time[0]<=ControlData[6].time[2]){
-                    if(ctx->FlagCyclic==FALSE){
+                    if(ctx->flags.Cyclic==FALSE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                         // Cruch:Up
-                        if( ctx->phys.q<=ControlData[6].sigma[0]) ctx->FlagCyclic = TRUE;
+                        if( ctx->phys.q<=ControlData[6].sigma[0]) ctx->flags.Cyclic = TRUE;
                     }
-                    if(ctx->FlagCyclic==TRUE){
+                    if(ctx->flags.Cyclic==TRUE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                         // Cruch:Down
                         if( ctx->phys.q>=ControlData[6].sigma[1]) {
-                            ctx->FlagCyclic = FALSE;
+                            ctx->flags.Cyclic = FALSE;
                             ControlData[6].time[0] = ControlData[6].time[0]+1;
                         }
                     }
@@ -629,20 +629,20 @@ void CDigitShowBasicDoc::Control_DA()
                     // Cruch:Up
                     if( ctx->phys.q<=ControlData[6].sigma[0]) {
                         ControlData[6].time[0] = ControlData[6].time[1];
-                        ctx->FlagCyclic = TRUE;
+                        ctx->flags.Cyclic = TRUE;
                     }
                 }
                 if(ControlData[6].time[1]<=ControlData[6].time[0] || ControlData[6].time[0]<=ControlData[6].time[2]){
-                    if(ctx->FlagCyclic==TRUE){
+                    if(ctx->flags.Cyclic==TRUE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                         // Cruch:Down
-                        if( ctx->phys.q>=ControlData[6].sigma[1]) ctx->FlagCyclic = FALSE;
+                        if( ctx->phys.q>=ControlData[6].sigma[1]) ctx->flags.Cyclic = FALSE;
                     }
-                    if(ctx->FlagCyclic==FALSE){
+                    if(ctx->flags.Cyclic==FALSE){
                         ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                         // Cruch:Up
                         if( ctx->phys.q<=ControlData[6].sigma[0]) {
-                            ctx->FlagCyclic = TRUE;
+                            ctx->flags.Cyclic = TRUE;
                             ControlData[6].time[0] = ControlData[6].time[0]+1;
                         }
                     }
@@ -847,20 +847,20 @@ void CDigitShowBasicDoc::CLoading_Stress()
     // Motor_Speed
     if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==0.0){
         if(ctx->NumCyclic==0){
-            ctx->FlagCyclic = FALSE;
+            ctx->flags.Cyclic = FALSE;
             ctx->NumCyclic = 1;
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
-            if(ctx->FlagCyclic==FALSE){
+            if(ctx->flags.Cyclic==FALSE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                 // Cruch:Up
-                if( ctx->phys.q<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) ctx->FlagCyclic = TRUE;
+                if( ctx->phys.q<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) ctx->flags.Cyclic = TRUE;
             }
-            if(ctx->FlagCyclic==TRUE){
+            if(ctx->flags.Cyclic==TRUE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                 // Cruch:Down
                 if( ctx->phys.q>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) {
-                    ctx->FlagCyclic = FALSE;
+                    ctx->flags.Cyclic = FALSE;
                     ctx->NumCyclic = ctx->NumCyclic+1;
                 }
             }
@@ -873,22 +873,22 @@ void CDigitShowBasicDoc::CLoading_Stress()
     }
     else if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==1.0){
         if(ctx->NumCyclic==0){
-            ctx->FlagCyclic = TRUE;
+            ctx->flags.Cyclic = TRUE;
             ctx->NumCyclic = 1;
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
-            if(ctx->FlagCyclic==FALSE){
+            if(ctx->flags.Cyclic==FALSE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                 // Cruch:Up
                 if( ctx->phys.q<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
-                    ctx->FlagCyclic = TRUE;
+                    ctx->flags.Cyclic = TRUE;
                     ctx->NumCyclic = ctx->NumCyclic+1;
                 }
             }
-            if(ctx->FlagCyclic==TRUE){
+            if(ctx->flags.Cyclic==TRUE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                 // Cruch:Down
-                if( ctx->phys.q>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) ctx->FlagCyclic = FALSE;
+                if( ctx->phys.q>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) ctx->flags.Cyclic = FALSE;
             }
         }
         if(ctx->NumCyclic>ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){ 
@@ -908,20 +908,20 @@ void CDigitShowBasicDoc::CLoading_Strain()
     // Motor_Speed
     if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==0.0){
         if(ctx->NumCyclic==0){
-            ctx->FlagCyclic = FALSE;
+            ctx->flags.Cyclic = FALSE;
             ctx->NumCyclic = 1;
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
-            if(ctx->FlagCyclic==FALSE){
+            if(ctx->flags.Cyclic==FALSE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                 // Cruch:Up
-                if(ctx->phys.ea<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) ctx->FlagCyclic = TRUE;
+                if(ctx->phys.ea<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) ctx->flags.Cyclic = TRUE;
             }
-            if(ctx->FlagCyclic==TRUE){
+            if(ctx->flags.Cyclic==TRUE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                 // Cruch:Down
                 if(ctx->phys.ea>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) {
-                    ctx->FlagCyclic = FALSE;
+                    ctx->flags.Cyclic = FALSE;
                     ctx->NumCyclic = ctx->NumCyclic+1;
                 }
             }
@@ -934,22 +934,22 @@ void CDigitShowBasicDoc::CLoading_Strain()
     }
     else if(ctx->controlFile.Para[ctx->controlFile.CurrentNum][0]==1.0){
         if(ctx->NumCyclic==0){
-            ctx->FlagCyclic = TRUE;
+            ctx->flags.Cyclic = TRUE;
             ctx->NumCyclic = 1;
         }
         if(ctx->NumCyclic!=0 && ctx->NumCyclic <= ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){
-            if(ctx->FlagCyclic==FALSE){
+            if(ctx->flags.Cyclic==FALSE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 5.0f;
                 // Cruch:Up
                 if(ctx->phys.ea<=ctx->controlFile.Para[ctx->controlFile.CurrentNum][2]) {
-                    ctx->FlagCyclic = TRUE;
+                    ctx->flags.Cyclic = TRUE;
                     ctx->NumCyclic = ctx->NumCyclic+1;
                 }
             }
-            if(ctx->FlagCyclic==TRUE){
+            if(ctx->flags.Cyclic==TRUE){
                 ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
                 // Cruch:Down
-                if(ctx->phys.ea>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) ctx->FlagCyclic = FALSE;
+                if(ctx->phys.ea>=ctx->controlFile.Para[ctx->controlFile.CurrentNum][3]) ctx->flags.Cyclic = FALSE;
             }
         }
         if(ctx->NumCyclic>ctx->controlFile.Para[ctx->controlFile.CurrentNum][4]){ 

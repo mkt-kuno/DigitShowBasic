@@ -112,7 +112,7 @@ CDigitShowBasicView::CDigitShowBasicView()
     m_FileName = _T("");
     //}}AFX_DATA_INIT
 
-    ctx->FlagCtrl = FALSE;
+    ctx->flags.Ctrl = FALSE;
     m_pEditBrush = new CBrush(RGB(255,255,255));
     m_pStaticBrush = new CBrush(RGB(0,128,128));    
     m_pDlgBrush = new CBrush(RGB(0,128,128));
@@ -266,7 +266,7 @@ void CDigitShowBasicView::OnInitialUpdate()
     m_Combo2->SetWindowText("1.0 s");
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
     pDoc->OpenBoard();
-    if(ctx->FlagSetBoard){
+    if(ctx->flags.SetBoard){
         if (ctx->NumAD > 0) {
             // floor() rounds toward shorter period to avoid board init failure
             const float scanClock_us =
@@ -338,11 +338,11 @@ void CDigitShowBasicView::OnTimer(UINT_PTR nIDEvent)
         { 
             ctx->NowTime = ctx->NowTime.GetCurrentTime();
             ctx->SNowTime = ctx->NowTime.Format("%m/%d  %H:%M:%S");
-            if(ctx->FlagSaveData){
+            if(ctx->flags.SaveData){
                 ctx->SpanTime = ctx->NowTime- ctx->StartTime;
                 ctx->SequentTime1 = (long)ctx->SpanTime.GetTotalSeconds();
             }    
-            if(ctx->FlagSetBoard)    pDoc -> AD_INPUT();
+            if(ctx->flags.SetBoard)    pDoc -> AD_INPUT();
             pDoc -> Cal_Physical();
             pDoc -> Cal_Param();
             ShowData();
@@ -351,20 +351,20 @@ void CDigitShowBasicView::OnTimer(UINT_PTR nIDEvent)
     case 2:
         { 
             _ftime_s(&StepTime1);
-            if(ctx->FlagCtrl==FALSE){
+            if(ctx->flags.Ctrl==FALSE){
                 StepTime0 = StepTime1;
-                ctx->FlagCtrl = TRUE;
+                ctx->flags.Ctrl = TRUE;
             }
             ctx->CtrlStepTime = double(StepTime1.time-StepTime0.time)+double( (StepTime1.millitm-StepTime0.millitm)/1000.0 );
             StepTime0 = StepTime1;
-            if(ctx->FlagSetBoard)    pDoc -> Control_DA(); 
+            if(ctx->flags.SetBoard)    pDoc -> Control_DA(); 
         }
         break;
     case 3:
         { 
             _ftime_s(&NowTime2);
             ctx->SequentTime2 = double(NowTime2.time-StartTime2.time)+double( (NowTime2.millitm-StartTime2.millitm)/1000.0 );
-            if(ctx->FlagSetBoard)    pDoc -> AD_INPUT();
+            if(ctx->flags.SetBoard)    pDoc -> AD_INPUT();
             pDoc -> Cal_Physical();
             pDoc -> Cal_Param();
             pDoc -> SaveToFile();
@@ -441,7 +441,7 @@ void CDigitShowBasicView::OnBUTTONCtrlOn()
     DigitShowContext* ctx = GetContext();
 
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
-    if(ctx->FlagSetBoard){
+    if(ctx->flags.SetBoard){
         SetTimer(2,ctx->timeSettings.ControlInterval,NULL);
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_CtrlOn);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_CtrlOff);
@@ -457,7 +457,7 @@ void CDigitShowBasicView::OnBUTTONCtrlOff()
 
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
     KillTimer(2);
-    ctx->FlagCtrl = FALSE;
+    ctx->flags.Ctrl = FALSE;
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_CtrlOn);
     CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_CtrlOff);
     myBTN1->EnableWindow(TRUE);
@@ -570,14 +570,14 @@ void CDigitShowBasicView::OnBUTTONStartSave()
             _ftime_s(&NowTime2);
             StartTime2 = NowTime2;
             ctx->SequentTime2 = double(NowTime2.time-StartTime2.time)+double( (NowTime2.millitm-StartTime2.millitm)/1000.0 );
-            ctx->FlagSaveData = TRUE;
+            ctx->flags.SaveData = TRUE;
             CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
             CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);
             CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
             myBTN1->EnableWindow(FALSE);    
             myBTN2->EnableWindow(TRUE);
             myBTN3->EnableWindow(TRUE);
-            if(ctx->FlagSetBoard)    pDoc -> AD_INPUT();
+            if(ctx->flags.SetBoard)    pDoc -> AD_INPUT();
             pDoc -> Cal_Physical();
             pDoc -> Cal_Param();
             pDoc -> SaveToFile();
@@ -589,11 +589,11 @@ void CDigitShowBasicView::OnBUTTONStopSave()
     DigitShowContext* ctx = GetContext();
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
 
-    if(ctx->FlagSaveData==TRUE){
+    if(ctx->flags.SaveData==TRUE){
         KillTimer(3);
         _ftime_s(&NowTime2);
         ctx->SequentTime2 = double(NowTime2.time-StartTime2.time)+double( (NowTime2.millitm-StartTime2.millitm)/1000.0 );
-        if(ctx->FlagSetBoard)    pDoc -> AD_INPUT();
+        if(ctx->flags.SetBoard)    pDoc -> AD_INPUT();
         pDoc -> Cal_Physical();
         pDoc -> Cal_Param();
         pDoc -> SaveToFile();
@@ -606,7 +606,7 @@ void CDigitShowBasicView::OnBUTTONStopSave()
         myBTN1->EnableWindow(TRUE);    
         myBTN2->EnableWindow(FALSE);
         myBTN3->EnableWindow(FALSE);    
-        ctx->FlagSaveData = FALSE;
+        ctx->flags.SaveData = FALSE;
     }
 }
 
@@ -617,7 +617,7 @@ void CDigitShowBasicView::OnBUTTONInterceptSave()
     
     _ftime_s(&NowTime2);
     ctx->SequentTime2 = double(NowTime2.time-StartTime2.time)+double( (NowTime2.millitm-StartTime2.millitm)/1000.0 );    
-    if(ctx->FlagSetBoard)    pDoc -> AD_INPUT();
+    if(ctx->flags.SetBoard)    pDoc -> AD_INPUT();
     pDoc -> Cal_Physical();
     pDoc -> Cal_Param();
     pDoc -> SaveToFile();    
@@ -697,7 +697,7 @@ void CDigitShowBasicView::OnBUTTONSetTimeInterval()
     if(tmp=="3.0 min")    ctx->timeSettings.SaveInterval = 180000;
     if(tmp=="5.0 min")    ctx->timeSettings.SaveInterval = 300000;
     if(tmp=="10.0 min")    ctx->timeSettings.SaveInterval = 600000;
-    if(ctx->FlagSaveData){
+    if(ctx->flags.SaveData){
         KillTimer(3);
         SetTimer(3,ctx->timeSettings.SaveInterval,NULL);
     }    
