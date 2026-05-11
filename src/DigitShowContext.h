@@ -127,16 +127,6 @@ struct TimeSettings {
 };
 
 /**
- * Sampling settings
- */
-struct SamplingSettings {
-    float SavingClock;
-    int   SavingTime;
-    long  TotalSamplingTimes;
-    long  CurrentSamplingTimes;
-};
-
-/**
  * Error tolerance settings
  */
 struct ErrorTolerance {
@@ -168,15 +158,10 @@ struct DspFilter {
  * Singleton pattern for global state management
  */
 struct DigitShowContext {
-    // Sampling and calibration
-    SamplingSettings sampling;
-
     // Analog input measurement data (post-filter)
     struct {
         float  raw[AI_MAX_CHANNELS];   // filtered ADC voltages [V]
-        float  raw_temp;               // scratch for FIFO save conversion
         double phy[AI_MAX_CHANNELS];   // calibrated physical values
-        double phy_temp;               // scratch for FIFO save conversion
         double param[AI_MAX_CHANNELS]; // derived stress/strain params
         struct {
             double a[NUM_PARAM_MAX];   // quadratic coefficient
@@ -222,7 +207,6 @@ struct DigitShowContext {
     bool FlagSaveData;
     bool FlagCtrl;
     bool FlagCyclic;
-    bool FlagFIFO;
 
     // Time management
     TimeSettings timeSettings;
@@ -262,7 +246,6 @@ struct DigitShowContext {
         float  ScanClock;
         long   LastDataCount;           // actual scan count from last AioGetAiSamplingData
         long   Data0[262144];
-        std::vector<long> pData;        // FIFO recording buffer
     } ad;
     struct DaBoardConfig {
         short  Id;

@@ -179,9 +179,6 @@ void CDigitShowBasicDoc::OpenBoard()
         ctx->Ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
         ctx->Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
 
-        ctx->sampling.SavingTime = 300;
-        ctx->sampling.TotalSamplingTimes =
-            long(ctx->sampling.SavingTime * 1000000L / ctx->ad.SamplingClock);
         // ── DA board (single, fixed) ──────────────────────────────
         if (ctx->NumDA > 0) {
             ctx->Ret = AioGetAoResolution (ctx->da.Id, &ctx->da.Resolution);
@@ -368,45 +365,6 @@ void CDigitShowBasicDoc::SaveToFile()
         fprintf(ctx->fpParam, "%lf\t", ctx->ai.param[i]);
     }
     fprintf(ctx->fpParam, "\n");
-}
-
-void CDigitShowBasicDoc::SaveToFile2()
-{
-    DigitShowContext* ctx = GetContext();
-    const int nCh = ctx->ad.Channels;   // 16
-
-    for (long i = 0; i < ctx->sampling.CurrentSamplingTimes; i++) {
-        fprintf(ctx->fpVoltage,  "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
-        fprintf(ctx->fpPhysical, "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
-        int k = 0;
-        for (int j = 0; j < nCh; j++) {
-            ctx->ai.raw_temp = BinaryToVolt(
-                ctx->ad.RangeMax, ctx->ad.RangeMin,
-                ctx->ad.Resolution,
-                ctx->ad.pData[i * nCh + j]);
-            ctx->ai.phy_temp = ctx->ai.cal.a[k] * ctx->ai.raw_temp * ctx->ai.raw_temp
-                             + ctx->ai.cal.b[k] * ctx->ai.raw_temp
-                             + ctx->ai.cal.c[k];
-            k++;
-            fprintf(ctx->fpVoltage,  "%lf\t", ctx->ai.raw_temp);
-            fprintf(ctx->fpPhysical, "%lf\t", ctx->ai.phy_temp);
-        }
-        fprintf(ctx->fpVoltage,  "\n");
-        fprintf(ctx->fpPhysical, "\n");
-    }
-}
-
-void CDigitShowBasicDoc::Allocate_Memory()
-{
-    DigitShowContext* ctx = GetContext();
-    if (ctx->FlagSaveData == TRUE) {
-        ctx->ad.pData.assign(
-            (size_t)ctx->sampling.TotalSamplingTimes * ctx->ad.Channels,
-            0L);
-    }
-    if (ctx->FlagSaveData == FALSE) {
-        ctx->ad.pData = {};
-    }
 }
 
 //--- Control Statements ---

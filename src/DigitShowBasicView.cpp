@@ -25,7 +25,6 @@
 #include "DigitShowBasicView.h"
 
 #include "caio.h"
-#include "SamplingSettings.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -45,9 +44,6 @@ BEGIN_MESSAGE_MAP(CDigitShowBasicView, CFormView)
     ON_BN_CLICKED(IDC_BUTTON_StopSave, OnBUTTONStopSave)
     ON_WM_DESTROY()
     ON_BN_CLICKED(IDC_BUTTON_InterceptSave, OnBUTTONInterceptSave)
-    ON_BN_CLICKED(IDC_BUTTON_FIFOStart, OnBUTTONFIFOStart)
-    ON_BN_CLICKED(IDC_BUTTON_FIFOStop, OnBUTTONFIFOStop)
-    ON_BN_CLICKED(IDC_BUTTON_WriteData, OnBUTTONWriteData)
     ON_BN_CLICKED(IDC_BUTTON_SetCtrlID, OnBUTTONSetCtrlID)
     ON_BN_CLICKED(IDC_BUTTON_SetTimeInterval, OnBUTTONSetTimeInterval)
     //}}AFX_MSG_MAP
@@ -230,13 +226,9 @@ void CDigitShowBasicView::OnInitialUpdate()
     CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_CtrlOff);
     CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);
     CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
-    CButton* myBTN4 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);
-    CButton* myBTN5 = (CButton*)GetDlgItem(IDC_BUTTON_WriteData);
     myBTN1->EnableWindow(FALSE);
     myBTN2->EnableWindow(FALSE);
     myBTN3->EnableWindow(FALSE);
-    myBTN4->EnableWindow(FALSE);
-    myBTN5->EnableWindow(FALSE);
     CString tmp;
     CComboBox* m_Combo1 = (CComboBox*)GetDlgItem(IDC_COMBO_Control_ID);
     m_Combo1->InsertString(-1,"0");
@@ -441,7 +433,6 @@ void CDigitShowBasicView::ShowData()
     m_NowTime = ctx->SNowTime;
     m_SeqTime = ctx->SequentTime1;
     m_SamplingTime = ctx->timeSettings.SaveInterval;
-    if(ctx->FlagFIFO) m_SamplingTime = long(ctx->ad.SamplingClock/1.0E+03);
     UpdateData(FALSE);
 }
 
@@ -478,16 +469,14 @@ void CDigitShowBasicView::OnBUTTONStartSave()
 {
     DigitShowContext* ctx = GetContext();
 
-    long        Ret;
     CString    TmpString;
     errno_t err;
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
 
-    if(ctx->FlagFIFO==FALSE){
-        CString    pFileName0, pFileName1, pFileName2;
-        CFileDialog SaveFile_dlg( FALSE, NULL, "*.tsv",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
-                "TSV Files(*.tsv)|*.tsv| All Files(*.*)|*.*| |",NULL);
-        if (SaveFile_dlg.DoModal()==IDOK){
+    CString    pFileName0, pFileName1, pFileName2;
+    CFileDialog SaveFile_dlg( FALSE, NULL, "*.tsv",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
+            "TSV Files(*.tsv)|*.tsv| All Files(*.*)|*.*| |",NULL);
+    if (SaveFile_dlg.DoModal()==IDOK){
             // File for saving the physical data 
             pFileName1 = SaveFile_dlg.GetPathName();    
             m_FileName =    SaveFile_dlg.GetFileTitle();
@@ -585,52 +574,22 @@ void CDigitShowBasicView::OnBUTTONStartSave()
             CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
             CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);
             CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
-            CButton* myBTN4 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
-            CButton* myBTN5 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);
             myBTN1->EnableWindow(FALSE);    
             myBTN2->EnableWindow(TRUE);
             myBTN3->EnableWindow(TRUE);
-            myBTN4->EnableWindow(FALSE);
-            myBTN5->EnableWindow(FALSE);
             if(ctx->FlagSetBoard)    pDoc -> AD_INPUT();
             pDoc -> Cal_Physical();
             pDoc -> Cal_Param();
             pDoc -> SaveToFile();
-        }
-    }
-    if(ctx->FlagSetBoard==TRUE && ctx->FlagFIFO==TRUE){
-        ctx->NowTime = ctx->NowTime.GetCurrentTime();
-        ctx->StartTime = ctx->NowTime;
-        ctx->SpanTime = ctx->NowTime- ctx->StartTime;
-        ctx->SequentTime1 = (long)ctx->SpanTime.GetTotalSeconds();
-        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
-        ctx->FlagSaveData = TRUE;
-        ctx->sampling.CurrentSamplingTimes = 0;
-        pDoc->Allocate_Memory();
-        CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
-        CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);
-        CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
-        CButton* myBTN4 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
-        CButton* myBTN5 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);
-        CButton* myBTN6 = (CButton*)GetDlgItem(IDC_BUTTON_WriteData);
-        myBTN1->EnableWindow(FALSE);    
-        myBTN2->EnableWindow(TRUE);
-        myBTN3->EnableWindow(FALSE);
-        myBTN4->EnableWindow(FALSE);
-        myBTN5->EnableWindow(FALSE);
-        myBTN6->EnableWindow(FALSE);
-        if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id);
-        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id);
     }
 }
 
 void CDigitShowBasicView::OnBUTTONStopSave() 
 {
     DigitShowContext* ctx = GetContext();
-    long    Ret;
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
 
-    if(ctx->FlagSaveData==TRUE && ctx->FlagFIFO==FALSE){
+    if(ctx->FlagSaveData==TRUE){
         KillTimer(3);
         _ftime_s(&NowTime2);
         ctx->SequentTime2 = double(NowTime2.time-StartTime2.time)+double( (NowTime2.millitm-StartTime2.millitm)/1000.0 );
@@ -644,32 +603,10 @@ void CDigitShowBasicView::OnBUTTONStopSave()
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);    
         CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
-        CButton* myBTN4 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
-        CButton* myBTN5 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);
         myBTN1->EnableWindow(TRUE);    
         myBTN2->EnableWindow(FALSE);
         myBTN3->EnableWindow(FALSE);    
-        myBTN4->EnableWindow(TRUE);
-        myBTN5->EnableWindow(FALSE);
         ctx->FlagSaveData = FALSE;
-    }
-    if(ctx->FlagSaveData==TRUE && ctx->FlagFIFO==TRUE){
-        ctx->FlagSaveData = FALSE;
-        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
-        if(ctx->NumAD>0) Ret = AioResetAiMemory(ctx->ad.Id);
-        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id);
-        CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
-        CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);    
-        CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
-        CButton* myBTN4 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
-        CButton* myBTN5 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);
-        CButton* myBTN6 = (CButton*)GetDlgItem(IDC_BUTTON_WriteData);
-        myBTN1->EnableWindow(TRUE);    
-        myBTN2->EnableWindow(FALSE);
-        myBTN3->EnableWindow(FALSE);    
-        myBTN4->EnableWindow(FALSE);
-        myBTN5->EnableWindow(TRUE);
-        myBTN6->EnableWindow(TRUE);
     }
 }
 
@@ -686,174 +623,12 @@ void CDigitShowBasicView::OnBUTTONInterceptSave()
     pDoc -> SaveToFile();    
 }
 
-void CDigitShowBasicView::OnBUTTONFIFOStart() 
-{
-    DigitShowContext* ctx = GetContext();
-    long    Ret;
-    int        nResult;
-    CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
-    CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
-    CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);    
-
-    if(ctx->FlagSetBoard==TRUE){
-        if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
-        CSamplingSettings SamplingSettings;
-        nResult = SamplingSettings.DoModal();
-        if(nResult==IDOK){
-            if (ctx->NumAD > 0) {
-                Ret = AioSetAiSamplingClock     (ctx->ad.Id, ctx->ad.SamplingClock);
-                Ret = AioGetAiSamplingClock     (ctx->ad.Id, &ctx->ad.SamplingClock);
-                Ret = AioSetAiStopTrigger       (ctx->ad.Id, 4);
-                Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
-                Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
-                Ret = AioResetAiMemory          (ctx->ad.Id);
-                // single board only
-            }
-            ctx->sampling.SavingClock = ctx->ad.SamplingClock;
-            ctx->FlagFIFO = TRUE;
-            myBTN1->EnableWindow(FALSE);
-            myBTN2->EnableWindow(TRUE);
-        }
-        if(ctx->NumAD>0) Ret = AioStartAi(ctx->ad.Id);
-    }
-    else{
-        AfxMessageBox("Board Setting has not been accomplished yet.", MB_OK | MB_ICONSTOP, 0);    
-    }
-}
-
-void CDigitShowBasicView::OnBUTTONFIFOStop() 
-{
-    DigitShowContext* ctx = GetContext();
-    long    Ret;
-    CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
-    CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStart);
-    CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_FIFOStop);    
-    if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
-    ctx->FlagFIFO = FALSE;
-    myBTN1->EnableWindow(TRUE);
-    myBTN2->EnableWindow(FALSE);
-    if (ctx->NumAD > 0) {
-        const float scanClock_us =
-            floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
-        Ret = AioSetAiSamplingClock(ctx->ad.Id, scanClock_us * DSP_AD_CHANNELS);
-        Ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
-        Ret = AioSetAiScanClock    (ctx->ad.Id, scanClock_us);
-        ctx->ad.SamplingTimes =
-            long(ctx->timeSettings.DisplayInterval * 1000.0f
-                 / (scanClock_us * DSP_AD_CHANNELS));
-        if (ctx->ad.SamplingTimes < 1) ctx->ad.SamplingTimes = 1;
-        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
-        Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
-        Ret = AioSetAiStopTrigger       (ctx->ad.Id, 4);
-        Ret = AioResetAiMemory          (ctx->ad.Id);
-    }
-    // single board only — no Id[ctx->NumAD-1] reference
-    if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id);
-}
-
-void CDigitShowBasicView::OnBUTTONWriteData() 
-{
-    DigitShowContext* ctx = GetContext();
-    long    Ret;
-    if(ctx->NumAD>0) Ret = AioStopAi(ctx->ad.Id);
-
-    CString    pFileName0, pFileName1,TmpString;
-    CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_WriteData);
-    CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
-    errno_t err; 
-
-    CFileDialog SaveFile_dlg( FALSE, NULL, "*.tsv",  OFN_CREATEPROMPT | OFN_OVERWRITEPROMPT,
-    "TSV Files(*.tsv)|*.tsv| All Files(*.*)|*.*| |",NULL);
-    if (SaveFile_dlg.DoModal()==IDOK){
-        // File for saving the physical data 
-        pFileName1 = SaveFile_dlg.GetPathName();    
-        m_FileName =    SaveFile_dlg.GetFileTitle();
-        TmpString = SaveFile_dlg.GetFileExt();    
-        if(TmpString == "" ){
-            TmpString =".tsv";
-            pFileName1 = pFileName1+TmpString;
-            m_FileName = m_FileName+TmpString;
-        }
-        else if(TmpString != "tsv"){
-            TmpString = _T(".")+TmpString;
-            pFileName1.Replace(TmpString,".tsv");
-            m_FileName = m_FileName+_T(".tsv");
-        }
-        if((err = fopen_s(&ctx->fpPhysical,(LPCSTR)pFileName1 , _T("w"))) == 0)
-        {
-            fprintf(ctx->fpPhysical,"%s\t","Time(s)");
-            fprintf(ctx->fpPhysical,"%s\t","Load_(N)");
-            fprintf(ctx->fpPhysical,"%s\t","Disp.(mm)");
-            fprintf(ctx->fpPhysical,"%s\t","Cell_P.(kPa)");
-            fprintf(ctx->fpPhysical,"%s\t","E_Cell_P.(kPa)");
-            fprintf(ctx->fpPhysical,"%s\t","SP.Vol.(cm3)");
-            fprintf(ctx->fpPhysical,"%s\t","LDT-V1(mm)");
-            fprintf(ctx->fpPhysical,"%s\t","LDT-V2(mm)");
-            fprintf(ctx->fpPhysical,"%s\t","CH07_(V)");
-            fprintf(ctx->fpPhysical,"%s\t","CH08_(V)");
-            fprintf(ctx->fpPhysical,"%s\t","CH09_(V)");
-            fprintf(ctx->fpPhysical,"%s\t","CH10_(V)");
-            fprintf(ctx->fpPhysical,"%s\t","CH11_(V)");
-            fprintf(ctx->fpPhysical,"%s\t","CH12_(V)");
-            fprintf(ctx->fpPhysical,"%s\t","CH13_(V)");
-            fprintf(ctx->fpPhysical,"%s\t","CH14_(V)");
-            fprintf(ctx->fpPhysical,"%s\n","CH15_(V)");
-        }
-
-
-        // File for saving the voltage data
-        pFileName0 = pFileName1;
-        pFileName0.Replace(".tsv","_v.tsv");
-        if((err = fopen_s(&ctx->fpVoltage,(LPCSTR)pFileName0 , _T("w"))) == 0)
-        {
-            fprintf(ctx->fpVoltage,"%s\t","Time(s)");
-            fprintf(ctx->fpVoltage,"%s\t","CH00_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH01_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH02_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH03_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH04_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH05_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH06_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH07_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH08_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH09_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH10_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH11_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH12_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH13_(V)");
-            fprintf(ctx->fpVoltage,"%s\t","CH14_(V)");
-            fprintf(ctx->fpVoltage,"%s\n","CH15_(V)");
-        }
-        pDoc -> SaveToFile2();
-        fclose(ctx->fpVoltage);
-        fclose(ctx->fpPhysical);
-        pDoc -> Allocate_Memory();
-        myBTN1->EnableWindow(FALSE);
-    }
-    if (ctx->NumAD > 0) {
-        const float scanClock_us =
-            floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
-        Ret = AioSetAiSamplingClock(ctx->ad.Id, scanClock_us * DSP_AD_CHANNELS);
-        Ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
-        Ret = AioSetAiScanClock    (ctx->ad.Id, scanClock_us);
-        ctx->ad.SamplingTimes =
-            long(ctx->timeSettings.DisplayInterval * 1000.0f
-                 / (scanClock_us * DSP_AD_CHANNELS));
-        if (ctx->ad.SamplingTimes < 1) ctx->ad.SamplingTimes = 1;
-        Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
-        Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
-        Ret = AioSetAiStopTrigger       (ctx->ad.Id, 4);
-        Ret = AioResetAiMemory          (ctx->ad.Id);
-    }
-    // single board only — no Id[ctx->NumAD-1] reference
-    if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id);
-}
-
 LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
 {
     DigitShowContext* ctx = GetContext();
-    int        i,j;
-    long    Ret,Ret2;
+    long    Ret, Ret2;
+    char    errStr[256];
+    CString msgStr;
 
     switch(message){
     case AIOM_AIE_DATA_NUM:
@@ -864,50 +639,29 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
 
         Ret = AioGetAiSamplingData(ctx->ad.Id, &tmp, &ctx->ad.Data0[0]);
         if (Ret != 0) {
-            Ret2 = AioGetErrorString(Ret, ctx->ErrorString);
-            ctx->TextString.Format("AioGetAiSamplingData = %d : %s", Ret, ctx->ErrorString);
-            AfxMessageBox(ctx->TextString, MB_ICONSTOP | MB_OK);
+            Ret2 = AioGetErrorString(Ret, errStr);
+            msgStr.Format("AioGetAiSamplingData = %d : %s", Ret, errStr);
+            AfxMessageBox(msgStr, MB_ICONSTOP | MB_OK);
             return TRUE;
         }
         ctx->ad.LastDataCount = tmp;   // store for AD_INPUT()
-
-        // FIFO recording
-        if (ctx->FlagSaveData == TRUE && ctx->FlagFIFO == TRUE) {
-            const int nCh = ctx->ad.Channels;   // 16
-            for (long si = 0; si < tmp; si++) {
-                if (ctx->sampling.CurrentSamplingTimes >= ctx->sampling.TotalSamplingTimes) {
-                    OnBUTTONStopSave();
-                    break;
-                }
-                for (j = 0; j < nCh; j++) {    // 16ch, no /2, no *2
-                    ctx->ad.pData[ctx->sampling.CurrentSamplingTimes * nCh + j]
-                        = ctx->ad.Data0[si * nCh + j];
-                }
-                ctx->sampling.CurrentSamplingTimes++;
-            }
-        }
         return TRUE;
     }
     case AIOM_AIE_OFERR:
-        if(ctx->FlagFIFO){
-            AfxMessageBox("FIFO sttoped by the over flow int the memory of A/D board.", MB_OK | MB_ICONSTOP, 0);    
+        if(ctx->ad.Id >= 0){
+            Ret = AioResetAiMemory(ctx->ad.Id);
+            Ret = AioStartAi(ctx->ad.Id);
         }
-        else{
-            if(ctx->NumAD>0){
-                Ret = AioResetAiMemory(ctx->ad.Id);
-                Ret = AioStartAi(ctx->ad.Id);
-            }
-            AfxMessageBox("FIFO sttoped by the over flow, but restarted automatically.", MB_OK | MB_ICONSTOP, 0);    
-        }
+        AfxMessageBox("Sampling overflowed and restarted automatically.", MB_OK | MB_ICONSTOP, 0);    
         return TRUE;
     case AIOM_AIE_SCERR:
-        AfxMessageBox("FIFO sttoped by sampling error.", MB_OK | MB_ICONSTOP, 0);    
+        AfxMessageBox("Sampling error.", MB_OK | MB_ICONSTOP, 0);    
         return TRUE;
     case AIOM_AIE_ADERR:
-        AfxMessageBox("FIFO sttoped by the error in A/D convert.", MB_OK | MB_ICONSTOP, 0);    
+        AfxMessageBox("A/D conversion error.", MB_OK | MB_ICONSTOP, 0);    
         return TRUE;
     case AIOM_AIE_END:
-        AfxMessageBox("FIFO sttoped to reach the end.", MB_OK | MB_ICONSTOP, 0);    
+        AfxMessageBox("Sampling ended.", MB_OK | MB_ICONSTOP, 0);    
         return TRUE;
     }    
     return CFormView::DefWindowProc(message, wParam, lParam);
