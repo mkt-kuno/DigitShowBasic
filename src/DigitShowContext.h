@@ -203,10 +203,13 @@ struct DigitShowContext {
     int  AmpID;
 
     // System flags
-    bool FlagSetBoard;
-    bool FlagSaveData;
-    bool FlagCtrl;
-    bool FlagCyclic;
+    struct SystemFlags {
+        bool SetBoard;
+        bool SaveData;
+        bool Ctrl;
+        bool Cyclic;
+    };
+    SystemFlags flags;
 
     // Time management
     TimeSettings timeSettings;
