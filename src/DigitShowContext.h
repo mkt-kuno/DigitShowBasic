@@ -242,7 +242,7 @@ struct DigitShowContext {
         long   SamplingTimes;
         float  ScanClock;
         long   LastDataCount;           // actual scan count from last AioGetAiSamplingData
-        long   Data0[262144];
+        std::vector<long> Data0;          // raw ADC sample buffer [SamplingTimes * Channels]
     } ad;
     struct DaBoardConfig {
         short  Id;
