@@ -502,75 +502,75 @@ void CDigitShowBasicView::OnBUTTONStartSave()
                 pFileName1.Replace(TmpString,".tsv");
                 m_FileName = m_FileName+_T(".tsv");
             }
-            if((err = fopen_s(&ctx->FileSaveData1,(LPCSTR)pFileName1, _T("w"))) == 0)
+            if((err = fopen_s(&ctx->fpPhysical,(LPCSTR)pFileName1, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData1,"%s\t","Time(s)");
-                fprintf(ctx->FileSaveData1,"%s\t","Load_(N)");
-                fprintf(ctx->FileSaveData1,"%s\t","Disp.(mm)");
-                fprintf(ctx->FileSaveData1,"%s\t","Cell_P.(kPa)");
-                fprintf(ctx->FileSaveData1,"%s\t","ECellP.(kPa)");
-                fprintf(ctx->FileSaveData1,"%s\t","SP.Vol.(mm3)");
-                fprintf(ctx->FileSaveData1,"%s\t","V-LDT1_(mm)");
-                fprintf(ctx->FileSaveData1,"%s\t","V-LDT2_(mm)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH07_(V)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH08_(V)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH09_(V)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH10_(V)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH11_(V)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH12_(V)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH13_(V)");
-                fprintf(ctx->FileSaveData1,"%s\t","CH14_(V)");
-                fprintf(ctx->FileSaveData1,"%s\n","CH15_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","Time(s)");
+                fprintf(ctx->fpPhysical,"%s\t","Load_(N)");
+                fprintf(ctx->fpPhysical,"%s\t","Disp.(mm)");
+                fprintf(ctx->fpPhysical,"%s\t","Cell_P.(kPa)");
+                fprintf(ctx->fpPhysical,"%s\t","ECellP.(kPa)");
+                fprintf(ctx->fpPhysical,"%s\t","SP.Vol.(mm3)");
+                fprintf(ctx->fpPhysical,"%s\t","V-LDT1_(mm)");
+                fprintf(ctx->fpPhysical,"%s\t","V-LDT2_(mm)");
+                fprintf(ctx->fpPhysical,"%s\t","CH07_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","CH08_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","CH09_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","CH10_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","CH11_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","CH12_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","CH13_(V)");
+                fprintf(ctx->fpPhysical,"%s\t","CH14_(V)");
+                fprintf(ctx->fpPhysical,"%s\n","CH15_(V)");
             }
 
 
             // File for saving the voltage data
             pFileName0 = pFileName1;
             pFileName0.Replace(".tsv","_v.tsv");
-            if((err = fopen_s(&ctx->FileSaveData0,(LPCSTR)pFileName0, _T("w"))) == 0)
+            if((err = fopen_s(&ctx->fpVoltage,(LPCSTR)pFileName0, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData0,"%s\t","Time(s)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH00_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH01_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH02_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH03_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH04_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH05_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH06_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH07_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH08_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH09_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH10_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH11_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH12_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH13_(V)");
-                fprintf(ctx->FileSaveData0,"%s\t","CH14_(V)");
-                fprintf(ctx->FileSaveData0,"%s\n","CH15_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","Time(s)");
+                fprintf(ctx->fpVoltage,"%s\t","CH00_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH01_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH02_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH03_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH04_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH05_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH06_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH07_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH08_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH09_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH10_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH11_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH12_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH13_(V)");
+                fprintf(ctx->fpVoltage,"%s\t","CH14_(V)");
+                fprintf(ctx->fpVoltage,"%s\n","CH15_(V)");
             }
 
 
             // File for saving the parameter data
             pFileName2 = pFileName1;
             pFileName2.Replace(".tsv","_p.tsv");
-            if((err = fopen_s(&ctx->FileSaveData2,(LPCSTR)pFileName2, _T("w"))) == 0)
+            if((err = fopen_s(&ctx->fpParam,(LPCSTR)pFileName2, _T("w"))) == 0)
             {
-                fprintf(ctx->FileSaveData2,"%s\t","Time(s)");
-                fprintf(ctx->FileSaveData2,"%s\t","s(a)_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","s(r)_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","s'(a)(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","s'(r)(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","Pore_(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","p____(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","q____(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","p'___(kPa)");
-                fprintf(ctx->FileSaveData2,"%s\t","e(a)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s\t","e(r)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s\t","e(v)_(%)_");
-                fprintf(ctx->FileSaveData2,"%s\t","eLDT1(%)_");
-                fprintf(ctx->FileSaveData2,"%s\t","eLDT2(%)_");
-                fprintf(ctx->FileSaveData2,"%s\t","AvLDT(%)_");
-                fprintf(ctx->FileSaveData2,"%s\t","(s'a+s'r)/2");
-                fprintf(ctx->FileSaveData2,"%s\n","(s'a-s'r)/2");
+                fprintf(ctx->fpParam,"%s\t","Time(s)");
+                fprintf(ctx->fpParam,"%s\t","s(a)_(kPa)");
+                fprintf(ctx->fpParam,"%s\t","s(r)_(kPa)");
+                fprintf(ctx->fpParam,"%s\t","s'(a)(kPa)");
+                fprintf(ctx->fpParam,"%s\t","s'(r)(kPa)");
+                fprintf(ctx->fpParam,"%s\t","Pore_(kPa)");
+                fprintf(ctx->fpParam,"%s\t","p____(kPa)");
+                fprintf(ctx->fpParam,"%s\t","q____(kPa)");
+                fprintf(ctx->fpParam,"%s\t","p'___(kPa)");
+                fprintf(ctx->fpParam,"%s\t","e(a)_(%)_");
+                fprintf(ctx->fpParam,"%s\t","e(r)_(%)_");
+                fprintf(ctx->fpParam,"%s\t","e(v)_(%)_");
+                fprintf(ctx->fpParam,"%s\t","eLDT1(%)_");
+                fprintf(ctx->fpParam,"%s\t","eLDT2(%)_");
+                fprintf(ctx->fpParam,"%s\t","AvLDT(%)_");
+                fprintf(ctx->fpParam,"%s\t","(s'a+s'r)/2");
+                fprintf(ctx->fpParam,"%s\n","(s'a-s'r)/2");
             }
 // Timer starts
             SetTimer(3,ctx->timeSettings.SaveInterval,NULL);
@@ -638,9 +638,9 @@ void CDigitShowBasicView::OnBUTTONStopSave()
         pDoc -> Cal_Physical();
         pDoc -> Cal_Param();
         pDoc -> SaveToFile();
-        fclose(ctx->FileSaveData0);
-        fclose(ctx->FileSaveData1);
-        fclose(ctx->FileSaveData2);
+        fclose(ctx->fpVoltage);
+        fclose(ctx->fpPhysical);
+        fclose(ctx->fpParam);
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);    
         CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
@@ -779,54 +779,54 @@ void CDigitShowBasicView::OnBUTTONWriteData()
             pFileName1.Replace(TmpString,".tsv");
             m_FileName = m_FileName+_T(".tsv");
         }
-        if((err = fopen_s(&ctx->FileSaveData1,(LPCSTR)pFileName1 , _T("w"))) == 0)
+        if((err = fopen_s(&ctx->fpPhysical,(LPCSTR)pFileName1 , _T("w"))) == 0)
         {
-            fprintf(ctx->FileSaveData1,"%s\t","Time(s)");
-            fprintf(ctx->FileSaveData1,"%s\t","Load_(N)");
-            fprintf(ctx->FileSaveData1,"%s\t","Disp.(mm)");
-            fprintf(ctx->FileSaveData1,"%s\t","Cell_P.(kPa)");
-            fprintf(ctx->FileSaveData1,"%s\t","E_Cell_P.(kPa)");
-            fprintf(ctx->FileSaveData1,"%s\t","SP.Vol.(cm3)");
-            fprintf(ctx->FileSaveData1,"%s\t","LDT-V1(mm)");
-            fprintf(ctx->FileSaveData1,"%s\t","LDT-V2(mm)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH07_(V)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH08_(V)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH09_(V)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH10_(V)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH11_(V)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH12_(V)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH13_(V)");
-            fprintf(ctx->FileSaveData1,"%s\t","CH14_(V)");
-            fprintf(ctx->FileSaveData1,"%s\n","CH15_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","Time(s)");
+            fprintf(ctx->fpPhysical,"%s\t","Load_(N)");
+            fprintf(ctx->fpPhysical,"%s\t","Disp.(mm)");
+            fprintf(ctx->fpPhysical,"%s\t","Cell_P.(kPa)");
+            fprintf(ctx->fpPhysical,"%s\t","E_Cell_P.(kPa)");
+            fprintf(ctx->fpPhysical,"%s\t","SP.Vol.(cm3)");
+            fprintf(ctx->fpPhysical,"%s\t","LDT-V1(mm)");
+            fprintf(ctx->fpPhysical,"%s\t","LDT-V2(mm)");
+            fprintf(ctx->fpPhysical,"%s\t","CH07_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","CH08_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","CH09_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","CH10_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","CH11_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","CH12_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","CH13_(V)");
+            fprintf(ctx->fpPhysical,"%s\t","CH14_(V)");
+            fprintf(ctx->fpPhysical,"%s\n","CH15_(V)");
         }
 
 
         // File for saving the voltage data
         pFileName0 = pFileName1;
         pFileName0.Replace(".tsv","_v.tsv");
-        if((err = fopen_s(&ctx->FileSaveData0,(LPCSTR)pFileName0 , _T("w"))) == 0)
+        if((err = fopen_s(&ctx->fpVoltage,(LPCSTR)pFileName0 , _T("w"))) == 0)
         {
-            fprintf(ctx->FileSaveData0,"%s\t","Time(s)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH00_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH01_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH02_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH03_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH04_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH05_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH06_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH07_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH08_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH09_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH10_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH11_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH12_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH13_(V)");
-            fprintf(ctx->FileSaveData0,"%s\t","CH14_(V)");
-            fprintf(ctx->FileSaveData0,"%s\n","CH15_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","Time(s)");
+            fprintf(ctx->fpVoltage,"%s\t","CH00_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH01_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH02_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH03_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH04_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH05_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH06_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH07_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH08_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH09_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH10_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH11_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH12_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH13_(V)");
+            fprintf(ctx->fpVoltage,"%s\t","CH14_(V)");
+            fprintf(ctx->fpVoltage,"%s\n","CH15_(V)");
         }
         pDoc -> SaveToFile2();
-        fclose(ctx->FileSaveData0);
-        fclose(ctx->FileSaveData1);
+        fclose(ctx->fpVoltage);
+        fclose(ctx->fpPhysical);
         pDoc -> Allocate_Memory();
         myBTN1->EnableWindow(FALSE);
     }

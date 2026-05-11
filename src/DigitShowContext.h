@@ -222,6 +222,7 @@ struct DigitShowContext {
     bool FlagSaveData;
     bool FlagCtrl;
     bool FlagCyclic;
+    bool FlagFIFO;
 
     // Time management
     TimeSettings timeSettings;
@@ -234,9 +235,9 @@ struct DigitShowContext {
     double CtrlStepTime;
 
     // File handles
-    FILE* FileSaveData0;
-    FILE* FileSaveData1;
-    FILE* FileSaveData2;
+    FILE* fpVoltage;   // raw ADC voltage log  (*_v.tsv)
+    FILE* fpPhysical;  // calibrated physical values log (*.tsv)
+    FILE* fpParam;     // derived parameters log (*_p.tsv)
 
     // Error handling
     long    Ret;
@@ -272,7 +273,6 @@ struct DigitShowContext {
         short  Resolution;
         long   Data[AO_MAX_CHANNELS];
     } da;
-    bool   FlagFIFO;
 };
 
 /**

@@ -352,22 +352,22 @@ void CDigitShowBasicDoc::Cal_Param()
 void CDigitShowBasicDoc::SaveToFile()
 {
     DigitShowContext* ctx = GetContext();
-    fprintf(ctx->FileSaveData0, "%.3lf\t", ctx->SequentTime2);
-    fprintf(ctx->FileSaveData1, "%.3lf\t", ctx->SequentTime2);
+    fprintf(ctx->fpVoltage,  "%.3lf\t", ctx->SequentTime2);
+    fprintf(ctx->fpPhysical, "%.3lf\t", ctx->SequentTime2);
 
     // Single AD board, all DSP_AD_CHANNELS channels
     for (int j = 0; j < ctx->ad.Channels; j++) {
-        fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai.raw[j]);
-        fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai.phy[j]);
+        fprintf(ctx->fpVoltage,  "%lf\t", ctx->ai.raw[j]);
+        fprintf(ctx->fpPhysical, "%lf\t", ctx->ai.phy[j]);
     }
-    fprintf(ctx->FileSaveData0, "\n");
-    fprintf(ctx->FileSaveData1, "\n");
+    fprintf(ctx->fpVoltage,  "\n");
+    fprintf(ctx->fpPhysical, "\n");
 
-    fprintf(ctx->FileSaveData2, "%.3lf\t", ctx->SequentTime2);
+    fprintf(ctx->fpParam, "%.3lf\t", ctx->SequentTime2);
     for (int i = 0; i < AI_MAX_CHANNELS; i++) {
-        fprintf(ctx->FileSaveData2, "%lf\t", ctx->ai.param[i]);
+        fprintf(ctx->fpParam, "%lf\t", ctx->ai.param[i]);
     }
-    fprintf(ctx->FileSaveData2, "\n");
+    fprintf(ctx->fpParam, "\n");
 }
 
 void CDigitShowBasicDoc::SaveToFile2()
@@ -376,8 +376,8 @@ void CDigitShowBasicDoc::SaveToFile2()
     const int nCh = ctx->ad.Channels;   // 16
 
     for (long i = 0; i < ctx->sampling.CurrentSamplingTimes; i++) {
-        fprintf(ctx->FileSaveData0, "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
-        fprintf(ctx->FileSaveData1, "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
+        fprintf(ctx->fpVoltage,  "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
+        fprintf(ctx->fpPhysical, "%.3lf\t", ctx->sampling.SavingClock / 1000000.0 * i);
         int k = 0;
         for (int j = 0; j < nCh; j++) {
             ctx->ai.raw_temp = BinaryToVolt(
@@ -388,11 +388,11 @@ void CDigitShowBasicDoc::SaveToFile2()
                              + ctx->ai.cal.b[k] * ctx->ai.raw_temp
                              + ctx->ai.cal.c[k];
             k++;
-            fprintf(ctx->FileSaveData0, "%lf\t", ctx->ai.raw_temp);
-            fprintf(ctx->FileSaveData1, "%lf\t", ctx->ai.phy_temp);
+            fprintf(ctx->fpVoltage,  "%lf\t", ctx->ai.raw_temp);
+            fprintf(ctx->fpPhysical, "%lf\t", ctx->ai.phy_temp);
         }
-        fprintf(ctx->FileSaveData0, "\n");
-        fprintf(ctx->FileSaveData1, "\n");
+        fprintf(ctx->fpVoltage,  "\n");
+        fprintf(ctx->fpPhysical, "\n");
     }
 }
 
