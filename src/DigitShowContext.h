@@ -226,12 +226,6 @@ struct DigitShowContext {
     FILE* fpPhysical;  // calibrated physical values log (*.tsv)
     FILE* fpParam;     // derived parameters log (*_p.tsv)
 
-    // Error handling
-    long    Ret;
-    long    Ret2;
-    char    ErrorString[256];
-    CString TextString;
-
     // CAIO board configuration (CONTEC AIO)
     int NumAD;
     int NumDA;

@@ -103,6 +103,9 @@ void CDigitShowBasicDoc::OpenBoard()
 {
     DigitShowContext* ctx = GetContext();
     int    i;
+    long   ret = 0, ret2 = 0;
+    char   errStr[256] = {};
+    CString msgStr;
     
     if(ctx->flags.SetBoard){
         AfxMessageBox("Initialization has been already accomplished", MB_ICONSTOP | MB_OK );
@@ -111,83 +114,83 @@ void CDigitShowBasicDoc::OpenBoard()
     else{
         // OPEN A/D BOARDS.
         if(ctx->NumAD > 0 ){
-            ctx->Ret = AioInit ( "AIO000" , &ctx->ad.Id );
-            if(ctx->Ret != 0){
-                ctx->Ret2 = AioGetErrorString(ctx->Ret, ctx->ErrorString);
-                 ctx->TextString.Format("AioInit = %d : %s", ctx->Ret, ctx->ErrorString);
-                AfxMessageBox( ctx->TextString, MB_ICONSTOP | MB_OK );
+            ret = AioInit ( "AIO000" , &ctx->ad.Id );
+            if(ret != 0){
+                ret2 = AioGetErrorString(ret, errStr);
+                 msgStr.Format("AioInit = %d : %s", ret, errStr);
+                AfxMessageBox( msgStr, MB_ICONSTOP | MB_OK );
                 return;
             }
             else{
-                ctx->Ret = AioResetDevice(ctx->ad.Id);
-                if(ctx->Ret != 0){
-                    ctx->Ret2 = AioGetErrorString(ctx->Ret, ctx->ErrorString);
-                     ctx->TextString.Format("AioResetDevice = %d : %s", ctx->Ret, ctx->ErrorString);
-                    AfxMessageBox( ctx->TextString, MB_ICONSTOP | MB_OK );
+                ret = AioResetDevice(ctx->ad.Id);
+                if(ret != 0){
+                    ret2 = AioGetErrorString(ret, errStr);
+                     msgStr.Format("AioResetDevice = %d : %s", ret, errStr);
+                    AfxMessageBox( msgStr, MB_ICONSTOP | MB_OK );
                     return;
                 }
             }
         }
         // OPEN D/A BOARDS.
         if(ctx->NumDA > 0){
-            ctx->Ret = AioInit("AIO003" , &ctx->da.Id );
-            if(ctx->Ret != 0){
-                ctx->Ret2 = AioGetErrorString(ctx->Ret, ctx->ErrorString);
-                 ctx->TextString.Format("AioInit = %d : %s", ctx->Ret, ctx->ErrorString);
-                AfxMessageBox( ctx->TextString, MB_ICONSTOP | MB_OK );
+            ret = AioInit("AIO003" , &ctx->da.Id );
+            if(ret != 0){
+                ret2 = AioGetErrorString(ret, errStr);
+                 msgStr.Format("AioInit = %d : %s", ret, errStr);
+                AfxMessageBox( msgStr, MB_ICONSTOP | MB_OK );
                 return;
             }
             else{
-                ctx->Ret = AioResetDevice(ctx->da.Id);
-                if(ctx->Ret != 0){
-                    ctx->Ret2 = AioGetErrorString(ctx->Ret, ctx->ErrorString);
-                     ctx->TextString.Format("AioResetDevice = %d : %s", ctx->Ret, ctx->ErrorString);
-                    AfxMessageBox( ctx->TextString, MB_ICONSTOP | MB_OK );
+                ret = AioResetDevice(ctx->da.Id);
+                if(ret != 0){
+                    ret2 = AioGetErrorString(ret, errStr);
+                     msgStr.Format("AioResetDevice = %d : %s", ret, errStr);
+                    AfxMessageBox( msgStr, MB_ICONSTOP | MB_OK );
                     return;
                 }
             }
         }
         // ── AD board (single, fixed) ──────────────────────────────
-        ctx->Ret = AioGetAiInputMethod(ctx->ad.Id, &ctx->ad.InputMethod);
-        ctx->Ret = AioGetAiResolution (ctx->ad.Id, &ctx->ad.Resolution);
+        ret = AioGetAiInputMethod(ctx->ad.Id, &ctx->ad.InputMethod);
+        ret = AioGetAiResolution (ctx->ad.Id, &ctx->ad.Resolution);
 
         short physicalChannels = 0;
-        ctx->Ret = AioGetAiMaxChannels(ctx->ad.Id, &physicalChannels);
+        ret = AioGetAiMaxChannels(ctx->ad.Id, &physicalChannels);
         if (physicalChannels < DSP_AD_CHANNELS) {
-            ctx->TextString.Format(
+            msgStr.Format(
                 "AD board has only %d channels; %d are required. Aborting.",
                 (int)physicalChannels, DSP_AD_CHANNELS);
-            AfxMessageBox(ctx->TextString, MB_ICONSTOP | MB_OK);
+            AfxMessageBox(msgStr, MB_ICONSTOP | MB_OK);
             AioExit(ctx->ad.Id);
             if (ctx->NumDA > 0) AioExit(ctx->da.Id);
             return;
         }
         ctx->ad.Channels = DSP_AD_CHANNELS;   // clamp to 16
-        ctx->Ret = AioSetAiChannels(ctx->ad.Id, ctx->ad.Channels);
+        ret = AioSetAiChannels(ctx->ad.Id, ctx->ad.Channels);
 
-        ctx->Ret = AioSetAiRangeAll(ctx->ad.Id, 1);   // ±5 V
-        ctx->Ret = AioGetAiRange   (ctx->ad.Id, 0, &ctx->ad.Range);
-        ctx->Ret = GetRangeValue   (ctx->ad.Range, &ctx->ad.RangeMax, &ctx->ad.RangeMin);
-        ctx->Ret = AioGetAiMemoryType(ctx->ad.Id, &ctx->ad.MemoryType);
+        ret = AioSetAiRangeAll(ctx->ad.Id, 1);   // ±5 V
+        ret = AioGetAiRange   (ctx->ad.Id, 0, &ctx->ad.Range);
+        ret = GetRangeValue   (ctx->ad.Range, &ctx->ad.RangeMax, &ctx->ad.RangeMin);
+        ret = AioGetAiMemoryType(ctx->ad.Id, &ctx->ad.MemoryType);
 
         // ScanClock: floor(208.33) = 208 µs/ch → slightly above 300 sps/ch
         // Round DOWN (floor) so the board clock period is never too long.
         const float scanClock_us =
             floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
-        ctx->Ret = AioSetAiScanClock    (ctx->ad.Id, scanClock_us);
-        ctx->Ret = AioGetAiScanClock    (ctx->ad.Id, &ctx->ad.ScanClock);
-        ctx->Ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
-        ctx->Ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
+        ret = AioSetAiScanClock    (ctx->ad.Id, scanClock_us);
+        ret = AioGetAiScanClock    (ctx->ad.Id, &ctx->ad.ScanClock);
+        ret = AioGetAiSamplingClock(ctx->ad.Id, &ctx->ad.SamplingClock);
+        ret = AioGetAiEventSamplingTimes(ctx->ad.Id, &ctx->ad.SamplingTimes);
 
         // ── DA board (single, fixed) ──────────────────────────────
         if (ctx->NumDA > 0) {
-            ctx->Ret = AioGetAoResolution (ctx->da.Id, &ctx->da.Resolution);
+            ret = AioGetAoResolution (ctx->da.Id, &ctx->da.Resolution);
             short daPhys = 0;
-            ctx->Ret = AioGetAoMaxChannels(ctx->da.Id, &daPhys);
+            ret = AioGetAoMaxChannels(ctx->da.Id, &daPhys);
             ctx->da.Channels = (daPhys > DSP_DA_CHANNELS) ? DSP_DA_CHANNELS : daPhys;
-            ctx->Ret = AioSetAoRangeAll(ctx->da.Id, 50);   // 0–10 V
-            ctx->Ret = AioGetAoRange   (ctx->da.Id, 0, &ctx->da.Range);
-            ctx->Ret = GetRangeValue   (ctx->da.Range, &ctx->da.RangeMax, &ctx->da.RangeMin);
+            ret = AioSetAoRangeAll(ctx->da.Id, 50);   // 0–10 V
+            ret = AioGetAoRange   (ctx->da.Id, 0, &ctx->da.Range);
+            ret = GetRangeValue   (ctx->da.Range, &ctx->da.RangeMax, &ctx->da.RangeMin);
         }
         ctx->flags.SetBoard = TRUE;
     }
@@ -197,10 +200,11 @@ void CDigitShowBasicDoc::OpenBoard()
 void CDigitShowBasicDoc::CloseBoard()
 {
     DigitShowContext* ctx = GetContext();
+    long ret = 0;
     // Close A/D and D/A board to end the application 
     if( ctx->flags.SetBoard==TRUE ){
-        if(ctx->NumAD > 0)    ctx->Ret = AioExit(ctx->ad.Id);
-        if(ctx->NumDA > 0)    ctx->Ret = AioExit(ctx->da.Id);
+        if(ctx->NumAD > 0)    ret = AioExit(ctx->ad.Id);
+        if(ctx->NumDA > 0)    ret = AioExit(ctx->da.Id);
     }
 }
 
@@ -254,6 +258,7 @@ void CDigitShowBasicDoc::AD_INPUT()
 void CDigitShowBasicDoc::DA_OUTPUT()
 {
     DigitShowContext* ctx = GetContext();
+    long ret = 0;
     if (ctx->NumDA <= 0) return;
 
     const int nCh = ctx->da.Channels;   // clamped to DSP_DA_CHANNELS = 8
@@ -264,7 +269,7 @@ void CDigitShowBasicDoc::DA_OUTPUT()
             ctx->da.RangeMax, ctx->da.RangeMin,
             ctx->da.Resolution, ctx->ao.raw[j]);
     }
-    ctx->Ret = AioMultiAo(ctx->da.Id, nCh, &ctx->da.Data[0]);
+    ret = AioMultiAo(ctx->da.Id, nCh, &ctx->da.Data[0]);
 }
 
 //--- Calcuration of Physical Value ---
