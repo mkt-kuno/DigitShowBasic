@@ -267,7 +267,7 @@ void CDigitShowBasicView::OnInitialUpdate()
     CDigitShowBasicDoc* pDoc = (CDigitShowBasicDoc *)GetDocument();
     pDoc->OpenBoard();
     if(ctx->flags.SetBoard){
-        if (ctx->NumAD > 0) {
+        {
             // floor() rounds toward shorter period to avoid board init failure
             const float scanClock_us =
                 floorf(1000000.0f / (float(DSP_FS_HZ) * float(DSP_AD_CHANNELS)));
@@ -293,7 +293,7 @@ void CDigitShowBasicView::OnInitialUpdate()
         const long adEvent = AIE_DATA_NUM | AIE_OFERR | AIE_SCERR | AIE_ADERR;
         Ret = AioSetAiEvent(ctx->ad.Id, m_hWnd, adEvent);
         Ret = AioSetAiEventSamplingTimes(ctx->ad.Id, ctx->ad.SamplingTimes);
-        if (ctx->NumAD > 0) Ret = AioStartAi(ctx->ad.Id);
+        Ret = AioStartAi(ctx->ad.Id);
     }
     SetTimer(1,ctx->timeSettings.DisplayInterval,NULL);    
 }

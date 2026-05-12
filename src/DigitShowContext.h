@@ -204,7 +204,8 @@ struct DigitShowContext {
 
     // System flags
     struct SystemFlags {
-        bool SetBoard;
+        bool SetBoard;  // AD board (AIO000) successfully opened
+        bool HasDA;     // DA board (AIO001) successfully opened
         bool SaveData;
         bool Ctrl;
         bool Cyclic;
@@ -227,8 +228,6 @@ struct DigitShowContext {
     FILE* fpParam;     // derived parameters log (*_p.tsv)
 
     // CAIO board configuration (CONTEC AIO)
-    int NumAD;
-    int NumDA;
     struct AdBoardConfig {
         short  Id;
         short  Channels;
