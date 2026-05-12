@@ -36,10 +36,6 @@ void InitContext(DigitShowContext* ctx)
 {
     if (ctx == nullptr) return;
 
-    // Initialize board counts (CAIO)
-    ctx->NumAD = 1;
-    ctx->NumDA = 0;
-
     // Initialize A/D board config (zero all POD fields)
     ctx->ad = {};
     
@@ -53,6 +49,7 @@ void InitContext(DigitShowContext* ctx)
 
     // Initialize flags
     ctx->flags.SetBoard  = false;
+    ctx->flags.HasDA     = false;
     ctx->flags.SaveData  = false;
     ctx->flags.Cyclic    = false;
     ctx->flags.Ctrl      = false;
