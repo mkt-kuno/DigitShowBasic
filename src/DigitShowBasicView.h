@@ -84,9 +84,6 @@ protected:
     afx_msg void OnBUTTONStopSave();
     afx_msg void OnDestroy();
     afx_msg void OnBUTTONInterceptSave();
-    afx_msg void OnBUTTONFIFOStart();
-    afx_msg void OnBUTTONFIFOStop();
-    afx_msg void OnBUTTONWriteData();
     afx_msg void OnBUTTONSetCtrlID();
     afx_msg void OnBUTTONSetTimeInterval();
     DECLARE_MESSAGE_MAP()

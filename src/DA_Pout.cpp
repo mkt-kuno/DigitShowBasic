@@ -31,22 +31,22 @@ CDA_Pout::CDA_Pout(CWnd* pParent)
     : CDialog(CDA_Pout::IDD, pParent)
 {
     DigitShowContext* ctx = GetContext();
-    m_DACala00 = ctx->cal.DA_a[0];
-    m_DACala01 = ctx->cal.DA_a[1];
-    m_DACala02 = ctx->cal.DA_a[2];
-    m_DACala03 = ctx->cal.DA_a[3];
-    m_DACala04 = ctx->cal.DA_a[4];
-    m_DACala05 = ctx->cal.DA_a[5];
-    m_DACala06 = ctx->cal.DA_a[6];
-    m_DACala07 = ctx->cal.DA_a[7];
-    m_DACalb00 = ctx->cal.DA_b[0];
-    m_DACalb01 = ctx->cal.DA_b[1];
-    m_DACalb02 = ctx->cal.DA_b[2];
-    m_DACalb03 = ctx->cal.DA_b[3];
-    m_DACalb04 = ctx->cal.DA_b[4];
-    m_DACalb05 = ctx->cal.DA_b[5];
-    m_DACalb06 = ctx->cal.DA_b[6];
-    m_DACalb07 = ctx->cal.DA_b[7];
+    m_DACala00 = ctx->ao.cal.a[0];
+    m_DACala01 = ctx->ao.cal.a[1];
+    m_DACala02 = ctx->ao.cal.a[2];
+    m_DACala03 = ctx->ao.cal.a[3];
+    m_DACala04 = ctx->ao.cal.a[4];
+    m_DACala05 = ctx->ao.cal.a[5];
+    m_DACala06 = ctx->ao.cal.a[6];
+    m_DACala07 = ctx->ao.cal.a[7];
+    m_DACalb00 = ctx->ao.cal.b[0];
+    m_DACalb01 = ctx->ao.cal.b[1];
+    m_DACalb02 = ctx->ao.cal.b[2];
+    m_DACalb03 = ctx->ao.cal.b[3];
+    m_DACalb04 = ctx->ao.cal.b[4];
+    m_DACalb05 = ctx->ao.cal.b[5];
+    m_DACalb06 = ctx->ao.cal.b[6];
+    m_DACalb07 = ctx->ao.cal.b[7];
     m_DAPvalue00 = 0.0;
     m_DAPvalue01 = 0.0;
     m_DAPvalue02 = 0.0;
@@ -55,14 +55,14 @@ CDA_Pout::CDA_Pout(CWnd* pParent)
     m_DAPvalue05 = 0.0;
     m_DAPvalue06 = 0.0;
     m_DAPvalue07 = 0.0;
-    m_DAVout00 = ctx->ao_raw[0];
-    m_DAVout01 = ctx->ao_raw[1];
-    m_DAVout02 = ctx->ao_raw[2];
-    m_DAVout03 = ctx->ao_raw[3];
-    m_DAVout04 = ctx->ao_raw[4];
-    m_DAVout05 = ctx->ao_raw[5];
-    m_DAVout06 = ctx->ao_raw[6];
-    m_DAVout07 = ctx->ao_raw[7];
+    m_DAVout00 = ctx->ao.raw[0];
+    m_DAVout01 = ctx->ao.raw[1];
+    m_DAVout02 = ctx->ao.raw[2];
+    m_DAVout03 = ctx->ao.raw[3];
+    m_DAVout04 = ctx->ao.raw[4];
+    m_DAVout05 = ctx->ao.raw[5];
+    m_DAVout06 = ctx->ao.raw[6];
+    m_DAVout07 = ctx->ao.raw[7];
 }
 
 void CDA_Pout::DoDataExchange(CDataExchange* pDX)
@@ -118,14 +118,14 @@ void CDA_Pout::OnBUTTONDAOutput()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    ctx->ao_raw[0] = m_DAVout00;
-    ctx->ao_raw[1] = m_DAVout01;
-    ctx->ao_raw[2] = m_DAVout02;
-    ctx->ao_raw[3] = m_DAVout03;
-    ctx->ao_raw[4] = m_DAVout04;
-    ctx->ao_raw[5] = m_DAVout05;
-    ctx->ao_raw[6] = m_DAVout06;
-    ctx->ao_raw[7] = m_DAVout07;
+    ctx->ao.raw[0] = m_DAVout00;
+    ctx->ao.raw[1] = m_DAVout01;
+    ctx->ao.raw[2] = m_DAVout02;
+    ctx->ao.raw[3] = m_DAVout03;
+    ctx->ao.raw[4] = m_DAVout04;
+    ctx->ao.raw[5] = m_DAVout05;
+    ctx->ao.raw[6] = m_DAVout06;
+    ctx->ao.raw[7] = m_DAVout07;
     pDoc2->DA_OUTPUT();
 }
 
@@ -133,7 +133,7 @@ void CDA_Pout::OnBUTTONCalculation00()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout00 = float(ctx->cal.DA_a[0] * m_DAPvalue00 + ctx->cal.DA_b[0]);
+    m_DAVout00 = float(ctx->ao.cal.a[0] * m_DAPvalue00 + ctx->ao.cal.b[0]);
     UpdateData(FALSE);
 }
 
@@ -141,7 +141,7 @@ void CDA_Pout::OnBUTTONCalculation01()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout01 = float(ctx->cal.DA_a[1] * m_DAPvalue01 + ctx->cal.DA_b[1]);
+    m_DAVout01 = float(ctx->ao.cal.a[1] * m_DAPvalue01 + ctx->ao.cal.b[1]);
     UpdateData(FALSE);
 }
 
@@ -149,7 +149,7 @@ void CDA_Pout::OnBUTTONCalculation02()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout02 = float(ctx->cal.DA_a[2] * m_DAPvalue02 + ctx->cal.DA_b[2]);
+    m_DAVout02 = float(ctx->ao.cal.a[2] * m_DAPvalue02 + ctx->ao.cal.b[2]);
     UpdateData(FALSE);
 }
 
@@ -157,7 +157,7 @@ void CDA_Pout::OnBUTTONCalculation03()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout03 = float(ctx->cal.DA_a[3] * m_DAPvalue03 + ctx->cal.DA_b[3]);
+    m_DAVout03 = float(ctx->ao.cal.a[3] * m_DAPvalue03 + ctx->ao.cal.b[3]);
     UpdateData(FALSE);
 }
 
@@ -165,7 +165,7 @@ void CDA_Pout::OnBUTTONCalculation04()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout04 = float(ctx->cal.DA_a[4] * m_DAPvalue04 + ctx->cal.DA_b[4]);
+    m_DAVout04 = float(ctx->ao.cal.a[4] * m_DAPvalue04 + ctx->ao.cal.b[4]);
     UpdateData(FALSE);
 }
 
@@ -173,7 +173,7 @@ void CDA_Pout::OnBUTTONCalculation05()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout05 = float(ctx->cal.DA_a[5] * m_DAPvalue05 + ctx->cal.DA_b[5]);
+    m_DAVout05 = float(ctx->ao.cal.a[5] * m_DAPvalue05 + ctx->ao.cal.b[5]);
     UpdateData(FALSE);
 }
 
@@ -181,7 +181,7 @@ void CDA_Pout::OnBUTTONCalculation06()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout06 = float(ctx->cal.DA_a[6] * m_DAPvalue06 + ctx->cal.DA_b[6]);
+    m_DAVout06 = float(ctx->ao.cal.a[6] * m_DAPvalue06 + ctx->ao.cal.b[6]);
     UpdateData(FALSE);
 }
 
@@ -189,6 +189,6 @@ void CDA_Pout::OnBUTTONCalculation07()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_DAVout07 = float(ctx->cal.DA_a[7] * m_DAPvalue07 + ctx->cal.DA_b[7]);
+    m_DAVout07 = float(ctx->ao.cal.a[7] * m_DAPvalue07 + ctx->ao.cal.b[7]);
     UpdateData(FALSE);
 }

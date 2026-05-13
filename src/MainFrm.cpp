@@ -22,7 +22,6 @@
 
 #include "MainFrm.h"
 #include "BoardSettings.h"
-#include "SamplingSettings.h"
 #include "CalibrationFactor.h"
 #include "Specimen.h"
 #include "TransAdjustment.h"
@@ -63,7 +62,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_COMMAND(ID_Control_Sensitivity, OnControlSensitivity)
     ON_COMMAND(ID_Control_CLoading, OnControlCLoading)
     ON_COMMAND(ID_Control_File, OnControlFile)
-    ON_COMMAND(ID_SamplingSettings, OnSamplingSettings)
     ON_COMMAND(ID_Control_PreConsolidation, OnControlPreConsolidation)
     ON_COMMAND(ID_TransAdjustment, OnTransAdjustment)
     ON_COMMAND(ID_Control_LinearStressPath, OnControlLinearStressPath)
@@ -129,18 +127,10 @@ void CMainFrame::OnBoardSettings()
         // Display a device open dialog.
 }
 
-void CMainFrame::OnSamplingSettings() 
-{
-
-        CSamplingSettings SamplingSettings;
-        nResult = SamplingSettings.DoModal();
-        // Display a device open dialog.
-}
-
 void CMainFrame::OnCalibrationFactor() 
 {
     DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
+    if(ctx->flags.SetBoard==FALSE){
         AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
     }
     CCalibrationFactor CalibrationFactor;
@@ -170,7 +160,7 @@ void CMainFrame::OnDAChannel()
 void CMainFrame::OnDAVout() 
 {
     DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
+    if(ctx->flags.SetBoard==FALSE){
         AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
     }
     CDA_Vout DA_Vout;
@@ -180,7 +170,7 @@ void CMainFrame::OnDAVout()
 void CMainFrame::OnDAPout() 
 {
     DigitShowContext* ctx = GetContext();
-    if(ctx->FlagSetBoard==FALSE){
+    if(ctx->flags.SetBoard==FALSE){
         AfxMessageBox("BoardSettings has not been accomplished !",MB_ICONEXCLAMATION | MB_OK );
     }
     CDA_Pout DA_Pout;
