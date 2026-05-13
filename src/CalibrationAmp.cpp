@@ -1,4 +1,4 @@
-﻿/*
+/*
  * DigitShowBasic - Triaxial Test Machine Control Software
  * Copyright (C) 2025 Makoto KUNO
  *
@@ -58,7 +58,7 @@ void CCalibrationAmp::OnBUTTONAmpBase()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_AmpVB = ctx->ai_raw[ctx->AmpID];
+    m_AmpVB = ctx->ai.raw[ctx->AmpID];
     UpdateData(FALSE);
 }
 
@@ -66,7 +66,7 @@ void CCalibrationAmp::OnBUTTONAmpOffset()
 {
     UpdateData(TRUE);
     DigitShowContext* ctx = GetContext();
-    m_AmpVO = ctx->ai_raw[ctx->AmpID];
+    m_AmpVO = ctx->ai.raw[ctx->AmpID];
     UpdateData(FALSE);
 }
 
@@ -78,8 +78,8 @@ void CCalibrationAmp::OnBUTTONAmpUpdate()
     }
     else {
         DigitShowContext* ctx = GetContext();
-        ctx->cal.b[ctx->AmpID] = (m_AmpPO - m_AmpPB) / (m_AmpVO - m_AmpVB);
-        ctx->cal.c[ctx->AmpID] = m_AmpPB - ctx->cal.b[ctx->AmpID] * m_AmpVB;
+        ctx->ai.cal.b[ctx->AmpID] = (m_AmpPO - m_AmpPB) / (m_AmpVO - m_AmpVB);
+        ctx->ai.cal.c[ctx->AmpID] = m_AmpPB - ctx->ai.cal.b[ctx->AmpID] * m_AmpVB;
         AfxMessageBox("Get calibration factors!", MB_ICONEXCLAMATION | MB_OK);
     }
 }

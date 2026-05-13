@@ -1,4 +1,4 @@
-// Microsoft Visual C++ generated resource script.
+﻿// Microsoft Visual C++ generated resource script.
 //
 #pragma code_page(65001)
 
@@ -84,7 +84,6 @@ BEGIN
     POPUP "View"
     BEGIN
         MENUITEM "Board Settings",              ID_BoardSettings
-        MENUITEM "SamplingSettings",            ID_SamplingSettings
     END
     POPUP "Calibration"
     BEGIN
@@ -293,9 +292,6 @@ BEGIN
     PUSHBUTTON      "Start Saving",IDC_BUTTON_StartSave,460,243,48,14
     PUSHBUTTON      "Stop Saving",IDC_BUTTON_StopSave,514,243,48,14
     PUSHBUTTON      "Intercept Saving",IDC_BUTTON_InterceptSave,460,262,102,14
-    PUSHBUTTON      "Start FIFO",IDC_BUTTON_FIFOStart,460,280,35,14
-    PUSHBUTTON      "Stop FIFO",IDC_BUTTON_FIFOStop,497,280,34,14
-    PUSHBUTTON      "Write Data",IDC_BUTTON_WriteData,533,280,30,14
     GROUPBOX        "Current conditins of sampling and control",IDC_STATIC,14,270,130,64
     LTEXT           "Control ID",IDC_STATIC,20,285,38,10
     EDITTEXT        IDC_EDIT_Ctrl_ID,81,282,36,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
@@ -929,41 +925,6 @@ BEGIN
     PUSHBUTTON      "<-",IDC_BUTTON_StepDec,132,17,27,14
     PUSHBUTTON      "->",IDC_BUTTON_StepInc,161,17,27,14
     LTEXT           "7: Creep without the control in extension direction ( Motor_rpm, q, time ),",IDC_STATIC,14,272,212,8
-END
-
-IDD_SamplingSettings DIALOG 0, 0, 227, 261
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Sampling Conditions with FIFO"
-FONT 9, "ＭＳ Ｐゴシック"
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,109,240,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,170,240,50,14
-    LTEXT           "Memory Type",IDC_STATIC,15,96,40,8
-    LTEXT           "Channels",IDC_STATIC,15,114,28,8
-    LTEXT           "Allocated Memory (MB)",IDC_STATIC,15,184,70,8
-    LTEXT           "Sampling Clock (ms)",IDC_STATIC,15,202,62,8
-    LTEXT           "Saving Time (s)",IDC_STATIC,15,219,47,8
-    LTEXT           "EventSamplingTimes (n)",IDC_STATIC,15,132,72,8
-    EDITTEXT        IDC_EDIT_MemoryType,118,92,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT_Channels,118,110,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT_AllocatedMemory,118,182,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT_SamplingClock,118,200,40,14,ES_CENTER | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_SavingTime,118,217,40,14,ES_CENTER | ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_EventSamplingTimes,118,128,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "( 1 -100 )",IDC_STATIC,165,203,30,8
-    LTEXT           "TotalSamplingTimes (n)",IDC_STATIC,15,166,70,8
-    EDITTEXT        IDC_EDIT_TotalSamplingTimes,118,164,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    PUSHBUTTON      "Check",IDC_BUTTON_Check,166,95,50,14
-    LTEXT           "Time Interval (ms) to display",IDC_STATIC,14,24,86,8
-    LTEXT           "Time Interval (ms) to feed back",IDC_STATIC,14,41,94,8
-    LTEXT           "Time Interval (ms) to save data",IDC_STATIC,14,57,94,8
-    EDITTEXT        IDC_EDIT_TimeInterval1,118,22,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT_TimeInterval2,118,39,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT_TimeInterval3,118,56,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
-    GROUPBOX        "Sampling Settings of Timers",IDC_STATIC,7,7,213,66
-    GROUPBOX        "Sampling Conditions with FIFO Memory",IDC_STATIC,7,79,213,157
-    LTEXT           "Number of data to average (n)",IDC_STATIC,15,149,90,8
-    EDITTEXT        IDC_EDIT_AvSmplNum,118,146,40,14,ES_CENTER | ES_AUTOHSCROLL | ES_READONLY
 END
 
 IDD_Control_PreConsolidation DIALOG 0, 0, 155, 71

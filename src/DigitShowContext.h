@@ -22,10 +22,27 @@
 #pragma once
 
 #include <afxwin.h>
+#include <vector>
 
 #define NUM_PARAM_MAX    16  // Number of calibration parameter sets (cal.a/b/c array size)
 #define AI_MAX_CHANNELS  16  // Maximum number of analog input channels (ai_raw / ai_phy array size)
 #define AO_MAX_CHANNELS   8  // Maximum number of analog output channels (ao_raw array size)
+
+// D/A channel index assignments (fixed hardware wiring)
+#define DA_CH_MOTOR         0    // Motor on/off (5V = on)
+#define DA_CH_MOTOR_CLUTCH  1    // Motor clutch (5V = engaged)
+#define DA_CH_MOTOR_SPEED   2    // Motor speed setpoint [V]
+#define DA_CH_EP_CELL       3    // Cell pressure [V]
+
+// ── Digital Filter / Board Constants ──────────────────────
+#define DSP_AD_CHANNELS   16     // Number of AD channels used (hard limit)
+#define DSP_DA_CHANNELS    8     // Number of DA channels used (= AO_MAX_CHANNELS)
+#define DSP_FS_HZ        300     // AD sampling rate [sps/ch]
+#define DSP_MA1_TAPS       5     // Stage-1 MA taps  → notch at Fs/5 = 60 Hz
+#define DSP_MA2_TAPS       6     // Stage-2 MA taps  → notch at Fs/6 = 50 Hz
+// Group delay = (MA1_TAPS-1 + MA2_TAPS-1) / (2*Fs) = 15 ms
+// -3dB ~ 18 Hz
+// ScanClock = 1e6 / (DSP_FS_HZ * DSP_AD_CHANNELS) = 208.33 µs/ch
 
 /**
  * Specimen data structure
@@ -72,48 +89,23 @@ struct ControlData {
 };
 
 /**
- * Calibration data
- */
-struct CalibrationData {
-    double a[NUM_PARAM_MAX];
-    double b[NUM_PARAM_MAX];
-    double c[NUM_PARAM_MAX];
-    double DA_a[8];
-    double DA_b[8];
-};
-
-/**
  * Physical values
  */
 struct PhysicalValues {
-    double sa;
-    // axial stress
-    double e_sa;
-    // effective axial stress
-    double sr;
-    // radial stress
-    double e_sr;
-    // effective radial stress
-    double p;
-    // mean stress
-    double e_p;
-    // effective mean stress
-    double q;
-    // deviator stress
-    double u;
-    // pore pressure
-    double ea;
-    // axial strain
-    double er;
-    // radial strain
-    double ev;
-    // volumetric strain
-    double eLDT;
-    // LDT average strain
-    double eLDT1;
-    // LDT1 strain
-    double eLDT2;
-    // LDT2 strain
+    double sa;      // axial stress
+    double e_sa;    // effective axial stress
+    double sr;      // radial stress
+    double e_sr;    // effective radial stress
+    double p;       // mean stress
+    double e_p;     // effective mean stress
+    double q;       // deviator stress
+    double u;       // pore pressure
+    double ea;      // axial strain
+    double er;      // radial strain
+    double ev;      // volumetric strain
+    double eLDT;    // LDT average strain
+    double eLDT1;   // LDT1 strain
+    double eLDT2;   // LDT2 strain
 };
 
 /**
@@ -129,34 +121,9 @@ struct ControlFileData {
  * Time settings
  */
 struct TimeSettings {
-    unsigned int Interval1;
-    // Time interval (ms) to display output data
-    unsigned int Interval2;
-    // Time interval (ms) to feed back
-    unsigned int Interval3;
-    // Time interval (ms) to save the data
-};
-
-/**
- * D/A Channel assignments
- */
-struct DaChannelAssign {
-    int Motor;
-    int MotorCruch;
-    int MotorSpeed;
-    int EP_Cell;
-};
-
-/**
- * Sampling settings
- */
-struct SamplingSettings {
-    float SavingClock;
-    int   SavingTime;
-    long  TotalSamplingTimes;
-    long  CurrentSamplingTimes;
-    float AllocatedMemory;   // Estimated memory usage (MB)
-    int   AvSmplNum;         // Number of samples to average per channel
+    unsigned int DisplayInterval;   // ms — Timer 1: AD acquire + display
+    unsigned int ControlInterval;   // ms — Timer 2: control feedback
+    unsigned int SaveInterval;      // ms — Timer 3: data file write
 };
 
 /**
@@ -172,24 +139,46 @@ struct ErrorTolerance {
 };
 
 /**
+ * Cascaded sliding-window MA filter state (20Hz-B design)
+ * Stage 1: MA(DSP_MA1_TAPS) — 60 Hz notch
+ * Stage 2: MA(DSP_MA2_TAPS) — 50 Hz notch
+ */
+struct DspFilter {
+    float  ma1_buf[AI_MAX_CHANNELS][DSP_MA1_TAPS];
+    double ma1_sum[AI_MAX_CHANNELS];
+    int    ma1_idx[AI_MAX_CHANNELS];
+
+    float  ma2_buf[AI_MAX_CHANNELS][DSP_MA2_TAPS];
+    double ma2_sum[AI_MAX_CHANNELS];
+    int    ma2_idx[AI_MAX_CHANNELS];
+};
+
+/**
  * Main application context structure
  * Singleton pattern for global state management
  */
 struct DigitShowContext {
-    // Board configuration
-    DaChannelAssign daChannel;
+    // Analog input measurement data (post-filter)
+    struct {
+        float  raw[AI_MAX_CHANNELS];   // filtered ADC voltages [V]
+        double phy[AI_MAX_CHANNELS];   // calibrated physical values
+        double param[AI_MAX_CHANNELS]; // derived stress/strain params
+        struct {
+            double a[NUM_PARAM_MAX];   // quadratic coefficient
+            double b[NUM_PARAM_MAX];   // linear coefficient
+            double c[NUM_PARAM_MAX];   // offset
+        } cal;
+        DspFilter dsp;                 // 20Hz-B MA5×MA6 filter state
+    } ai;
 
-    // Sampling and calibration
-    SamplingSettings sampling;
-    CalibrationData cal;
-
-    // Measurement data
-    float  ai_raw[AI_MAX_CHANNELS];
-    float  ai_raw_temp;
-    double ai_phy[AI_MAX_CHANNELS];
-    double ai_phy_temp;
-    double ai_param[AI_MAX_CHANNELS];
-    float  ao_raw[AO_MAX_CHANNELS];
+    // Analog output setpoints [V]
+    struct {
+        float  raw[AO_MAX_CHANNELS];
+        struct {
+            double a[AO_MAX_CHANNELS]; // DA gain
+            double b[AO_MAX_CHANNELS]; // DA offset
+        } cal;
+    } ao;
 
     // Physical values
     PhysicalValues phys;
@@ -203,6 +192,8 @@ struct DigitShowContext {
     ControlFileData controlFile;
     ErrorTolerance errTol;
 
+    // Digital filter: DspFilter dsp moved into struct ai above
+
     // Control state
     int  ControlID;
     int  NumCyclic;
@@ -212,10 +203,14 @@ struct DigitShowContext {
     int  AmpID;
 
     // System flags
-    bool FlagSetBoard;
-    bool FlagSaveData;
-    bool FlagCtrl;
-    bool FlagCyclic;
+    struct SystemFlags {
+        bool SetBoard;  // AD board (AIO000) successfully opened
+        bool HasDA;     // DA board (AIO001) successfully opened
+        bool SaveData;
+        bool Ctrl;
+        bool Cyclic;
+    };
+    SystemFlags flags;
 
     // Time management
     TimeSettings timeSettings;
@@ -227,52 +222,36 @@ struct DigitShowContext {
     double SequentTime2;
     double CtrlStepTime;
 
-    // Memory management
-    PVOID  pSmplData0;
-    HANDLE hHeap0;
-
     // File handles
-    FILE* FileSaveData0;
-    FILE* FileSaveData1;
-    FILE* FileSaveData2;
+    FILE* fpVoltage;   // raw ADC voltage log  (*_v.tsv)
+    FILE* fpPhysical;  // calibrated physical values log (*.tsv)
+    FILE* fpParam;     // derived parameters log (*_p.tsv)
 
-    // Error handling
-    long    Ret;
-    long    Ret2;
-    char    ErrorString[256];
-    CString TextString;
-
-    // Event handling
-    long AdEvent;
-    
     // CAIO board configuration (CONTEC AIO)
-    int NumAD;
-    int NumDA;
-    int AdMaxChannels;
     struct AdBoardConfig {
-        short  Id[1];
-        short  Channels[1];
-        short  Range[1];
-        float  RangeMax[1];
-        float  RangeMin[1];
-        short  Resolution[1];
-        short  InputMethod[1];
-        short  MemoryType[1];
-        float  SamplingClock[1];
-        long   SamplingTimes[1];
-        float  ScanClock[1];
-        long   Data0[262144];
+        short  Id;
+        short  Channels;
+        short  Range;
+        float  RangeMax;
+        float  RangeMin;
+        short  Resolution;
+        short  InputMethod;
+        short  MemoryType;
+        float  SamplingClock;
+        long   SamplingTimes;
+        float  ScanClock;
+        long   LastDataCount;           // actual scan count from last AioGetAiSamplingData
+        std::vector<long> Data0;          // raw ADC sample buffer [SamplingTimes * Channels]
     } ad;
     struct DaBoardConfig {
-        short  Id[1];
-        short  Channels[1];
-        short  Range[1];
-        float  RangeMax[1];
-        float  RangeMin[1];
-        short  Resolution[1];
-        long   Data[8];
+        short  Id;
+        short  Channels;
+        short  Range;
+        float  RangeMax;
+        float  RangeMin;
+        short  Resolution;
+        long   Data[AO_MAX_CHANNELS];
     } da;
-    bool   FlagFIFO;
 };
 
 /**

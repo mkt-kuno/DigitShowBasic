@@ -38,4 +38,6 @@
 #include <afxcmn.h>
 #endif
 
+#include <vector>
+
 #endif // __STDAFX_H_INCLUDE__
