@@ -211,8 +211,16 @@ void CDigitShowBasicDoc::CloseBoard()
     long ret = 0;
     // Close A/D and D/A board to end the application 
     if( ctx->flags.SetBoard==TRUE ){
+        // Zero all DA outputs before closing to ensure hardware is in a safe state
+        if (ctx->flags.HasDA) {
+            for (int j = 0; j < ctx->da.Channels; j++)
+                ctx->ao.raw[j] = 0.0f;
+            DA_OUTPUT();
+            ret = AioExit(ctx->da.Id);
+        }
         ret = AioExit(ctx->ad.Id);
-        if(ctx->flags.HasDA)  ret = AioExit(ctx->da.Id);
+        ctx->flags.SetBoard = FALSE;
+        ctx->flags.HasDA = FALSE;
     }
 }
 
@@ -260,6 +268,8 @@ void CDigitShowBasicDoc::AD_INPUT()
             ctx->ai.raw[ch] = float(d.ma2_sum[ch] * inv2);
         }
     }
+    // Reset so a second call within the same 100ms tick does not re-process the same data
+    ctx->ad.LastDataCount = 0;
 }
 
 //--- Output to D/A Board ---
@@ -296,11 +306,19 @@ void CDigitShowBasicDoc::Cal_Param()
 {
     DigitShowContext* ctx = GetContext();
     auto SpecimenData = &ctx->specimen;
+
+    // Guard against zero/negative values that would cause division by zero or log(<=0) UB
+    if (SpecimenData->Height[0] <= 0.0 || SpecimenData->Volume[0] <= 0.0) return;
+
     //    Specimen Data in drain and undrain condition
     ctx->height = SpecimenData->Height[0]-ctx->ai.phy[1];
     // Current height
+    if (ctx->height <= 0.0) return;
+
     ctx->volume = SpecimenData->Volume[0]- ctx->ai.phy[9];
     // Current volume in drain condition
+    if (ctx->volume <= 0.0) return;
+
     ctx->area = ctx->volume/ ctx->height;
     // Current area
     ctx->phys.ea = -log(ctx->height/SpecimenData->Height[0])*100.0;
@@ -362,6 +380,7 @@ void CDigitShowBasicDoc::Cal_Param()
 void CDigitShowBasicDoc::SaveToFile()
 {
     DigitShowContext* ctx = GetContext();
+    if (!ctx->fpVoltage || !ctx->fpPhysical || !ctx->fpParam) return;
     fprintf(ctx->fpVoltage,  "%.3lf\t", ctx->SequentTime2);
     fprintf(ctx->fpPhysical, "%.3lf\t", ctx->SequentTime2);
 
@@ -785,7 +804,11 @@ void CDigitShowBasicDoc::Start_Control()
 void CDigitShowBasicDoc::Stop_Control()
 {
     DigitShowContext* ctx = GetContext();
-    ctx->ao.raw[DA_CH_MOTOR_SPEED] = 0.0f;
+    ctx->ao.raw[DA_CH_MOTOR]        = 0.0f;
+    //Motor: Off
+    ctx->ao.raw[DA_CH_MOTOR_CLUTCH] = 0.0f;
+    //Motor Clutch: Off
+    ctx->ao.raw[DA_CH_MOTOR_SPEED]  = 0.0f;
     //Motor Speed->0
     DA_OUTPUT();
 }

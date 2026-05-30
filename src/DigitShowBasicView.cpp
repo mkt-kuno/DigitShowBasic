@@ -564,7 +564,14 @@ void CDigitShowBasicView::OnBUTTONStartSave()
                 fprintf(ctx->fpParam,"%s\t","(s'a+s'r)/2");
                 fprintf(ctx->fpParam,"%s\n","(s'a-s'r)/2");
             }
-// Timer starts
+// Timer starts — only if all three files opened successfully
+            if (!ctx->fpVoltage || !ctx->fpPhysical || !ctx->fpParam) {
+                if (ctx->fpVoltage)  { fclose(ctx->fpVoltage);  ctx->fpVoltage  = nullptr; }
+                if (ctx->fpPhysical) { fclose(ctx->fpPhysical); ctx->fpPhysical = nullptr; }
+                if (ctx->fpParam)    { fclose(ctx->fpParam);    ctx->fpParam    = nullptr; }
+                AfxMessageBox("データファイルを開けませんでした。", MB_ICONSTOP | MB_OK);
+                return;
+            }
             SetTimer(3,ctx->timeSettings.SaveInterval,NULL);
             ctx->NowTime = ctx->NowTime.GetCurrentTime();
             ctx->StartTime = ctx->NowTime;
@@ -600,9 +607,9 @@ void CDigitShowBasicView::OnBUTTONStopSave()
         pDoc -> Cal_Physical();
         pDoc -> Cal_Param();
         pDoc -> SaveToFile();
-        fclose(ctx->fpVoltage);
-        fclose(ctx->fpPhysical);
-        fclose(ctx->fpParam);
+        fclose(ctx->fpVoltage);  ctx->fpVoltage  = nullptr;
+        fclose(ctx->fpPhysical); ctx->fpPhysical = nullptr;
+        fclose(ctx->fpParam);    ctx->fpParam    = nullptr;
         CButton* myBTN1 = (CButton*)GetDlgItem(IDC_BUTTON_StartSave);
         CButton* myBTN2 = (CButton*)GetDlgItem(IDC_BUTTON_StopSave);    
         CButton* myBTN3 = (CButton*)GetDlgItem(IDC_BUTTON_InterceptSave);
@@ -639,6 +646,10 @@ LRESULT CDigitShowBasicView::DefWindowProc(UINT message, WPARAM wParam, LPARAM l
         long tmp = 0;
         Ret = AioGetAiSamplingCount(ctx->ad.Id, &tmp);
         if (tmp <= 0) return TRUE;
+
+        // Clamp to allocated buffer size to prevent overflow
+        long maxScans = (long)(ctx->ad.Data0.size() / DSP_AD_CHANNELS);
+        if (tmp > maxScans) tmp = maxScans;
 
         Ret = AioGetAiSamplingData(ctx->ad.Id, &tmp, ctx->ad.Data0.data());
         if (Ret != 0) {

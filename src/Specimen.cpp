@@ -276,7 +276,7 @@ void CSpecimen::OnBUTTONBeConsol()
     auto SpecimenData = &ctx->specimen;
 
     SpecimenData->Height[2] = SpecimenData->Height[1]-ctx->ai.phy[1];    
-    SpecimenData->Volume[2] = SpecimenData->Volume[1]-SpecimenData->Area[1]*ctx->ai.phy[1];
+    SpecimenData->Volume[2] = SpecimenData->Volume[1]-ctx->ai.phy[9];
     SpecimenData->Area[2]   = SpecimenData->Area[1];
     SpecimenData->Diameter[2] = SpecimenData->Diameter[1]*sqrt(SpecimenData->Area[2]/SpecimenData->Area[1]) ;
     SpecimenData->Depth[2]  = SpecimenData->Depth[1]*sqrt(SpecimenData->Area[2]/SpecimenData->Area[1]);
